@@ -1,0 +1,39 @@
+user aziz;
+worker_processes 1;
+          
+error_log /path/to/error.log;
+
+pid /path/to/webserv.pid;
+
+events
+    workers_connections 1024;
+
+http
+    include /path/tp/folder/to/include
+
+    sendfile    on;
+    keepalive_timeout 65;
+    #gzip on;
+
+    server
+        listen      8080;
+        server_name localhost;
+
+
+        location /
+            root    /opt/homebrew/var/www;
+            index   index.html index.htm;
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html
+            root html;
+    server
+        listen       8000;
+        listen       somename:8080;
+        server_name  somename  alias  another.alias;
+    
+        location /
+            root   html;
+            index  index.html index.htm;
+        
+    include /path/to/folder/to/include
