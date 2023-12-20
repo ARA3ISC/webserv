@@ -1,15 +1,15 @@
 user aziz;
-worker_processes 1;
+worker_processes 3;
           
 error_log /path/to/error.log;
 
 pid /path/to/webserv.pid;
 
 events
-    workers_connections 1024;
+    workers_connections 1024
 
 http
-    include /path/tp/folder/to/include
+    include /path/to/folder/to/include
 
     sendfile    on;
     keepalive_timeout 65;

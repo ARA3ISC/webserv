@@ -18,3 +18,52 @@ std::string getFirstWord(std::string line)
 
     return word;
 }
+
+std::string getSecondWord(std::string line)
+{
+    int i = 0;
+    std::string word;
+    while (line[i] && line[i] != ' ' && line[i] != '\t')
+        i++;
+    while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+            i++;
+    if (!line[i])
+        return NULL;
+
+    while (line[i] && line[i] != ';')
+        word += line[i++];
+
+    return word;
+}
+
+int countWords(const std::string& str) {
+    int count = 0;
+    bool inWord = false;
+
+    for (size_t i = 0; i < str.length(); ++i) {
+        if (std::isspace(str[i])) {
+            if (inWord) {
+                count++;
+                inWord = false;
+            }
+        } else {
+            inWord = true;
+        }
+    }
+    if (inWord) {
+        count++;
+    }
+    return count;
+}
+
+bool is_digit(std::string arg)
+{
+    int i = 0;
+    while (arg[i])
+    {
+        if (!std::isdigit(arg[i]))
+            return false;
+        i++;
+    }
+    return true;
+}
