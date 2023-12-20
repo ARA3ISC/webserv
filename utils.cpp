@@ -33,6 +33,8 @@ std::string getSecondWord(std::string line)
     while (line[i] && line[i] != ';')
         word += line[i++];
 
+    if (line[i] == ';' && line[i + 1] != '\0')
+        throw std::runtime_error("Error: syntax error");
     return word;
 }
 
@@ -58,6 +60,7 @@ int countWords(const std::string& str) {
 
 bool is_digit(std::string arg)
 {
+//    std::cout << arg << std::endl;
     int i = 0;
     while (arg[i])
     {

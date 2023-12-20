@@ -3,12 +3,10 @@
 
 void    checkValue(std::string line)
 {
-    (void)line;
     if (getFirstWord(line) == "worker_processes")
         if (!is_digit(getSecondWord(line)))
             throwError("Invalid value");
 //    std::cout << getSecondWord(line) << std::endl;
-//    std::cout << line << std::endl;
 }
 
 void    checkMainContext(std::ifstream &obj)
@@ -30,6 +28,7 @@ void    checkMainContext(std::ifstream &obj)
             || line.at(0) == '#' || line.at(0) == ' ' || line.at(0) == '\t')
             continue;
         if (std::find(mainDirectives.begin(), mainDirectives.end(), getFirstWord(line)) == mainDirectives.end())
+            throwError("Invalid directive");
         if (line.back() != ';' && ( std::find(mainDirectives.begin(), mainDirectives.begin() + 4, getFirstWord(line)) != mainDirectives.begin() + 4 ) )
         {
             std::string error_line = "syntax error (line: " + std::to_string(lineNb) + ")";

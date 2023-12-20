@@ -11,13 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/configfile.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/configfile.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/test.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parsingConfigFile.o" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webserv" beforeDir="false" afterPath="$PROJECT_DIR$/webserv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +26,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -74,7 +74,7 @@
       <workItem from="1703024793197" duration="456000" />
       <workItem from="1703025256108" duration="514000" />
       <workItem from="1703084740946" duration="8895000" />
-      <workItem from="1703100936402" duration="4783000" />
+      <workItem from="1703100936402" duration="7004000" />
     </task>
     <servers />
   </component>
