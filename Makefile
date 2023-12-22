@@ -2,7 +2,8 @@ NAME = webserv
 CXX = c++
 CXXFLAGS = -Wextra -Werror -Wall -std=c++98
 RM = rm -f
-SRC = main.cpp parsingConfigFile.cpp utils.cpp error.cpp
+SRC = webserv.cpp main.cpp parsingConfigFile.cpp server.cpp \
+location.cpp utils.cpp error.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

@@ -30,7 +30,7 @@ std::string getSecondWord(std::string line)
     if (!line[i])
         return NULL;
 
-    while (line[i] && line[i] != ';')
+    while (line[i])
         word += line[i++];
 
     if (line[i] == ';' && line[i + 1] != '\0')

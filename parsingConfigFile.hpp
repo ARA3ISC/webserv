@@ -1,6 +1,9 @@
-#pragma  once
+#ifndef PARSINGCONFIGFILE_HPP
+# define PARSINGCONFIGFILE_HPP
 
-#include "webserv.hpp"
 #include "utils.hpp"
 
+
 void    startParsing(std::string filename);
+
+#endif

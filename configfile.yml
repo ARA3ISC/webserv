@@ -1,0 +1,113 @@
+- server:
+    server_name: webserv
+
+    listen: 127.0.0.1:4444
+
+    root: ./test
+    index: index.html
+
+    cgi_path: py /usr/bin/python3
+    cgi_path: php /Users/maneddam/.local/bin/php-cgi
+    cgi_path: purl /usr/bin/purl
+
+    default_dir_file: error_pages/dir_ans_file.html
+
+    allow_methods: GET POST DELETE
+
+    Error: 404 ./error_pages/404.html
+
+    upload: ./upload
+
+    - location /:
+
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./www
+
+
+    - location /portfolio:
+
+        dir_listing: off
+        allow_methods: GET
+        root: ./www/portfolio
+        index: index.html
+        auto_index: on
+
+
+    - location /cgi:
+
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./www/cgi
+        auto_index: off
+
+
+    - location /gallary:
+        allow_methods: GET
+        root: ./www/gallary
+        index: index.html
+        auto_index: on
+
+
+    - location /finexo:
+        allow_methods: GET
+        root: ./www/finexo
+        index: index.html
+        auto_index: on
+
+
+- server:
+    server_name: webserv
+
+    listen: 127.0.0.1:4445
+
+    root: ./test
+    index: index.html
+
+    cgi_path: py /usr/bin/python3
+    cgi_path: php /Users/hlahrach/.local/bin/php-cgi
+    cgi_path: purl /usr/bin/purl
+
+    default_dir_file: error_pages/dir_ans_file.html
+
+    allow_methods: GET POST DELETE
+
+    Error: 404 ./error_pages/404.html
+
+    upload: ./upload
+
+    - location /:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./www
+
+    - location /portfolio:
+
+        dir_listing: off
+        allow_methods: GET
+        root: ./www/portfolio
+        index: index.html
+        auto_index: on
+
+
+    - location /cgi:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./www/cgi
+        auto_index: off
+
+
+    - location /gallery:
+        allow_methods: GET
+        root: ./www/gallary
+        index: index.html
+        auto_index: on
+
+
+    - location /fine:
+        allow_methods: GET
+        root: ./www/finexo
+        index: index.html
+        auto_index: on
+
+
