@@ -15,7 +15,9 @@ private:
     std::vector<std::string> _allow_methods;
     std::vector<std::string> _error_pages;
     std::string _upload;
-    location* _locations;
+    int _client_max_body_size;
+    std::vector<location> _locations;
+//    location* _locations;
 public:
     server();
 	server(int locations_count);

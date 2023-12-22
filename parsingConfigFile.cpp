@@ -4,7 +4,6 @@
 
 webserv webs;
 
-
 void    checkValue(std::string line)
 {
     if (getFirstWord(line) == "worker_processes")
@@ -32,13 +31,6 @@ void    checkServerBlock(std::ifstream &obj)
 {
     std::string line;
     int lineNb = 0;
-    // std::vector<std::string> mainDirectives;
-    // mainDirectives.push_back("worker_processes");
-    // mainDirectives.push_back("error_log");
-    // mainDirectives.push_back("pid");
-    // mainDirectives.push_back("events");
-    // mainDirectives.push_back("http");
-    std::streampos offset;
     while (getline(obj, line))
     {
         lineNb++;
@@ -58,13 +50,6 @@ void    checkServerBlock(std::ifstream &obj)
             // std::cout << webs.get_serverCount() << std::endl;
             while (getline(obj, line) && line[0] != '-')
             {
-                if (line[0] == '-')
-                {
-                    offset = obj.tellg();
-                    obj.seekg(offset);
-                    break;
-                }
-                std::cout << " = " << line << std::endl;
             }
         }
     }
