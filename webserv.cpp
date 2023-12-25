@@ -33,10 +33,17 @@ webserv::~webserv() {
 //    delete[] this->_servers;
 }
 
-void webserv::newServer() {
-    this->_serverCount++;
-}
 
 int webserv::get_serverCount() {
     return this->_serverCount;
+}
+
+server* webserv::createServer() {
+    server *s = new server;
+    return s;
+}
+
+void webserv::addServer(server* newserv) {
+    this->_servers.push_back(*newserv);
+    std::cout << "server created\n";
 }

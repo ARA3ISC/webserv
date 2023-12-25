@@ -11,8 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configfile.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configfile.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/error.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/error.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/utils.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webserv.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/webserv.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webserv.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/webserv.hpp" afterDir="false" />
     </list>
@@ -79,7 +82,9 @@
       <workItem from="1703163312157" duration="8190000" />
       <workItem from="1703233554228" duration="3512000" />
       <workItem from="1703243572029" duration="2515000" />
-      <workItem from="1703253920439" duration="2441000" />
+      <workItem from="1703253920439" duration="3589000" />
+      <workItem from="1703334311729" duration="1622000" />
+      <workItem from="1703523924659" duration="763000" />
     </task>
     <servers />
   </component>

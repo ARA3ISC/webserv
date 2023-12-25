@@ -3,6 +3,6 @@
 // #include "webserv.hpp"
 #include <iostream>
 
-void    throwError(std::string msg);
+void    throwError(int nb);
 
 #endif

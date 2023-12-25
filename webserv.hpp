@@ -42,6 +42,7 @@ public:
     webserv& operator=(const webserv& rhs);
     ~webserv();
 
-    void    newServer();
     int    get_serverCount();
+    server* createServer();
+    void   addServer(server* newserv);
 };

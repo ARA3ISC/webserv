@@ -13,13 +13,15 @@ std::string getFirstWord(std::string line)
 {
     int i = 0;
     std::string word;
+    while (line[i] == 32 || line[i] == '\t')
+        i++;
     while (line[i] && line[i] != ' ' && line[i] != '\t')
         word += line[i++];
 
     return word;
 }
 
-std::string getSecondWord(std::string line)
+std::string     getSecondWord(std::string line)
 {
     int i = 0;
     std::string word;
