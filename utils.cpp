@@ -13,6 +13,7 @@ std::string getFirstWord(std::string line)
 {
     int i = 0;
     std::string word;
+
     while (line[i] == 32 || line[i] == '\t')
         i++;
     while (line[i] && line[i] != ' ' && line[i] != '\t')

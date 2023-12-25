@@ -8,8 +8,8 @@ class server
 {
 private:
     int _locations_count;
-	std::vector<std::string> _listen;
 	std::vector<std::string> _server_name;
+	std::vector<std::string> _listen;
     std::string _root;
     std::map<std::string, std::string> _cgi_path;
     std::vector<std::string> _allow_methods;
@@ -24,4 +24,13 @@ public:
 	server(const server& rhs);
 	server& operator=(const server& rhs);
 	~server();
+
+    void set_server_name(std::string line, int nbln);
+    void set_listen(std::string line, int nbln);
+
+    std::vector<std::string> getListen(){
+        return this->_listen;
+    }
+
+
 };

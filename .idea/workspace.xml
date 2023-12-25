@@ -12,12 +12,10 @@
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/configfile.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configfile.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/error.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/error.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/error.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webserv.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/webserv.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webserv.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/webserv.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +83,8 @@
       <workItem from="1703253920439" duration="3589000" />
       <workItem from="1703334311729" duration="1622000" />
       <workItem from="1703523924659" duration="763000" />
+      <workItem from="1703537644853" duration="2465000" />
+      <workItem from="1703540796861" duration="74000" />
     </task>
     <servers />
   </component>

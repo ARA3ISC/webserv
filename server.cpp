@@ -1,9 +1,27 @@
 #include "server.hpp"
+#include "error.hpp"
+#include <sstream>
+
+
+// helpful functions
+
+std::vector<std::string> splitBySpace(const std::string& input) {
+    std::istringstream iss(input);
+    std::vector<std::string> words;
+    std::string word;
+
+    while (iss >> word) {
+        words.push_back(word);
+    }
+
+    return words;
+}
+
+// class members
 
 server::server() {}
 server::server(int locations_count) {
     this->_locations_count = locations_count;
-//    this->_locations = new location[locations_count];
 }
 server::server(const server& rhs)
 {
@@ -16,10 +34,6 @@ server::server(const server& rhs)
     this->_upload = rhs._upload;
     this->_client_max_body_size = rhs._client_max_body_size;
     this->_locations = rhs._locations;
-//    this->_locations = new location[rhs._locations_count];
-//    for (int i = 0; i < rhs._locations_count; ++i) {
-//        this->_locations[i] = rhs._locations[i];
-//    }
 }
 
 server &server::operator=(const server &rhs) {
@@ -34,15 +48,36 @@ server &server::operator=(const server &rhs) {
         this->_upload = rhs._upload;
         this->_client_max_body_size = rhs._client_max_body_size;
         this->_locations = rhs._locations;
-//        delete[] _locations;
-//        this->_locations = new location[rhs._locations_count];
-//        for (int i = 0; i < rhs._locations_count; ++i) {
-//            this->_locations[i] = rhs._locations[i];
-//        }
     }
     return *this;
 }
 
+void    server::set_server_name(std::string line, int nbln) {
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+
+    if (splited.size() < 2)
+        throwError(nbln);
+    for (unsigned long i = 1; i < splited.size(); ++i) {
+        this->_server_name.push_back(splited[i]);
+    }
+
+}
+
+void    server::set_listen(std::string line, int nbln) {
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+
+    if (splited.size() != 2)
+        throwError(nbln);
+
+    for (unsigned long i = 1; i < splited.size(); ++i) {
+        this->_listen.push_back(splited[1]);
+    }
+}
+
+
 server::~server() {
-//    delete[] this->_locations;
 }

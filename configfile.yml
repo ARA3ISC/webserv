@@ -1,10 +1,11 @@
 - server:
-    server_name: webserv
+    server_name: webser
 
     listen: 127.0.0.1:4444
 
     root: ./test
     index: index.html
+
     cgi_path: py /usr/bin/python3
     cgi_path: php /Users/maneddam/.local/bin/php-cgi
     cgi_path: purl /usr/bin/purl

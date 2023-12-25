@@ -37,7 +37,6 @@ void    checkIndentation(std::string s, int c, int nbline)
 void    fillLocationAttr(std::ifstream &obj, std::string line, int nbline)
 {
     // ! must get
-
     while (getline(obj, line) && rtrim(line) != "- server:")
     {
         nbline++;
@@ -54,14 +53,13 @@ void    fillLocationAttr(std::ifstream &obj, std::string line, int nbline)
         }
         else
         {
-        // std::cout << "-"  << line << "-" << std::endl;
             checkIndentation(line, 8, nbline);
         }
     }
 
 }
 
-void    fillServerAttr(std::ifstream &obj, int nbline)
+void    fillServerAttr(std::ifstream &obj, int nbline, server* s)
 {
     std::string line;
     while (getline(obj, line) && rtrim(line) != "- server:")
@@ -72,16 +70,21 @@ void    fillServerAttr(std::ifstream &obj, int nbline)
             continue;
 
         checkIndentation(line, 4, nbline);
+        if (getFirstWord(line) == "server_name:")
+            s->set_server_name(line, nbline);
+        else if (getFirstWord(line) == "listen:")
+           s->set_listen(line, nbline);
+
 
         if (rtrim(line).find("- location") != std::string::npos)
         {
             // std::cout << line << '\n';
             fillLocationAttr(obj, line, nbline);
-
-
         }
     }
-
+    // std::cout << *(s->getListen().begin()) << std::endl;
+    // std::cout << *(++(s->getListen().begin())) << std::endl;
+    // std::cout << s->getListen().size() << std::endl;
 }
 
 void    checkServerBlock(std::ifstream &obj)
@@ -98,11 +101,11 @@ void    checkServerBlock(std::ifstream &obj)
             throwError(lineNb);
         else
         {
-            fillServerAttr(obj, lineNb);
+            server* s = webs.createServer();
+            fillServerAttr(obj, lineNb, s);
 
         }
     }
-//    std::cout << "server count: " << webs.get_serverCount() << std::endl;
 }
 
 bool checkExtension(const std::string& fileName, const std::string& extension) {
