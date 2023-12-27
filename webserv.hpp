@@ -43,6 +43,9 @@ public:
     ~webserv();
 
     int    get_serverCount();
+    void    set_serverCount(int i) {
+        this->_serverCount = i;
+    }
     server* createServer();
     void   addServer(server newserv);
 

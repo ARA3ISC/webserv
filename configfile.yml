@@ -34,18 +34,17 @@
         index: index.html location111
 
 - server:
+    root: root2
     allow_methods: GET POST DELETE
     - location /dd:
         dir_listing: off location2
         allow_methods: GET location2
         root: ./www/portfoliolocation2
 
-
-
-
- - server:
 - server:
+    root: root3
+    allow_methods: GET POST DELETE
     - location /dd:
-        dir_listing: off location4
-        allow_methods: GET location4
-        root: ./www/portfoliolocation4
+        dir_listing: off location2
+        allow_methods: GET location2
+        root: ./www/portfoliolocation2

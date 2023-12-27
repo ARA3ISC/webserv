@@ -91,22 +91,38 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
         {
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
-            // if (line.empty())
-                // break;
         }
         if (rtrim(line).find("- server:") != std::string::npos)
         {
-            std::cout << "***\n";
+            // webs.addServer(*s);
+            checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
             std::cout << "-----------\n";
         }
-        // else
-        // {
-            // std::cout << line << std::endl;
-            // checkIndentation(line, 4, nbline);
-        // }
     }
+    // if (webs.get_serverCount() == 1)
     webs.addServer(*s);
+
+}
+
+void    countServers(std::string filename)
+{
+    std::string line;
+    int count = 0;
+
+    std::ifstream obj(filename);
+    if (obj.is_open())
+    {
+        while (getline(obj, line))
+        {
+            if (rtrim(line.c_str()) == "- server:")
+                count++;
+        }
+        webs.set_serverCount(count);
+        // std::cout << webs.get_serverCount() << std::endl;
+        obj.close();
+    }
+
 }
 
 void checkServerBlock(std::ifstream &obj)
@@ -123,6 +139,12 @@ void checkServerBlock(std::ifstream &obj)
         {
             c++;
             fillServerAttr(obj, nbline);
+            for (unsigned long i = 0; i < webs.getServers().size(); i++)
+            {
+                std::cout << webs.getServers()[i].getRoot() << std::endl;
+                /* code */
+            }
+
         }
         else
             throwError(nbline);
@@ -150,6 +172,7 @@ void startParsing(std::string filename)
     std::ifstream obj(filename);
     if (obj.is_open())
     {
+        countServers(filename);
         checkServerBlock(obj);
         obj.close();
     }
