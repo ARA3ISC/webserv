@@ -22,24 +22,24 @@ std::string getFirstWord(std::string line)
     return word;
 }
 
-std::string     getSecondWord(std::string line)
-{
-    int i = 0;
-    std::string word;
-    while (line[i] && line[i] != ' ' && line[i] != '\t')
-        i++;
-    while (line[i] && (line[i] == ' ' || line[i] == '\t'))
-            i++;
-    if (!line[i])
-        return NULL;
+// std::string     getSecondWord(std::string line)
+// {
+//     int i = 0;
+//     std::string word;
+//     while (line[i] && line[i] != ' ' && line[i] != '\t')
+//         i++;
+//     while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+//             i++;
+//     if (!line[i])
+//         return NULL;
 
-    while (line[i])
-        word += line[i++];
+//     while (line[i])
+//         word += line[i++];
 
-    if (line[i] == ';' && line[i + 1] != '\0')
-        throw std::runtime_error("Error: syntax error");
-    return word;
-}
+//     if (line[i] == ';' && line[i + 1] != '\0')
+//         throw std::runtime_error("Error: syntax error");
+//     return word;
+// }
 
 int countWords(const std::string& str) {
     int count = 0;
@@ -72,4 +72,32 @@ bool is_digit(std::string arg)
         i++;
     }
     return true;
+}
+
+std::vector<std::string> splitBySpace(const std::string& input) {
+    std::istringstream iss(input);
+    std::vector<std::string> words;
+    std::string word;
+
+    while (iss >> word) {
+        words.push_back(word);
+    }
+
+    return words;
+}
+
+std::string trimStr(const std::string& str) {
+    // Find the first non-whitespace character from the beginning
+    size_t start = str.find_first_not_of(" \t\n\r");
+
+    // If the string is empty or contains only whitespaces
+    if (start == std::string::npos) {
+        return "";
+    }
+
+    // Find the last non-whitespace character from the end
+    size_t end = str.find_last_not_of(" \t\n\r");
+
+    // Return the trimmed substring
+    return str.substr(start, end - start + 1);
 }

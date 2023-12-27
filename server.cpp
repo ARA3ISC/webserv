@@ -1,21 +1,7 @@
 #include "server.hpp"
 #include "error.hpp"
-#include <sstream>
+#include "utils.hpp"
 
-
-// helpful functions
-
-std::vector<std::string> splitBySpace(const std::string& input) {
-    std::istringstream iss(input);
-    std::vector<std::string> words;
-    std::string word;
-
-    while (iss >> word) {
-        words.push_back(word);
-    }
-
-    return words;
-}
 
 // class members
 
@@ -72,12 +58,32 @@ void    server::set_listen(std::string line, int nbln) {
 
     if (splited.size() != 2)
         throwError(nbln);
-
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_listen.push_back(splited[1]);
     }
 }
 
+void    server::setRoot(std::string line, int nbln){
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+
+    if (splited.size() != 2)
+        throwError(nbln);
+
+    this->_root = splited[1];
+}
+
+location* server::createLocation()
+{
+    location* l = new location;
+    return l;
+}
+
+void server::addLocation(location location) {
+    this->_locations.push_back(location);
+    // std::cout << "location created\n";
+}
 
 server::~server() {
 }

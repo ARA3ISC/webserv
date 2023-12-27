@@ -1,6 +1,8 @@
 #include "parsingConfigFile.hpp"
 #include "error.hpp"
 #include "webserv.hpp"
+#include <string>
+
 
 webserv webs;
 
@@ -12,114 +14,137 @@ webserv webs;
 
 // }
 
-std::string rtrim(const std::string& str) {
+std::string rtrim(const std::string &str)
+{
     size_t end = str.find_last_not_of(" \t\n\r");
 
-    if (end == std::string::npos) {
+    if (end == std::string::npos)
+    {
         return "";
     }
     return str.substr(0, end + 1);
 }
 
-void    checkIndentation(std::string s, int c, int nbline)
+void checkIndentation(std::string s, int c, int &nbline)
 {
     int i;
-    for (i = 0; i < c; ++i) {
-        if (!std::isspace(s[i])) {
-            // std::cout << "[" << line[i] << "]\n";
+    for (i = 0; i < c; ++i)
+    {
+        if (!std::isspace(s[i]))
+        {
             throwError(nbline);
         }
     }
-    if (s[i] == 32 || s[i] == '\t')
+    if (s[c] && (s[c] == ' ' || s[c] == '\t'))
+    {
         throwError(nbline);
+    }
 }
 
-void    fillLocationAttr(std::ifstream &obj, std::string line, int nbline)
+void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
     // ! must get
-    while (getline(obj, line) && rtrim(line) != "- server:")
+    (void)obj;
+    // location *l = s->createLocation();
+    // l->setPath(line, nbline);
+
+    while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
     {
         nbline++;
-        if (line.empty() || is_empty(line.c_str())
-            || line.at(0) == '#')
+        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#')
             continue;
-
-
-        if (rtrim(line).find("- location") != std::string::npos)
+        // std::cout << line << std::endl;
+        if (trimStr(line).find("- location") != std::string::npos)
         {
-            checkIndentation(line, 4, nbline);
-            fillLocationAttr(obj, line, nbline);
-            // std::cout << "-------\n";
+
+            fillLocationAttr(obj, line, nbline, s);
+            return;
+
         }
         else
-        {
             checkIndentation(line, 8, nbline);
-        }
+        // std::cout <<"[" << line << "]" << std::endl;
     }
 
 }
 
-void    fillServerAttr(std::ifstream &obj, int nbline, server* s)
+void fillServerAttr(std::ifstream &obj, int &nbline)
 {
+    server *s = webs.createServer();
+
     std::string line;
-    while (getline(obj, line) && rtrim(line) != "- server:")
+    while (getline(obj, line))
     {
         nbline++;
-        if (line.empty() || is_empty(line.c_str())
-            || line.at(0) == '#')
+        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#')
             continue;
 
-        checkIndentation(line, 4, nbline);
         if (getFirstWord(line) == "server_name:")
             s->set_server_name(line, nbline);
         else if (getFirstWord(line) == "listen:")
-           s->set_listen(line, nbline);
-
-
-        if (rtrim(line).find("- location") != std::string::npos)
+            s->set_listen(line, nbline);
+        else if (getFirstWord(line) == "root:")
         {
-            // std::cout << line << '\n';
-            fillLocationAttr(obj, line, nbline);
+            s->setRoot(line, nbline);
         }
+        else if (rtrim(line).find("- location") != std::string::npos)
+        {
+            checkIndentation(line, 4, nbline);
+            fillLocationAttr(obj, line, nbline, s);
+            // if (line.empty())
+                // break;
+        }
+        if (rtrim(line).find("- server:") != std::string::npos)
+        {
+            std::cout << "***\n";
+            fillServerAttr(obj, nbline);
+            std::cout << "-----------\n";
+        }
+        // else
+        // {
+            // std::cout << line << std::endl;
+            // checkIndentation(line, 4, nbline);
+        // }
     }
-    // std::cout << *(s->getListen().begin()) << std::endl;
-    // std::cout << *(++(s->getListen().begin())) << std::endl;
-    // std::cout << s->getListen().size() << std::endl;
+    webs.addServer(*s);
 }
 
-void    checkServerBlock(std::ifstream &obj)
+void checkServerBlock(std::ifstream &obj)
 {
     std::string line;
-    int lineNb = 0;
+    int nbline = 0;
+    int c = 0;
     while (getline(obj, line))
     {
-        lineNb++;
-        if (line.empty() || is_empty(line.c_str())
-            || line.at(0) == '#' || line.at(0) == ' ' || line.at(0) == '\t')
+        nbline++;
+        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#' || trimStr(line).at(0) == 32 || trimStr(line).at(0) == '\t')
             continue;
-        if (rtrim(line) != "- server:")
-            throwError(lineNb);
-        else
+        if (rtrim(line) == "- server:")
         {
-            server* s = webs.createServer();
-            fillServerAttr(obj, lineNb, s);
-
+            c++;
+            fillServerAttr(obj, nbline);
         }
+        else
+            throwError(nbline);
     }
+    if (!c)
+        throw std::runtime_error("No server block found");
 }
 
-bool checkExtension(const std::string& fileName, const std::string& extension) {
+bool checkExtension(const std::string &fileName, const std::string &extension)
+{
     size_t dotPos = fileName.find_last_of('.');
-    if (dotPos != std::string::npos) {
+    if (dotPos != std::string::npos)
+    {
         std::string fileExtension = fileName.substr(dotPos + 1);
         return fileExtension == extension;
     }
     return false;
 }
 
-void    startParsing(std::string filename)
+void startParsing(std::string filename)
 {
-    if (!checkExtension(filename, "yaml") && !checkExtension(filename, "yml") )
+    if (!checkExtension(filename, "yaml") && !checkExtension(filename, "yml"))
         throw std::runtime_error("Invalid extension.");
 
     std::ifstream obj(filename);
@@ -131,4 +156,3 @@ void    startParsing(std::string filename)
     else
         throw std::runtime_error("Cannot open file.");
 }
-

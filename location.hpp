@@ -16,4 +16,9 @@ public:
     location(const location& rhs);
     location& operator=(const location& rhs);
     ~location();
+
+
+    void setPath(std::string line, int nbl);
+    void set_dir_listing(std::string line, int nb);
+
 };

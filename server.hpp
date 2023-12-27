@@ -27,10 +27,14 @@ public:
 
     void set_server_name(std::string line, int nbln);
     void set_listen(std::string line, int nbln);
+    void setRoot(std::string line, int nbln);
 
     std::vector<std::string> getListen(){
         return this->_listen;
     }
+    std::string getRoot(){return this->_root;}
 
 
+    location* createLocation();
+    void   addLocation(location newserv);
 };

@@ -43,7 +43,7 @@ server* webserv::createServer() {
     return s;
 }
 
-void webserv::addServer(server* newserv) {
-    this->_servers.push_back(*newserv);
+void webserv::addServer(server newserv) {
+    this->_servers.push_back(newserv);
     std::cout << "server created\n";
 }
