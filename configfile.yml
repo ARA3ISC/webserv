@@ -40,11 +40,8 @@
         dir_listing: off location2
         allow_methods: GET location2
         root: ./www/portfoliolocation2
-
-- server:
-    root: root3
-    allow_methods: GET POST DELETE
-    - location /dd:
+    - location /lherba:
         dir_listing: off location2
         allow_methods: GET location2
         root: ./www/portfoliolocation2
+

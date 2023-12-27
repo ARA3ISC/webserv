@@ -44,28 +44,27 @@ void checkIndentation(std::string s, int c, int &nbline)
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
     // ! must get
-    (void)obj;
-    // location *l = s->createLocation();
-    // l->setPath(line, nbline);
+
+    location *l = s->createLocation();
+    l->setPath(line, nbline);
 
     while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
     {
         nbline++;
         if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#')
             continue;
-        // std::cout << line << std::endl;
+
         if (trimStr(line).find("- location") != std::string::npos)
         {
-
+            s->addLocation(*l);
             fillLocationAttr(obj, line, nbline, s);
             return;
-
         }
         else
             checkIndentation(line, 8, nbline);
         // std::cout <<"[" << line << "]" << std::endl;
     }
-
+    s->addLocation(*l);
 }
 
 void fillServerAttr(std::ifstream &obj, int &nbline)
@@ -84,9 +83,7 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
         else if (getFirstWord(line) == "listen:")
             s->set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
-        {
             s->setRoot(line, nbline);
-        }
         else if (rtrim(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
@@ -94,7 +91,6 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
         }
         if (rtrim(line).find("- server:") != std::string::npos)
         {
-            // webs.addServer(*s);
             checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
             std::cout << "-----------\n";
@@ -139,11 +135,7 @@ void checkServerBlock(std::ifstream &obj)
         {
             c++;
             fillServerAttr(obj, nbline);
-            for (unsigned long i = 0; i < webs.getServers().size(); i++)
-            {
-                std::cout << webs.getServers()[i].getRoot() << std::endl;
-                /* code */
-            }
+            std::reverse(webs.getServers().begin(), webs.getServers().end());
 
         }
         else
@@ -151,6 +143,9 @@ void checkServerBlock(std::ifstream &obj)
     }
     if (!c)
         throw std::runtime_error("No server block found");
+
+
+
 }
 
 bool checkExtension(const std::string &fileName, const std::string &extension)
@@ -174,6 +169,15 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
+        // for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+        //     {
+        //         for (std::vector<location>::iterator i = it->getLocations().begin(); i < it->getLocations().end(); i++)
+        //         {
+        //             /* code */
+        //             std::cout << i->getPath() << std::endl;
+        //         }
+        //         std::cout << "****\n";
+        //     }
         obj.close();
     }
     else

@@ -21,4 +21,9 @@ public:
     void setPath(std::string line, int nbl);
     void set_dir_listing(std::string line, int nb);
 
+    std::string getPath()
+    {
+        return this->_path;
+    }
+
 };

@@ -49,7 +49,7 @@ public:
     server* createServer();
     void   addServer(server newserv);
 
-    std::vector<server> getServers() {
+    std::vector<server>& getServers() {
         return this->_servers;
     }
 };

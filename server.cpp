@@ -6,9 +6,6 @@
 // class members
 
 server::server() {}
-server::server(int locations_count) {
-    this->_locations_count = locations_count;
-}
 server::server(const server& rhs)
 {
     this->_locations_count = rhs._locations_count;
@@ -82,7 +79,12 @@ location* server::createLocation()
 
 void server::addLocation(location location) {
     this->_locations.push_back(location);
-    // std::cout << "location created\n";
+    std::cout << "location created\n";
+}
+
+std::vector<location>& server::getLocations()
+{
+    return this->_locations;
 }
 
 server::~server() {
