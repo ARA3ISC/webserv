@@ -27,6 +27,7 @@ std::string rtrim(const std::string &str)
 
 void checkIndentation(std::string s, int c, int &nbline)
 {
+    std::cout <<  "|"<<s<<"|" << std::endl;
     int i;
     for (i = 0; i < c; ++i)
     {
@@ -54,9 +55,18 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
         if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#')
             continue;
 
+        if (getFirstWord(trimStr(line)) == "dir_listing:")
+        {
+            // std::cout << line << std::endl;
+            l->set_dir_listing(line, nbline);
+        }
+
         if (trimStr(line).find("- location") != std::string::npos)
         {
             s->addLocation(*l);
+            // std::cout << line << "       00000\n";
+
+            checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
             return;
         }
@@ -84,17 +94,26 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s->set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
             s->setRoot(line, nbline);
-        else if (rtrim(line).find("- location") != std::string::npos)
+        else if (trimStr(line).find("- location") != std::string::npos)
         {
+            // std::cout << line << "       00000\n";
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
         }
-        if (rtrim(line).find("- server:") != std::string::npos)
+        else if (rtrim(line).find("- server:") != std::string::npos)
         {
             checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
-            std::cout << "-----------\n";
+            // std::cout << "-----------\n";
         }
+        else
+        {
+            // std::cout <<  "|"<<s<<"|" << std::endl;
+
+            throwError(nbline);
+        }
+        if ( !line.empty() && rtrim(line).find("- server:") == std::string::npos)
+            checkIndentation(line, 4, nbline);
     }
     // if (webs.get_serverCount() == 1)
     webs.addServer(*s);
@@ -105,12 +124,21 @@ void    countServers(std::string filename)
 {
     std::string line;
     int count = 0;
+    int ln = 0;
 
     std::ifstream obj(filename);
     if (obj.is_open())
     {
         while (getline(obj, line))
         {
+        ln++;
+            if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#' || line.at(0) == 32 || line.at(0) == '\t')
+                continue;
+            if (rtrim(line.c_str()) != "- server:")
+            {
+                std::cout << "-> "<< line << '\n';
+                throwError(ln);
+            }
             if (rtrim(line.c_str()) == "- server:")
                 count++;
         }
@@ -129,8 +157,9 @@ void checkServerBlock(std::ifstream &obj)
     while (getline(obj, line))
     {
         nbline++;
-        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#' || trimStr(line).at(0) == 32 || trimStr(line).at(0) == '\t')
+        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#' || line.at(0) == 32 || line.at(0) == '\t')
             continue;
+
         if (rtrim(line) == "- server:")
         {
             c++;
@@ -143,6 +172,7 @@ void checkServerBlock(std::ifstream &obj)
     }
     if (!c)
         throw std::runtime_error("No server block found");
+    std::cout << c << std::endl;
 
 
 
@@ -169,15 +199,14 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-        // for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-        //     {
-        //         for (std::vector<location>::iterator i = it->getLocations().begin(); i < it->getLocations().end(); i++)
-        //         {
-        //             /* code */
-        //             std::cout << i->getPath() << std::endl;
-        //         }
-        //         std::cout << "****\n";
-        //     }
+//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+//        {
+//            for (std::vector<location>::iterator i = it->getLocations().begin(); i < it->getLocations().end(); i++)
+//            {
+//                std::cout << i->get_dir_listing() << std::endl;
+//            }
+//            std::cout << "****\n";
+//        }
         obj.close();
     }
     else

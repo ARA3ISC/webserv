@@ -79,7 +79,7 @@ location* server::createLocation()
 
 void server::addLocation(location location) {
     this->_locations.push_back(location);
-    std::cout << "location created\n";
+    // std::cout << "location created\n";
 }
 
 std::vector<location>& server::getLocations()
