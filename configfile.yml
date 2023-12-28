@@ -34,7 +34,6 @@
         allow_methods: GET location2
         root: ./www/portfoliolocation2
 
-
 - server:
     root: root2
     - location /akheruahd1:

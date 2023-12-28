@@ -27,7 +27,7 @@ std::string rtrim(const std::string &str)
 
 void checkIndentation(std::string s, int c, int &nbline)
 {
-    std::cout <<  "|"<<s<<"|" << std::endl;
+    // std::cout <<  "|"<<s<<"|" << std::endl;
     int i;
     for (i = 0; i < c; ++i)
     {
@@ -48,6 +48,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 
     location *l = s->createLocation();
     l->setPath(line, nbline);
+
 
     while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
     {
@@ -74,6 +75,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             checkIndentation(line, 8, nbline);
         // std::cout <<"[" << line << "]" << std::endl;
     }
+    nbline++;
     s->addLocation(*l);
 }
 
@@ -112,8 +114,10 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
 
             throwError(nbline);
         }
-        if ( !line.empty() && rtrim(line).find("- server:") == std::string::npos)
+        if (!line.empty() && rtrim(line).find("- server:") == std::string::npos)
+        {
             checkIndentation(line, 4, nbline);
+        }
     }
     // if (webs.get_serverCount() == 1)
     webs.addServer(*s);
@@ -131,12 +135,12 @@ void    countServers(std::string filename)
     {
         while (getline(obj, line))
         {
-        ln++;
+            ln++;
             if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#' || line.at(0) == 32 || line.at(0) == '\t')
                 continue;
             if (rtrim(line.c_str()) != "- server:")
             {
-                std::cout << "-> "<< line << '\n';
+                // std::cout << "-> "<< line << '\n';
                 throwError(ln);
             }
             if (rtrim(line.c_str()) == "- server:")
@@ -165,14 +169,13 @@ void checkServerBlock(std::ifstream &obj)
             c++;
             fillServerAttr(obj, nbline);
             std::reverse(webs.getServers().begin(), webs.getServers().end());
-
         }
         else
             throwError(nbline);
     }
     if (!c)
         throw std::runtime_error("No server block found");
-    std::cout << c << std::endl;
+
 
 
 
