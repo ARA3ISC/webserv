@@ -83,14 +83,17 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             continue;
 
         if (getFirstWord(line) == "server_name:")
+        {
+//            std::cout << line << std::endl;
             s->set_server_name(line, nbline);
+        }
         else if (getFirstWord(line) == "listen:")
             s->set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
             s->setRoot(line, nbline);
         else if (getFirstWord(line) == "index:")
         {
-            s->setInndex(line, nbline);
+            s->setIndex(line, nbline);
             // std::cout << line <<  "\n";
             // std::cout << s->getIndex()[0] << "\n*******\n";
         }
@@ -204,22 +207,23 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-        {
-            for (std::vector<std::string>::iterator i = it->getInndex().begin(); i != it->getInndex().end(); i++)
-            {
-                std::cout << *i << std::endl;
-            }
-            std::cout << "****\n";
-        }
+//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+//        {
+//            for (std::vector<std::string>::iterator i = it->getIndex().begin(); i != it->getIndex().end(); i++)
+//            {
+//                std::cout << *i << std::endl;
+//            }
+//            std::cout << "****\n";
+//        }
 
 //     std::vector<server>::iterator it = webs.getServers().begin();
 //     unsigned long i = it->getInndex().size();
 //     std::cout << i << std::endl;
 
-//     std::cout << webs.getServers()[2].getInndex()[0] << std::endl;
-    // std::cout << webs.getServers()[1].getIndex()[0] << std::endl;
-    // std::cout << webs.getServers()[2].getIndex()[0] << std::endl;
+//        if (!webs.getServers()[0].get().empty())
+            std::cout << webs.getServers()[0].getMethods()[0] << std::endl;
+//     std::cout << webs.getServers()[1].getRoot() << std::endl;
+//     std::cout << webs.getServers()[2].getRoot() << std::endl;
 
         obj.close();
 

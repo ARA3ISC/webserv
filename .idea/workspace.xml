@@ -10,11 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/configfile.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configfile.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/location.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/location.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webserv.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/webserv.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +83,7 @@
       <workItem from="1703537644853" duration="2465000" />
       <workItem from="1703540796861" duration="74000" />
       <workItem from="1703715620204" duration="191000" />
+      <workItem from="1703950696783" duration="32000" />
     </task>
     <servers />
   </component>

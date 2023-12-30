@@ -29,11 +29,11 @@ public:
 	void set_server_name(std::string line, int nbln);
 	void set_listen(std::string line, int nbln);
 	void setRoot(std::string line, int nbln);
-	void setInndex(std::string line, int nbln);
+	void setIndex(std::string line, int nbln);
 	void setMethods(std::string line, int nbln);
 
 
-	std::vector<std::string>& getInndex()
+	std::vector<std::string>& getIndex()
 	{
 		return this->_indx;
 	}

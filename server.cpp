@@ -4,8 +4,14 @@
 
 
 // class members
-
-server::server() {}
+server::server() {
+    this->_root = "/";
+    this->_indx.push_back("index.html");
+    this->_indx.push_back("index.htm");
+    this->_allow_methods.push_back("GET");
+    this->_allow_methods.push_back("POST");
+    this->_allow_methods.push_back("DELETE");
+}
 server::server(const server& rhs)
 {
     this->_locations_count = rhs._locations_count;
@@ -73,7 +79,7 @@ void    server::setRoot(std::string line, int nbln){
     this->_root = splited[1];
 }
 
-void server::setInndex(std::string line, int nbln)
+void server::setIndex(std::string line, int nbln)
 {
     std::vector<std::string> splited;
 
@@ -81,6 +87,7 @@ void server::setInndex(std::string line, int nbln)
 
     if (splited.size() == 1)
         throwError(nbln);
+    this->_indx.clear();
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_indx.push_back(splited[i]);
     }
@@ -95,6 +102,7 @@ void    server::setMethods(std::string line, int nbln) {
 
     if (splited.size() == 1)
         throwError(nbln);
+    this->_allow_methods.clear();
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_allow_methods.push_back(splited[i]);
     }
