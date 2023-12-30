@@ -108,6 +108,19 @@ void    server::setMethods(std::string line, int nbln) {
     }
 }
 
+void server::setCgiPath(std::string line, int nbln)
+{
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+
+    if (splited.size() != 3)
+        throwError(nbln);
+//    this->_cgi_path.clear();
+    this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
+//    this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
+}
+
 location* server::createLocation()
 {
     location* l = new location;
@@ -123,6 +136,7 @@ std::vector<location>& server::getLocations()
 {
     return this->_locations;
 }
+
 
 server::~server() {
 }

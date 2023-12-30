@@ -98,10 +98,12 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             // std::cout << s->getIndex()[0] << "\n*******\n";
         }
         else if (getFirstWord(line) == "allow_methods:")
-        {
             s->setMethods(line, nbline);
-            // std::cout << line <<  "\n";
-            // std::cout << s->getIndex()[0] << "\n*******\n";
+        else if (getFirstWord(line) == "cgi_path:")
+        {
+//            std::cout << line <<"\n";
+            s->setCgiPath(line, nbline);
+
         }
         else if (trimStr(line).find("- location") != std::string::npos)
         {
@@ -207,22 +209,23 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-//        {
-//            for (std::vector<std::string>::iterator i = it->getIndex().begin(); i != it->getIndex().end(); i++)
-//            {
-//                std::cout << *i << std::endl;
-//            }
-//            std::cout << "****\n";
-//        }
+        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+        {
+          for (std::map<std::string, std::string>::iterator i = it->getCgiPath().begin(); i != it->getCgiPath().end(); i++)
+            {
+                std::cout << i->first << ": " << i->second << std::endl;
+            }
+            std::cout << "****\n";
+        }
 
 //     std::vector<server>::iterator it = webs.getServers().begin();
-//     unsigned long i = it->getInndex().size();
-//     std::cout << i << std::endl;
+//     std::map<std::string, std::string>::iterator  i = it->getCgiPath().begin();
+//     std::cout << i->first << ": " << i->second << std::endl;
+//     i++;
 
 //        if (!webs.getServers()[0].get().empty())
-            std::cout << webs.getServers()[0].getMethods()[0] << std::endl;
-//     std::cout << webs.getServers()[1].getRoot() << std::endl;
+//            std::cout << webs.getServers()[0].getMethods()[0] << std::endl;
+//     std::cout << webs.getServers()[0].getCgiPath()[0] << std::endl;
 //     std::cout << webs.getServers()[2].getRoot() << std::endl;
 
         obj.close();

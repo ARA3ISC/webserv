@@ -31,6 +31,7 @@ public:
 	void setRoot(std::string line, int nbln);
 	void setIndex(std::string line, int nbln);
 	void setMethods(std::string line, int nbln);
+	void setCgiPath(std::string line, int nbln);
 
 
 	std::vector<std::string>& getIndex()
@@ -45,6 +46,10 @@ public:
 	{
 		return this->_allow_methods;
 	}
+    std::map<std::string, std::string>& getCgiPath()
+	{
+          return this->_cgi_path;
+    }
 
 
 	std::vector<std::string>& getListen(){
