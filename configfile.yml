@@ -1,8 +1,18 @@
 - server:
-    server_name: server1
+    server_name: server1 kkkk1
     listen: listen1
     root: root1
+    index: index1.html index111 kk
+    #cgi_path: py /usr/bin/python3
+    #cgi_path: php /Users/maneddam/.local/bin/php-cgi
+    #cgi_path: purl /usr/bin/purl
+    #default_dir_file: error_pages/dir_ans_file.html
 
+    allow_methods: GET POST DELETE
+
+    #Error: 404 ./error_pages/404.html
+
+    #upload: ./upload
 
     - location /blog:
         dir_listing: on
@@ -18,13 +28,18 @@
 
     - location /about:
         dir_listing:  on
-        allow_methods: GET location111
+        allow_methods: Post location111
         root: ./www/portfoliolocation111
         auto_index: on location111
         index: index.html location111
 
 - server:
+    server_name: server2 kkkk2
+    listen: listen2
     root: root2
+    allow_methods: Post POST DELETE
+    index: index2.html index222
+
     - location /dd:
         dir_listing: off
         allow_methods: GET location2
@@ -34,15 +49,20 @@
         allow_methods: GET location2
         root: ./www/portfoliolocation2
 
+
 - server:
-    root: root2
+    index: index3.html index333
+    root: root3
+    server_name: server3 kkkk3
+
+    listen: listen3
+    allow_methods: DELETE POST DELETE
     - location /akheruahd1:
         dir_listing: on
         allow_methods: GET location2
         root: ./www/portfoliolocation2
     - location /akheruahd2:
-        dir_listing: off
+        dir_listing: on
         allow_methods: GET location2
         root: ./www/portfoliolocation2
-    - location /hahahahhahah:
 

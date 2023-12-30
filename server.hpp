@@ -7,35 +7,53 @@
 class server
 {
 private:
-    int _locations_count;
+	int _locations_count;
 	std::vector<std::string> _server_name;
 	std::vector<std::string> _listen;
-    std::string _root;
-    std::map<std::string, std::string> _cgi_path;
-    std::vector<std::string> _allow_methods;
-    std::vector<std::string> _error_pages;
-    std::string _upload;
-    int _client_max_body_size;
-    std::vector<location> _locations;
+	std::string _root;
+	std::vector<std::string> _indx;
+	std::map<std::string, std::string> _cgi_path;
+	std::vector<std::string> _allow_methods;
+	std::vector<std::string> _error_pages;
+	std::string _upload;
+	int _client_max_body_size;
+	std::vector<location> _locations;
 //    location* _locations;
 public:
-    server();
+	server();
 	server(int locations_count);
 	server(const server& rhs);
 	server& operator=(const server& rhs);
 	~server();
 
-    void set_server_name(std::string line, int nbln);
-    void set_listen(std::string line, int nbln);
-    void setRoot(std::string line, int nbln);
-
-    std::vector<std::string> getListen(){
-        return this->_listen;
-    }
-    std::string getRoot(){return this->_root;}
+	void set_server_name(std::string line, int nbln);
+	void set_listen(std::string line, int nbln);
+	void setRoot(std::string line, int nbln);
+	void setInndex(std::string line, int nbln);
+	void setMethods(std::string line, int nbln);
 
 
-    location* createLocation();
-    std::vector<location>& getLocations();
-    void   addLocation(location newserv);
+	std::vector<std::string>& getInndex()
+	{
+		return this->_indx;
+	}
+	std::vector<std::string>& getServer_names()
+	{
+		return this->_server_name;
+	}
+	std::vector<std::string>& getMethods()
+	{
+		return this->_allow_methods;
+	}
+
+
+	std::vector<std::string>& getListen(){
+		return this->_listen;
+	}
+	std::string getRoot(){return this->_root;}
+
+
+	location* createLocation();
+	std::vector<location>& getLocations();
+	void   addLocation(location newserv);
 };

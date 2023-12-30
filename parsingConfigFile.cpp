@@ -44,12 +44,8 @@ void checkIndentation(std::string s, int c, int &nbline)
 
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
-    // ! must get
-
     location *l = s->createLocation();
     l->setPath(line, nbline);
-
-
     while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
     {
         nbline++;
@@ -58,22 +54,18 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 
         if (getFirstWord(trimStr(line)) == "dir_listing:")
         {
-            // std::cout << line << std::endl;
             l->set_dir_listing(line, nbline);
         }
 
         if (trimStr(line).find("- location") != std::string::npos)
         {
             s->addLocation(*l);
-            // std::cout << line << "       00000\n";
-
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
             return;
         }
         else
             checkIndentation(line, 8, nbline);
-        // std::cout <<"[" << line << "]" << std::endl;
     }
     nbline++;
     s->addLocation(*l);
@@ -96,32 +88,44 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s->set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
             s->setRoot(line, nbline);
+        else if (getFirstWord(line) == "index:")
+        {
+            s->setInndex(line, nbline);
+            // std::cout << line <<  "\n";
+            // std::cout << s->getIndex()[0] << "\n*******\n";
+        }
+        else if (getFirstWord(line) == "allow_methods:")
+        {
+            s->setMethods(line, nbline);
+            // std::cout << line <<  "\n";
+            // std::cout << s->getIndex()[0] << "\n*******\n";
+        }
         else if (trimStr(line).find("- location") != std::string::npos)
         {
-            // std::cout << line << "       00000\n";
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
         }
-        else if (rtrim(line).find("- server:") != std::string::npos)
+        if (rtrim(line).find("- server:") != std::string::npos)
         {
             checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
-            // std::cout << "-----------\n";
         }
-        else
-        {
-            // std::cout <<  "|"<<s<<"|" << std::endl;
-
-            throwError(nbline);
-        }
+        // else
+        // {
+        //     throwError(nbline);
+        // }
         if (!line.empty() && rtrim(line).find("- server:") == std::string::npos)
         {
             checkIndentation(line, 4, nbline);
         }
     }
     // if (webs.get_serverCount() == 1)
-    webs.addServer(*s);
+    webs.addServer(s);
 
+     static int i;
+//    std::cout << "server : "<< webs.getServers()[i].getRoot() << " -> " << webs.getServers()[i].getInndex()[0] << std::endl;
+     i++;
+    delete s;
 }
 
 void    countServers(std::string filename)
@@ -153,7 +157,7 @@ void    countServers(std::string filename)
 
 }
 
-void checkServerBlock(std::ifstream &obj)
+void    checkServerBlock(std::ifstream &obj)
 {
     std::string line;
     int nbline = 0;
@@ -175,8 +179,6 @@ void checkServerBlock(std::ifstream &obj)
     }
     if (!c)
         throw std::runtime_error("No server block found");
-
-
 
 
 }
@@ -202,15 +204,25 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-//        {
-//            for (std::vector<location>::iterator i = it->getLocations().begin(); i < it->getLocations().end(); i++)
-//            {
-//                std::cout << i->get_dir_listing() << std::endl;
-//            }
-//            std::cout << "****\n";
-//        }
+        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+        {
+            for (std::vector<std::string>::iterator i = it->getInndex().begin(); i != it->getInndex().end(); i++)
+            {
+                std::cout << *i << std::endl;
+            }
+            std::cout << "****\n";
+        }
+
+//     std::vector<server>::iterator it = webs.getServers().begin();
+//     unsigned long i = it->getInndex().size();
+//     std::cout << i << std::endl;
+
+//     std::cout << webs.getServers()[2].getInndex()[0] << std::endl;
+    // std::cout << webs.getServers()[1].getIndex()[0] << std::endl;
+    // std::cout << webs.getServers()[2].getIndex()[0] << std::endl;
+
         obj.close();
+
     }
     else
         throw std::runtime_error("Cannot open file.");
