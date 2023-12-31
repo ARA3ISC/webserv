@@ -30,4 +30,9 @@ public:
         return this->_path;
     }
 
+
+    std::vector<std::string>& getMethods()
+    {
+        return this->_allow_methods;
+    }
 };

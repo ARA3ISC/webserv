@@ -10,6 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configfile.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configfile.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/location.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/location.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/location.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/location.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
@@ -84,6 +89,7 @@
       <workItem from="1703540796861" duration="74000" />
       <workItem from="1703715620204" duration="191000" />
       <workItem from="1703950696783" duration="32000" />
+      <workItem from="1704036931342" duration="1880000" />
     </task>
     <servers />
   </component>

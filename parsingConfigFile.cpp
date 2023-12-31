@@ -1,6 +1,7 @@
 #include "parsingConfigFile.hpp"
 #include "error.hpp"
 #include "webserv.hpp"
+//#include "location.hpp"
 #include <string>
 
 
@@ -33,11 +34,13 @@ void checkIndentation(std::string s, int c, int &nbline)
     {
         if (!std::isspace(s[i]))
         {
+
             throwError(nbline);
         }
     }
     if (s[c] && (s[c] == ' ' || s[c] == '\t'))
     {
+        std::cout << "[" << s[c] << c << "]" << std::endl;
         throwError(nbline);
     }
 }
@@ -62,6 +65,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             s->addLocation(*l);
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
+            delete l;
             return;
         }
         else
@@ -69,6 +73,8 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
     }
     nbline++;
     s->addLocation(*l);
+    // should re-test later after adding this delete
+    delete l;
 }
 
 void fillServerAttr(std::ifstream &obj, int &nbline)
@@ -92,19 +98,14 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
         else if (getFirstWord(line) == "root:")
             s->setRoot(line, nbline);
         else if (getFirstWord(line) == "index:")
-        {
             s->setIndex(line, nbline);
-            // std::cout << line <<  "\n";
-            // std::cout << s->getIndex()[0] << "\n*******\n";
-        }
         else if (getFirstWord(line) == "allow_methods:")
             s->setMethods(line, nbline);
         else if (getFirstWord(line) == "cgi_path:")
-        {
-//            std::cout << line <<"\n";
             s->setCgiPath(line, nbline);
+        else if (getFirstWord(line) == "client_max_body_size:")
+            s->setMaxBodySize(line, nbline);
 
-        }
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
@@ -119,12 +120,13 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
         // {
         //     throwError(nbline);
         // }
-        if (!line.empty() && rtrim(line).find("- server:") == std::string::npos)
-        {
-            checkIndentation(line, 4, nbline);
-        }
+//        if (!line.empty() && rtrim(line).find("- server:") == std::string::npos)
+//        {
+//                        std::cout << "--     " << line << std::endl;
+//
+//            checkIndentation(line, 4, nbline);
+//        }
     }
-    // if (webs.get_serverCount() == 1)
     webs.addServer(s);
 
      static int i;
@@ -180,7 +182,10 @@ void    checkServerBlock(std::ifstream &obj)
             std::reverse(webs.getServers().begin(), webs.getServers().end());
         }
         else
+        {
+//            std::cout << line << std::endl;
             throwError(nbline);
+        }
     }
     if (!c)
         throw std::runtime_error("No server block found");
@@ -209,12 +214,21 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
+
+//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+//        {
+//            for (std::vector<location>::iterator l = it->getLocations().begin(); l != it->getLocations().end(); ++l)
+//            {
+//                for (std::vector<std::string>::iterator i = l->getMethods().begin(); i != l->getMethods().end(); i++)
+//                {
+//                    std::cout << *i << std::endl;
+//                }
+//            }
+//            std::cout << "****\n";
+//        }
         for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
         {
-          for (std::map<std::string, std::string>::iterator i = it->getCgiPath().begin(); i != it->getCgiPath().end(); i++)
-            {
-                std::cout << i->first << ": " << i->second << std::endl;
-            }
+            std::cout << it->getMaxBodySize() << std::endl;
             std::cout << "****\n";
         }
 

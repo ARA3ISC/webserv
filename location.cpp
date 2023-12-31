@@ -1,8 +1,13 @@
 #include "location.hpp"
+#include "server.hpp"
 #include "utils.hpp"
 #include "error.hpp"
 
-location::location(): _dir_listing(false) {}
+location::location(): _dir_listing(false)
+{
+//    server s;
+//    this->_allow_methods = s.getMethods();
+}
 location::location(const location &rhs) {
     this->_path = rhs._path;
     this->_dir_listing = rhs._dir_listing;

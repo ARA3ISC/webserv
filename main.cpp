@@ -1,7 +1,8 @@
 #include "parsingConfigFile.hpp"
+#include <sys/qos.h>
 
 
-int main(int ac, char *av[])
+void m(int ac, char *av[])
 {
     try {
         if (ac > 2)
@@ -16,5 +17,11 @@ int main(int ac, char *av[])
         std::cerr << e.what() << std::endl;
     }
 
-    return 0;
+//    return 0;
+}
+
+int main(int ac, char **av)
+{
+    m(ac, av);
+//    system("leaks webserv");
 }

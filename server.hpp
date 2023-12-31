@@ -14,9 +14,9 @@ private:
 	std::vector<std::string> _indx;
 	std::map<std::string, std::string> _cgi_path;
 	std::vector<std::string> _allow_methods;
+	int _client_max_body_size;
 	std::vector<std::string> _error_pages;
 	std::string _upload;
-	int _client_max_body_size;
 	std::vector<location> _locations;
 //    location* _locations;
 public:
@@ -32,6 +32,7 @@ public:
 	void setIndex(std::string line, int nbln);
 	void setMethods(std::string line, int nbln);
 	void setCgiPath(std::string line, int nbln);
+    void setMaxBodySize(std::string line, int nbln);
 
 
 	std::vector<std::string>& getIndex()
@@ -50,13 +51,11 @@ public:
 	{
           return this->_cgi_path;
     }
-
-
 	std::vector<std::string>& getListen(){
 		return this->_listen;
 	}
 	std::string getRoot(){return this->_root;}
-
+    int getMaxBodySize() {return this->_client_max_body_size;}
 
 	location* createLocation();
 	std::vector<location>& getLocations();

@@ -1,6 +1,7 @@
 #include "server.hpp"
 #include "error.hpp"
 #include "utils.hpp"
+#include <stdexcept>
 
 
 // class members
@@ -11,6 +12,7 @@ server::server() {
     this->_allow_methods.push_back("GET");
     this->_allow_methods.push_back("POST");
     this->_allow_methods.push_back("DELETE");
+    this->_client_max_body_size = 2000;
 }
 server::server(const server& rhs)
 {
@@ -116,9 +118,23 @@ void server::setCgiPath(std::string line, int nbln)
 
     if (splited.size() != 3)
         throwError(nbln);
-//    this->_cgi_path.clear();
+    if (this->_cgi_path.find(splited[1]) != this->_cgi_path.end())
+    {
+        std::cout << "Duplicated key (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
+
     this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
-//    this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
+}
+
+void server::setMaxBodySize(std::string line, int nbln) {
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+
+    if (splited.size() != 2)
+        throwError(nbln);
+    this->_client_max_body_size = std::stoi(splited[1]);
 }
 
 location* server::createLocation()
