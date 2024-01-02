@@ -125,6 +125,7 @@ void server::setCgiPath(std::string line, int nbln)
     }
 
     this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
+
 }
 
 void server::setMaxBodySize(std::string line, int nbln) {

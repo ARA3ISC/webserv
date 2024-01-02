@@ -55,7 +55,19 @@ void location::set_dir_listing(std::string line, int nbl)
         this->_dir_listing = true;
     else
         this->_dir_listing = false;
+}
 
+void    location::setMethods(std::string line, int nbln) {
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+
+    if (splited.size() == 1)
+        throwError(nbln);
+    this->_allow_methods.clear();
+    for (unsigned long i = 1; i < splited.size(); ++i) {
+        this->_allow_methods.push_back(splited[i]);
+    }
 }
 
 location::~location() {}

@@ -59,7 +59,8 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
         {
             l->set_dir_listing(line, nbline);
         }
-
+        else if (getFirstWord(trimStr(line)) == "allow_methods:")
+            l->setMethods(line, nbline);
         if (trimStr(line).find("- location") != std::string::npos)
         {
             s->addLocation(*l);
@@ -226,11 +227,11 @@ void startParsing(std::string filename)
 //            }
 //            std::cout << "****\n";
 //        }
-        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-        {
-            std::cout << it->getMaxBodySize() << std::endl;
-            std::cout << "****\n";
-        }
+//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+//        {
+//            std::cout << it->getMaxBodySize() << std::endl;
+//            std::cout << "****\n";
+//        }
 
 //     std::vector<server>::iterator it = webs.getServers().begin();
 //     std::map<std::string, std::string>::iterator  i = it->getCgiPath().begin();
@@ -239,8 +240,32 @@ void startParsing(std::string filename)
 
 //        if (!webs.getServers()[0].get().empty())
 //            std::cout << webs.getServers()[0].getMethods()[0] << std::endl;
-//     std::cout << webs.getServers()[0].getCgiPath()[0] << std::endl;
 //     std::cout << webs.getServers()[2].getRoot() << std::endl;
+
+//     std::cout << webs.getServers()[0].getServer_names()[0] << std::endl;
+//     std::cout << webs.getServers()[0].getListen()[0] << std::endl;
+//     std::cout << webs.getServers()[0].getRoot() << std::endl;
+//     std::cout << webs.getServers()[0].getIndex()[0] << std::endl;
+//     std::cout << webs.getServers()[0].getCgiPath().size() << std::endl;
+//     std::cout << (webs.getServers()[0].getCgiPath().begin())->first << ": " << (webs.getServers()[0].getCgiPath().begin())->second << std::endl;
+//     std::cout << (++webs.getServers()[0].getCgiPath().begin())->first << ": " << (++webs.getServers()[0].getCgiPath().begin())->second << std::endl;
+//     std::cout << (++(++webs.getServers()[0].getCgiPath().begin()))->first << ": " << (++(++webs.getServers()[0].getCgiPath().begin()))->second << std::endl;
+
+//     std::cout << webs.getServers()[0].getMaxBodySize() << std::endl;
+//     std::cout << webs.getServers()[0].getLocations()[0].get_dir_listing() << std::endl;
+     std::cout << webs.getServers()[0].getLocations()[2].getMethods()[0] << std::endl;
+//     std::cout << webs.getServers()[0].getLocations()[0].getMethods()[1] << std::endl;
+//     std::cout << webs.getServers()[0].getLocations()[0].getMethods()[2] << std::endl;
+
+
+//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+//        {
+//            for (std::map<std::string, std::string>::iterator l = it->getCgiPath().begin(); l != it->getCgiPath().end(); ++l)
+//            {
+//                std::cout << l->first << ": " << l->second << std::endl;
+//            }
+//            std::cout << "****\n";
+//        }
 
         obj.close();
 

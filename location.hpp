@@ -20,6 +20,7 @@ public:
 
     void setPath(std::string line, int nbl);
     void set_dir_listing(std::string line, int nb);
+    void setMethods(std::string line, int nbln);
     bool get_dir_listing()
     {
         return this->_dir_listing;
