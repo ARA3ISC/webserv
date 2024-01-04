@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <vector>
+
+#include "parsingConfigFile.hpp"
+
 class location
 {
 private:
@@ -21,15 +24,17 @@ public:
     void setPath(std::string line, int nbl);
     void set_dir_listing(std::string line, int nb);
     void setMethods(std::string line, int nbln);
+
+
     bool get_dir_listing()
     {
         return this->_dir_listing;
     }
-
     std::string getPath()
     {
         return this->_path;
     }
+//    std::vector<std::string>& getMethods() {return this->_allow_methods;}
 
 
     std::vector<std::string>& getMethods()

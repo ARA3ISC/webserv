@@ -69,6 +69,8 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             delete l;
             return;
         }
+        else if (invalid_directive(trimStr(line), 1))
+            throwError(nbline);
         else
             checkIndentation(line, 8, nbline);
     }
@@ -90,10 +92,7 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             continue;
 
         if (getFirstWord(line) == "server_name:")
-        {
-//            std::cout << line << std::endl;
             s->set_server_name(line, nbline);
-        }
         else if (getFirstWord(line) == "listen:")
             s->set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
@@ -106,25 +105,23 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s->setCgiPath(line, nbline);
         else if (getFirstWord(line) == "client_max_body_size:")
             s->setMaxBodySize(line, nbline);
-
+        else if (getFirstWord(line) == "error:")
+            s->setErrorPages(line, nbline);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
         }
+        else if (invalid_directive(trimStr(line), 0))
+             throwError(nbline);
         if (rtrim(line).find("- server:") != std::string::npos)
         {
             checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
         }
-        // else
-        // {
-        //     throwError(nbline);
-        // }
-//        if (!line.empty() && rtrim(line).find("- server:") == std::string::npos)
+//        else
 //        {
-//                        std::cout << "--     " << line << std::endl;
-//
+//            std::cout << " - " << line << std::endl;
 //            checkIndentation(line, 4, nbline);
 //        }
     }
@@ -234,9 +231,12 @@ void startParsing(std::string filename)
 //        }
 
 //     std::vector<server>::iterator it = webs.getServers().begin();
-//     std::map<std::string, std::string>::iterator  i = it->getCgiPath().begin();
+//     it++;
+//     it++;
+//     std::map<int, std::string>::iterator  i = it->get_error_pages().begin();
 //     std::cout << i->first << ": " << i->second << std::endl;
 //     i++;
+//     std::cout << i->first << ": " << i->second << std::endl;
 
 //        if (!webs.getServers()[0].get().empty())
 //            std::cout << webs.getServers()[0].getMethods()[0] << std::endl;
@@ -253,7 +253,7 @@ void startParsing(std::string filename)
 
 //     std::cout << webs.getServers()[0].getMaxBodySize() << std::endl;
 //     std::cout << webs.getServers()[0].getLocations()[0].get_dir_listing() << std::endl;
-     std::cout << webs.getServers()[0].getLocations()[2].getMethods()[0] << std::endl;
+//     std::cout << webs.getServers()[0].getLocations()[0].getMethods().size() << std::endl;
 //     std::cout << webs.getServers()[0].getLocations()[0].getMethods()[1] << std::endl;
 //     std::cout << webs.getServers()[0].getLocations()[0].getMethods()[2] << std::endl;
 

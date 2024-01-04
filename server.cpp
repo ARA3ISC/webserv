@@ -22,6 +22,7 @@ server::server(const server& rhs)
     this->_root = rhs._root;
     this->_indx = rhs._indx;
     this->_cgi_path = rhs._cgi_path;
+    this->_error_pages = rhs._error_pages;
     this->_allow_methods = rhs._allow_methods;
     this->_upload = rhs._upload;
     this->_client_max_body_size = rhs._client_max_body_size;
@@ -37,6 +38,7 @@ server &server::operator=(const server &rhs) {
         this->_root = rhs._root;
         this->_indx = rhs._indx;
         this->_cgi_path = rhs._cgi_path;
+        this->_error_pages = rhs._error_pages;
         this->_allow_methods = rhs._allow_methods;
         this->_upload = rhs._upload;
         this->_client_max_body_size = rhs._client_max_body_size;
@@ -49,6 +51,8 @@ void    server::set_server_name(std::string line, int nbln) {
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() < 2)
         throwError(nbln);
@@ -62,18 +66,22 @@ void    server::set_listen(std::string line, int nbln) {
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
 
-    if (splited.size() != 2)
+    if (splited.size() != 2 || isNaN(splited[1]))
         throwError(nbln);
-    for (unsigned long i = 1; i < splited.size(); ++i) {
-        this->_listen.push_back(splited[i]);
-    }
+
+    if (!this->_listen.empty())
+        throwError(nbln);
+    this->_listen = splited[1];
 }
 
 void    server::setRoot(std::string line, int nbln){
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() != 2)
         throwError(nbln);
@@ -86,6 +94,7 @@ void server::setIndex(std::string line, int nbln)
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
 
     if (splited.size() == 1)
         throwError(nbln);
@@ -101,9 +110,20 @@ void    server::setMethods(std::string line, int nbln) {
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
 
     if (splited.size() == 1)
         throwError(nbln);
+    if (invalidMethod(splited))
+    {
+        std::cout << "Invalid method (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
+    if (hasDuplicates(splited))
+    {
+        std::cout << "Duplicated symbol (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
     this->_allow_methods.clear();
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_allow_methods.push_back(splited[i]);
@@ -115,9 +135,16 @@ void server::setCgiPath(std::string line, int nbln)
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() != 3)
         throwError(nbln);
+    if (invalidCgi(splited[1]))
+    {
+        std::cout << "Invalid cgi (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
     if (this->_cgi_path.find(splited[1]) != this->_cgi_path.end())
     {
         std::cout << "Duplicated key (line: " << nbln << ")";
@@ -132,10 +159,34 @@ void server::setMaxBodySize(std::string line, int nbln) {
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() != 2)
         throwError(nbln);
     this->_client_max_body_size = std::stoi(splited[1]);
+}
+
+void server::setErrorPages(std::string line, int nbln)
+{
+    std::vector<std::string> splited;
+    splited = splitBySpace(line);
+    removeComment(splited);
+
+
+    if (splited.size() != 3)
+        throwError(nbln);
+//    std::cout << "****\n";
+    if (!is_digit(splited[1]))
+        throwError(nbln);
+    if (this->_error_pages.find(std::stoi(splited[1])) != this->_error_pages.end())
+    {
+        std::cout << "Duplicated key (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
+
+    this->_error_pages.insert(std::pair<int, std::string>(std::stoi(splited[1]), splited[2]));
+
 }
 
 location* server::createLocation()

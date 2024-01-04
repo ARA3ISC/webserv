@@ -63,7 +63,6 @@ int countWords(const std::string& str) {
 
 bool is_digit(std::string arg)
 {
-//    std::cout << arg << std::endl;
     int i = 0;
     while (arg[i])
     {
@@ -100,4 +99,26 @@ std::string trimStr(const std::string& str) {
 
     // Return the trimmed substring
     return str.substr(start, end - start + 1);
+}
+
+bool isNaN(std::string str)
+{
+    int i = 0;
+    while (str[i])
+    {
+        if (!isdigit(str[i]))
+            return true;
+        i++;
+    }
+    return false;
+}
+
+void    removeComment(std::vector<std::string>& splited)
+{
+    for (unsigned long i = 0; i < splited.size(); ++i) {
+        if (splited[i].at(0) == '#') {
+            splited.erase(splited.begin() + i, splited.end());
+            break;
+        }
+    }
 }

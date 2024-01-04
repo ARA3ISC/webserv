@@ -9,16 +9,15 @@ class server
 private:
 	int _locations_count;
 	std::vector<std::string> _server_name;
-	std::vector<std::string> _listen;
+	std::string _listen;
 	std::string _root;
 	std::vector<std::string> _indx;
 	std::map<std::string, std::string> _cgi_path;
 	std::vector<std::string> _allow_methods;
 	int _client_max_body_size;
-	std::vector<std::string> _error_pages;
+    std::map<int, std::string> _error_pages;
 	std::string _upload;
 	std::vector<location> _locations;
-//    location* _locations;
 public:
 	server();
 	server(int locations_count);
@@ -33,6 +32,7 @@ public:
 	void setMethods(std::string line, int nbln);
 	void setCgiPath(std::string line, int nbln);
     void setMaxBodySize(std::string line, int nbln);
+    void setErrorPages(std::string line, int nbln);
 
 
 	std::vector<std::string>& getIndex()
@@ -51,11 +51,16 @@ public:
 	{
           return this->_cgi_path;
     }
-	std::vector<std::string>& getListen(){
+	std::string& getListen(){
 		return this->_listen;
 	}
 	std::string getRoot(){return this->_root;}
     int getMaxBodySize() {return this->_client_max_body_size;}
+    std::map<int, std::string>& get_error_pages()
+    {
+        return this->_error_pages;
+    }
+
 
 	location* createLocation();
 	std::vector<location>& getLocations();

@@ -34,6 +34,8 @@ void    location::setPath(std::string line, int nbl)
 {
     std::vector<std::string> splited;
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() != 2 && splited.size() != 3)
         throwError(nbl);
@@ -47,6 +49,8 @@ void location::set_dir_listing(std::string line, int nbl)
 {
     std::vector<std::string> splited;
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off") )
         throwError(nbl);
@@ -61,9 +65,21 @@ void    location::setMethods(std::string line, int nbln) {
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
+    removeComment(splited);
+
 
     if (splited.size() == 1)
         throwError(nbln);
+    if (invalidMethod(splited))
+    {
+        std::cout << "Invalid method (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
+    if (hasDuplicates(splited))
+    {
+        std::cout << "Duplicated symbol (line: " << nbln << ")";
+        throw std::runtime_error("");
+    }
     this->_allow_methods.clear();
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_allow_methods.push_back(splited[i]);
