@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 
-void    throwError(int nb);
+void    throwError(std::string str, int nb);
 bool invalidCgi(std::string cgi);
 bool    invalid_directive(std::string line, int c);
 bool invalidMethod(std::vector<std::string> splited);

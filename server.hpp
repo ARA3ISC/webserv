@@ -33,6 +33,7 @@ public:
 	void setCgiPath(std::string line, int nbln);
     void setMaxBodySize(std::string line, int nbln);
     void setErrorPages(std::string line, int nbln);
+    void setUpload(std::string line, int nbln);
 
 
 	std::vector<std::string>& getIndex()
@@ -60,7 +61,7 @@ public:
     {
         return this->_error_pages;
     }
-
+    std::string getUpload() {return this->_upload;}
 
 	location* createLocation();
 	std::vector<location>& getLocations();

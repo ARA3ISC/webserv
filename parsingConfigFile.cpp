@@ -35,13 +35,13 @@ void checkIndentation(std::string s, int c, int &nbline)
         if (!std::isspace(s[i]))
         {
 
-            throwError(nbline);
+            throwError("Indentation error", nbline);
         }
     }
     if (s[c] && (s[c] == ' ' || s[c] == '\t'))
     {
         std::cout << "[" << s[c] << c << "]" << std::endl;
-        throwError(nbline);
+        throwError("Indentation error", nbline);
     }
 }
 
@@ -70,7 +70,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             return;
         }
         else if (invalid_directive(trimStr(line), 1))
-            throwError(nbline);
+            throwError("Invalid direction error", nbline);
         else
             checkIndentation(line, 8, nbline);
     }
@@ -107,29 +107,22 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s->setMaxBodySize(line, nbline);
         else if (getFirstWord(line) == "error:")
             s->setErrorPages(line, nbline);
+        else if (getFirstWord(line) == "upload:")
+            s->setUpload(line, nbline);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
         }
         else if (invalid_directive(trimStr(line), 0))
-             throwError(nbline);
+             throwError("Invalid direction error", nbline);
         if (rtrim(line).find("- server:") != std::string::npos)
         {
             checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
         }
-//        else
-//        {
-//            std::cout << " - " << line << std::endl;
-//            checkIndentation(line, 4, nbline);
-//        }
     }
     webs.addServer(s);
-
-     static int i;
-//    std::cout << "server : "<< webs.getServers()[i].getRoot() << " -> " << webs.getServers()[i].getInndex()[0] << std::endl;
-     i++;
     delete s;
 }
 
@@ -150,7 +143,7 @@ void    countServers(std::string filename)
             if (rtrim(line.c_str()) != "- server:")
             {
                 // std::cout << "-> "<< line << '\n';
-                throwError(ln);
+                throwError("Syntax error", ln);
             }
             if (rtrim(line.c_str()) == "- server:")
                 count++;
@@ -160,6 +153,24 @@ void    countServers(std::string filename)
         obj.close();
     }
 
+}
+
+void missing(std::string directive, int s)
+{
+    std::string msg;
+    msg = "Missing " + directive + " server number " + std::to_string(s);
+    throw std::runtime_error(msg.c_str());
+}
+
+void    checkMissingData()
+{
+    int s = 0;
+    for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
+    {
+        s++;
+        if (it->getRoot().empty())
+            missing("root", s);
+    }
 }
 
 void    checkServerBlock(std::ifstream &obj)
@@ -178,11 +189,11 @@ void    checkServerBlock(std::ifstream &obj)
             c++;
             fillServerAttr(obj, nbline);
             std::reverse(webs.getServers().begin(), webs.getServers().end());
+            checkMissingData();
         }
         else
         {
-//            std::cout << line << std::endl;
-            throwError(nbline);
+            throwError("Syntax error", nbline);
         }
     }
     if (!c)
@@ -226,7 +237,7 @@ void startParsing(std::string filename)
 //        }
 //        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
 //        {
-//            std::cout << it->getMaxBodySize() << std::endl;
+//            std::cout << it->getRoot() << std::endl;
 //            std::cout << "****\n";
 //        }
 

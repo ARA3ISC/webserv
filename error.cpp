@@ -1,8 +1,8 @@
 #include "error.hpp"
 
-void        throwError(int nb)
+void        throwError(std::string str, int nb)
 {
-    std::string msg = "syntax error (line: " + std::to_string(nb) + ")";
+    std::string msg = str + " (line: " + std::to_string(nb) + ")";
     throw std::runtime_error(msg.c_str());
 }
 

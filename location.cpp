@@ -38,7 +38,7 @@ void    location::setPath(std::string line, int nbl)
 
 
     if (splited.size() != 2 && splited.size() != 3)
-        throwError(nbl);
+        throwError("Syntax error", nbl);
     if (splited.size() == 2)
         this->_path = "/";
     else
@@ -53,7 +53,7 @@ void location::set_dir_listing(std::string line, int nbl)
 
 
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off") )
-        throwError(nbl);
+        throwError("Syntax error", nbl);
 
     if (splited[1] == "on")
         this->_dir_listing = true;
@@ -69,7 +69,7 @@ void    location::setMethods(std::string line, int nbln) {
 
 
     if (splited.size() == 1)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     if (invalidMethod(splited))
     {
         std::cout << "Invalid method (line: " << nbln << ")";

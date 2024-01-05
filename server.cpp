@@ -6,12 +6,8 @@
 
 // class members
 server::server() {
-    this->_root = "/";
     this->_indx.push_back("index.html");
     this->_indx.push_back("index.htm");
-    this->_allow_methods.push_back("GET");
-    this->_allow_methods.push_back("POST");
-    this->_allow_methods.push_back("DELETE");
     this->_client_max_body_size = 2000;
 }
 server::server(const server& rhs)
@@ -55,7 +51,7 @@ void    server::set_server_name(std::string line, int nbln) {
 
 
     if (splited.size() < 2)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_server_name.push_back(splited[i]);
     }
@@ -69,10 +65,10 @@ void    server::set_listen(std::string line, int nbln) {
     removeComment(splited);
 
     if (splited.size() != 2 || isNaN(splited[1]))
-        throwError(nbln);
+        throwError("Syntax error", nbln);
 
     if (!this->_listen.empty())
-        throwError(nbln);
+        throwError("Duplicated directive", nbln);
     this->_listen = splited[1];
 }
 
@@ -84,7 +80,7 @@ void    server::setRoot(std::string line, int nbln){
 
 
     if (splited.size() != 2)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
 
     this->_root = splited[1];
 }
@@ -97,7 +93,7 @@ void server::setIndex(std::string line, int nbln)
     removeComment(splited);
 
     if (splited.size() == 1)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     this->_indx.clear();
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_indx.push_back(splited[i]);
@@ -113,17 +109,14 @@ void    server::setMethods(std::string line, int nbln) {
     removeComment(splited);
 
     if (splited.size() == 1)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     if (invalidMethod(splited))
     {
         std::cout << "Invalid method (line: " << nbln << ")";
         throw std::runtime_error("");
     }
     if (hasDuplicates(splited))
-    {
-        std::cout << "Duplicated symbol (line: " << nbln << ")";
-        throw std::runtime_error("");
-    }
+        throwError("Duplicated symbol", nbln);
     this->_allow_methods.clear();
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_allow_methods.push_back(splited[i]);
@@ -139,17 +132,11 @@ void server::setCgiPath(std::string line, int nbln)
 
 
     if (splited.size() != 3)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     if (invalidCgi(splited[1]))
-    {
-        std::cout << "Invalid cgi (line: " << nbln << ")";
-        throw std::runtime_error("");
-    }
+        throwError("Invalid cgi", nbln);
     if (this->_cgi_path.find(splited[1]) != this->_cgi_path.end())
-    {
-        std::cout << "Duplicated key (line: " << nbln << ")";
-        throw std::runtime_error("");
-    }
+        throwError("Duplicated symbol", nbln);
 
     this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
 
@@ -163,7 +150,7 @@ void server::setMaxBodySize(std::string line, int nbln) {
 
 
     if (splited.size() != 2)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     this->_client_max_body_size = std::stoi(splited[1]);
 }
 
@@ -175,10 +162,10 @@ void server::setErrorPages(std::string line, int nbln)
 
 
     if (splited.size() != 3)
-        throwError(nbln);
+        throwError("Syntax error", nbln);
 //    std::cout << "****\n";
     if (!is_digit(splited[1]))
-        throwError(nbln);
+        throwError("Syntax error", nbln);
     if (this->_error_pages.find(std::stoi(splited[1])) != this->_error_pages.end())
     {
         std::cout << "Duplicated key (line: " << nbln << ")";
@@ -186,7 +173,19 @@ void server::setErrorPages(std::string line, int nbln)
     }
 
     this->_error_pages.insert(std::pair<int, std::string>(std::stoi(splited[1]), splited[2]));
+}
 
+void    server::setUpload(std::string line, int nbln)
+{
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+    removeComment(splited);
+
+
+    if (splited.size() != 2)
+        throwError("Syntax error", nbln);
+    this->_upload = splited[1];
 }
 
 location* server::createLocation()
