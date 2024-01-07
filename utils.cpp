@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "inc/utils.hpp"
 
 int is_empty(const char *s) {
     while (*s != '\0') {

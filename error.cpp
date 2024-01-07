@@ -1,4 +1,4 @@
-#include "error.hpp"
+#include "inc/error.hpp"
 
 void        throwError(std::string str, int nb)
 {

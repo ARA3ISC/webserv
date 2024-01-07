@@ -1,4 +1,5 @@
-#include "parsingConfigFile.hpp"
+#include "inc/parsingConfigFile.hpp"
+#include "inc/setUpServer.hpp"
 #include <sys/qos.h>
 
 
@@ -8,9 +9,14 @@ void m(int ac, char *av[])
         if (ac > 2)
             throw std::runtime_error("Invalid arguments number");
         else if (ac == 2)
+        {
             startParsing(av[1]);
+            startSetUp();
+        }
         else if (ac == 1)
+        {
             startParsing("configfile.yaml");
+        }
     }
     catch (std::exception& e)
     {
