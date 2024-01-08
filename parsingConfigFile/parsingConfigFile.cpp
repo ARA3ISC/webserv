@@ -1,6 +1,6 @@
-#include "inc/parsingConfigFile.hpp"
-#include "inc/error.hpp"
-#include "inc/webserv.hpp"
+#include "../inc/parsingConfigFile.hpp"
+#include "../inc/error.hpp"
+#include "../inc/webserv.hpp"
 //#include "location.hpp"
 #include <string>
 

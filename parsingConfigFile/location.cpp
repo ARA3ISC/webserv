@@ -1,7 +1,7 @@
-#include "inc/location.hpp"
-#include "inc/server.hpp"
-#include "inc/utils.hpp"
-#include "inc/error.hpp"
+#include "../inc/location.hpp"
+#include "../inc/server.hpp"
+#include "../inc/utils.hpp"
+#include "../inc/error.hpp"
 
 location::location(): _dir_listing(false)
 {

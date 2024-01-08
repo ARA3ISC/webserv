@@ -11,13 +11,14 @@
   <component name="ChangeListManager">
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configfile.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configfile.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/error.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/error.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/error.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/location.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/location.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/error.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/location.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/location.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/parsingConfigFile.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setUpServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/serverSetUp/setUpServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webserv.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/webserv.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +35,7 @@
     <setting file="file://$PROJECT_DIR$/configfile.yml" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -65,11 +66,38 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/parsingConfigFile" />
+      <recent name="$PROJECT_DIR$/ServerSetUp" />
+      <recent name="$PROJECT_DIR$/inc" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Target.all">
+    <configuration name="all" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="all" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="fclean" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="fclean" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.all" />
+        <item itemvalue="Makefile Target.fclean" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -106,22 +134,13 @@
       <workItem from="1704462731391" duration="371000" />
       <workItem from="1704467216597" duration="320000" />
       <workItem from="1704473018516" duration="66000" />
+      <workItem from="1704650890307" duration="3395000" />
+      <workItem from="1704656632181" duration="956000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/parsingConfigFile.hpp</url>
-          <line>2</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

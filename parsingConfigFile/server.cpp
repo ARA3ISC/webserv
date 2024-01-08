@@ -1,6 +1,6 @@
-#include "inc/server.hpp"
-#include "inc/error.hpp"
-#include "inc/utils.hpp"
+#include "../inc/server.hpp"
+#include "../inc/error.hpp"
+#include "../inc/utils.hpp"
 #include <stdexcept>
 
 

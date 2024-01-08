@@ -2,22 +2,23 @@ NAME = webserv
 CXX = c++
 CXXFLAGS = -Wextra -Werror -Wall -std=c++98
 RM = rm -f
-SRC = webserv.cpp main.cpp parsingConfigFile.cpp server.cpp \
-location.cpp utils.cpp error.cpp setUpServer.cpp
+SRC = parsingConfigFile/webserv.cpp main.cpp parsingConfigFile/parsingConfigFile.cpp parsingConfigFile/server.cpp \
+parsingConfigFile/location.cpp parsingConfigFile/utils.cpp parsingConfigFile/error.cpp serverSetUp/setUpServer.cpp
 OBJ_DIR = obj
-OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
+OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.cpp=%.o))
+OBJ_SUBDIRS = $(sort $(dir $(OBJ)))
 
-all: $(NAME)
+all: $(OBJ_SUBDIRS) $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 	clear
 
-$(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: %.cpp | $(OBJ_SUBDIRS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+$(OBJ_SUBDIRS):
+	mkdir -p $@
 
 clean:
 	$(RM) -r $(OBJ_DIR)
