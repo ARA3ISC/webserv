@@ -1,7 +1,7 @@
 #include "../inc/setUpServer.hpp"
 #include "../inc/request.hpp"
-#define PORT 7000
-#define BUFFER_SIZE 1024
+#define PORT 8000
+#define BUFFER_SIZE 30
 
 void    startParsingRequest(std::string fullRequest)
 {
@@ -12,11 +12,11 @@ void    startParsingRequest(std::string fullRequest)
     rq.setStartLine(line);
 
     while(getline(obj, line) && line.at(0) != '\r' && line.at(1) != '\n')
-    {
         rq.setHeaders(line);
-//        std::cout << line << std::endl;
-//        std::cout << rq.getHeaders().begin()->first << std::endl;
-    }
+    rq.setBody(fullRequest);
+
+    std::cout << "body:\n" << rq.getBody() << "\n" << std::endl;
+
 //    for (std::map<std::string, std::string>::iterator i = rq.getHeaders().begin(); i != rq.getHeaders().end(); ++i) {
 //        std::cout << i->first << " -> " << i->second << std::endl;
 //    }
@@ -32,7 +32,7 @@ void    parseRequest(int newFd)
     char buffer[BUFFER_SIZE];
     read(newFd, buffer, BUFFER_SIZE);
     fullRequest.append(buffer);
-    std::cout << fullRequest << std::endl;
+//    std::cout << fullRequest << std::endl;
     if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
         startParsingRequest(fullRequest);
 

@@ -15,6 +15,7 @@ class request
 private:
     startLine_t _startLine;
     std::map<std::string, std::string> _headers;
+    std::string _body;
 public:
     request();
     request(const request& rhs);
@@ -23,7 +24,9 @@ public:
 
     void setStartLine(std::string line);
     void setHeaders(std::string line);
+    void setBody(std::string line);
 
     startLine_t getStartLine();
     std::map<std::string, std::string>& getHeaders();
+    std::string& getBody();
 };

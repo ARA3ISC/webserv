@@ -20,3 +20,15 @@ std::vector<std::string> splitHeaderBycolon(std::string line) {
     splited.push_back(trimStr(value));
     return splited;
 }
+
+std::string trimFromBeginning(const std::string& input, const std::string& prefix) {
+    size_t pos = input.find(prefix);
+
+    if (pos != std::string::npos) {
+        // Found the prefix, trim from the beginning
+        return input.substr(pos + prefix.length());
+    } else {
+        // Prefix not found, return the original string
+        return input;
+    }
+}

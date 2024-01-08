@@ -38,10 +38,19 @@ void request::setHeaders(std::string line) {
     this->_headers.insert(std::pair<std::string, std::string>(values[0], values[1]));
 }
 
+void    request::setBody(std::string line) {
+    std::string body = trimFromBeginning(line, "\r\n\r\n");
+    this->_body = body;
+}
+
 startLine_t request::getStartLine() {
     return this->_startLine;
 }
 
 std::map<std::string, std::string>& request::getHeaders() {
     return this->_headers;
+}
+
+std::string& request::getBody() {
+    return this->_body;
 }
