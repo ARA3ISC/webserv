@@ -12,13 +12,10 @@
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/error.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/location.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/location.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/parsingConfigFile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setUpServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/serverSetUp/setUpServer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webserv.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/webserv.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/setUpServer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/inc/setUpServer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/inc/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parsingConfigFile/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serverSetUp/setUpServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/serverSetUp/setUpServer.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,9 +70,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/inc" />
       <recent name="$PROJECT_DIR$/parsingConfigFile" />
       <recent name="$PROJECT_DIR$/ServerSetUp" />
-      <recent name="$PROJECT_DIR$/inc" />
     </key>
   </component>
   <component name="RunManager" selected="Makefile Target.all">
@@ -136,6 +133,9 @@
       <workItem from="1704473018516" duration="66000" />
       <workItem from="1704650890307" duration="3395000" />
       <workItem from="1704656632181" duration="956000" />
+      <workItem from="1704713550091" duration="9965000" />
+      <workItem from="1704741176408" duration="425000" />
+      <workItem from="1704750205673" duration="2676000" />
     </task>
     <servers />
   </component>

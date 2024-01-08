@@ -1,0 +1,47 @@
+#include "../inc/request.hpp"
+
+
+request::request() {}
+
+request::request(const request &rhs) {
+    this->_startLine = rhs._startLine;
+    this->_headers = rhs._headers;
+}
+
+request& request::operator=(const request &rhs) {
+    if (this != &rhs)
+    {
+        this->_startLine = rhs._startLine;
+        this->_headers = rhs._headers;
+    }
+    return *this;
+}
+
+request::~request() {}
+
+/* end of canonical form */
+
+void request::setStartLine(std::string line) {
+    std::vector<std::string> values = splitBySpace(line);
+    if (values.size() != 3)
+        throw std::runtime_error("Bad request!!!!!");
+    this->_startLine.method = values[0];
+    this->_startLine.path = values[1];
+    this->_startLine.http_v = values[2];
+}
+
+void request::setHeaders(std::string line) {
+
+    std::vector<std::string> values = splitHeaderBycolon(line);
+    if (values.size() != 2)
+        throw std::runtime_error("Bad request!!!");
+    this->_headers.insert(std::pair<std::string, std::string>(values[0], values[1]));
+}
+
+startLine_t request::getStartLine() {
+    return this->_startLine;
+}
+
+std::map<std::string, std::string>& request::getHeaders() {
+    return this->_headers;
+}
