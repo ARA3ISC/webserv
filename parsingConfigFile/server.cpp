@@ -151,7 +151,7 @@ void server::setMaxBodySize(std::string line, int nbln) {
 
     if (splited.size() != 2)
         throwError("Syntax error", nbln);
-    this->_client_max_body_size = std::stoi(splited[1]);
+    this->_client_max_body_size = std::atoi(splited[1].c_str());
 }
 
 void server::setErrorPages(std::string line, int nbln)
@@ -166,13 +166,13 @@ void server::setErrorPages(std::string line, int nbln)
 //    std::cout << "****\n";
     if (!is_digit(splited[1]))
         throwError("Syntax error", nbln);
-    if (this->_error_pages.find(std::stoi(splited[1])) != this->_error_pages.end())
+    if (this->_error_pages.find(std::atoi(splited[1].c_str())) != this->_error_pages.end())
     {
         std::cout << "Duplicated key (line: " << nbln << ")";
         throw std::runtime_error("");
     }
 
-    this->_error_pages.insert(std::pair<int, std::string>(std::stoi(splited[1]), splited[2]));
+    this->_error_pages.insert(std::pair<int, std::string>(std::atoi(splited[1].c_str()), splited[2]));
 }
 
 void    server::setUpload(std::string line, int nbln)

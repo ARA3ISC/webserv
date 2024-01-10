@@ -2,6 +2,7 @@
 # define UTILS_HPP
 
 #include <iostream>
+#include <string>
 #include <sstream>
 #include <vector>
 
@@ -16,5 +17,5 @@ std::vector<std::string> splitBySpace(const std::string& input);
 std::string trimStr(const std::string& str);
 bool isNaN(std::string str);
 void    removeComment(std::vector<std::string>& splited);
-std::string removeLastColon(const std::string& input);
+std::string removeLastColon(std::string& input);
 #endif

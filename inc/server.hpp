@@ -1,6 +1,8 @@
 #pragma once
 
 # include <iostream>
+# include <string>
+# include <cstdlib>
 # include "location.hpp"
 # include <map>
 # include <vector>

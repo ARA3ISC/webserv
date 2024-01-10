@@ -2,7 +2,9 @@
 
 void        throwError(std::string str, int nb)
 {
-    std::string msg = str + " (line: " + std::to_string(nb) + ")";
+    std::stringstream ss;
+    ss << nb;
+    std::string msg = str + " (line: " + ss.str() + ")";
     throw std::runtime_error(msg.c_str());
 }
 

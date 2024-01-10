@@ -132,7 +132,8 @@ void    countServers(std::string filename)
     int count = 0;
     int ln = 0;
 
-    std::ifstream obj(filename);
+    std::ifstream obj;
+    obj.open(filename.c_str());
     if (obj.is_open())
     {
         while (getline(obj, line))
@@ -157,8 +158,10 @@ void    countServers(std::string filename)
 
 void missing(std::string directive, int s)
 {
+    std::stringstream ss;
+    ss << s;
     std::string msg;
-    msg = "Missing " + directive + " server number " + std::to_string(s);
+    msg = "Missing " + directive + " server number " + ss.str();
     throw std::runtime_error(msg.c_str());
 }
 
@@ -218,7 +221,8 @@ void startParsing(std::string filename)
     if (!checkExtension(filename, "yaml") && !checkExtension(filename, "yml"))
         throw std::runtime_error("Invalid extension.");
 
-    std::ifstream obj(filename);
+    std::ifstream obj;
+    obj.open(filename.c_str());
     if (obj.is_open())
     {
         countServers(filename);

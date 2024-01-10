@@ -1,11 +1,12 @@
 #include "../inc/setUpServer.hpp"
 #include "../inc/request.hpp"
-#define PORT 2030
+#define PORT 8000
 #define BUFFER_SIZE 3000
 
 void    requestSyntaxError(request& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
+
     /* check transfer encoding value */
     if (rq.getHeaders().find("Transfer-Encoding") != rq.getHeaders().end()) {
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
@@ -17,7 +18,6 @@ void    requestSyntaxError(request& rq)
                 throw std::runtime_error("Bad request 400");
 
     // check URI allowed characters
-    std::cout << rq.getStartLine().path << '\n';
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
             throw std::runtime_error("Bad request 400");
@@ -25,6 +25,9 @@ void    requestSyntaxError(request& rq)
     // check the length of the URI
     if (rq.getStartLine().path.size() > 2048)
         throw std::runtime_error("Request-URI Too Long 414");
+
+    if (rq.getHeaders().find("Host") == rq.getHeaders().end())
+        throw std::runtime_error("Bad request 400");
 
 }
 
@@ -41,9 +44,6 @@ void    startParsingRequest(std::string fullRequest)
     rq.setBody(fullRequest);
 
     requestSyntaxError(rq);
-
-
-
 
 //    std::cout << "body:\n" << rq.getBody() << "\n" << std::endl;
 
@@ -62,9 +62,14 @@ void    parseRequest(int newFd)
     char buffer[BUFFER_SIZE];
     read(newFd, buffer, BUFFER_SIZE);
     fullRequest.append(buffer);
-//    std::cout << fullRequest << std::endl;
-    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
+
+
+
+    //    std::cout << fullRequest << std::endl;
+    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos) {
         startParsingRequest(fullRequest);
+    }
+
 
 }
 

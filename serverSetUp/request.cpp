@@ -35,6 +35,7 @@ void request::setHeaders(std::string line) {
     std::vector<std::string> values = splitHeaderBycolon(line);
     if (values.size() != 2)
         throw std::runtime_error("Bad request!!!");
+
     this->_headers.insert(std::pair<std::string, std::string>(values[0], values[1]));
 }
 
