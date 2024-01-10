@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <sstream>
+#define PORT 8000
 
 void    startSetUp();
 

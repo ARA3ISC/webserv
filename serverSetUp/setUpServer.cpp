@@ -1,8 +1,8 @@
 #include "../inc/setUpServer.hpp"
 #include "../inc/request.hpp"
-#define PORT 8000
-#define BUFFER_SIZE 3000
 
+
+#define BUFFER_SIZE 3000
 void    requestSyntaxError(request& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
@@ -37,19 +37,28 @@ void    startParsingRequest(std::string fullRequest)
     std::istringstream obj(fullRequest);
     request rq;
     getline(obj, line);
+
     rq.setStartLine(line);
 
-    while(getline(obj, line) && line.at(0) != '\r' && line.at(1) != '\n')
+    while(getline(obj, line) && line != "\r\n" && !line.empty() && line[0] != '\n')
+    {
+        std::cout << line << std::endl;
         rq.setHeaders(line);
+    }
     rq.setBody(fullRequest);
 
+//    std::map<std::string, std::string>::iterator it = rq.getHeaders().begin();
+//    std::cout << "|" << it->first <<"|" << std::endl;
+
     requestSyntaxError(rq);
+//    if (!rq.getBody().empty())
+//        std::cout << "body:\n" << rq.getBody() << "\n" << std::endl;
 
-//    std::cout << "body:\n" << rq.getBody() << "\n" << std::endl;
-
+//    std::cout << rq.getHeaders().size() << std::endl;
 //    for (std::map<std::string, std::string>::iterator i = rq.getHeaders().begin(); i != rq.getHeaders().end(); ++i) {
-//        std::cout << i->first << " -> " << i->second << std::endl;
+//        std::cout << "|" << i->first << "| -> " << i->second << std::endl;
 //    }
+    std::cout << rq.getHeaders().size() << std::endl;
 //    std::cout << "method: " << rq.getStartLine().method << "\n" << "path: " << rq.getStartLine().path << "\n" <<
 //        "http version: " << rq.getStartLine().http_v << "\n";
 }
@@ -63,16 +72,13 @@ void    parseRequest(int newFd)
     read(newFd, buffer, BUFFER_SIZE);
     fullRequest.append(buffer);
 
-
-
-    //    std::cout << fullRequest << std::endl;
-    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos) {
+    // std::cout << fullRequest << std::endl;
+//    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
         startParsingRequest(fullRequest);
-    }
+//    std::cout << "8*******" << std::endl;
 
 
 }
-
 
 void    startSetUp() {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);

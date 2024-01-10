@@ -11,14 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e724e170-ee7f-4e27-be7a-3b11bb9423f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/inc/server.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/inc/utils.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/webserv.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/inc/webserv.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsingConfigFile/error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/error.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsingConfigFile/parsingConfigFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/parsingConfigFile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsingConfigFile/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsingConfigFile/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parsingConfigFile/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/setUpServer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/inc/setUpServer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/serverSetUp/request.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/serverSetUp/request.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/serverSetUp/setUpServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/serverSetUp/setUpServer.cpp" afterDir="false" />
     </list>
@@ -143,7 +136,9 @@
       <workItem from="1704750205673" duration="4807000" />
       <workItem from="1704789958554" duration="5501000" />
       <workItem from="1704823240957" duration="1492000" />
-      <workItem from="1704877340614" duration="3106000" />
+      <workItem from="1704877340614" duration="8257000" />
+      <workItem from="1704891358728" duration="3000" />
+      <workItem from="1704892707414" duration="8663000" />
     </task>
     <servers />
   </component>

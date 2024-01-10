@@ -1,6 +1,5 @@
 #include "../inc/request.hpp"
 
-
 request::request() {}
 
 request::request(const request &rhs) {
@@ -22,7 +21,10 @@ request::~request() {}
 /* end of canonical form */
 
 void request::setStartLine(std::string line) {
+//    if (line.at(0) == 32 || line.at(0) == '\t')
+//        throw std::runtime_error("Bad request!!!");
     std::vector<std::string> values = splitBySpace(line);
+
     if (values.size() != 3)
         throw std::runtime_error("Bad request!!!!!");
     this->_startLine.method = values[0];
@@ -31,11 +33,10 @@ void request::setStartLine(std::string line) {
 }
 
 void request::setHeaders(std::string line) {
-
     std::vector<std::string> values = splitHeaderBycolon(line);
-    if (values.size() != 2)
+    if (values.size() != 2) {
         throw std::runtime_error("Bad request!!!");
-
+    }
     this->_headers.insert(std::pair<std::string, std::string>(values[0], values[1]));
 }
 
