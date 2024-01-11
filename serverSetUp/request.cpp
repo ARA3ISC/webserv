@@ -21,18 +21,20 @@ request::~request() {}
 /* end of canonical form */
 
 void request::setStartLine(std::string line) {
-//    if (line.at(0) == 32 || line.at(0) == '\t')
-//        throw std::runtime_error("Bad request!!!");
+    if (line.at(0) == 32 || line.at(0) == '\t')
+        throw std::runtime_error("Bad request 400");
     std::vector<std::string> values = splitBySpace(line);
 
     if (values.size() != 3)
-        throw std::runtime_error("Bad request!!!!!");
+        throw std::runtime_error("Bad request");
     this->_startLine.method = values[0];
     this->_startLine.path = values[1];
     this->_startLine.http_v = values[2];
 }
 
 void request::setHeaders(std::string line) {
+    if (line[0] == 32 || line[0] == '\t')
+        throw std::runtime_error("Bad request 400");
     std::vector<std::string> values = splitHeaderBycolon(line);
     if (values.size() != 2) {
         throw std::runtime_error("Bad request!!!");

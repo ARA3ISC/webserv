@@ -37,22 +37,14 @@ void    startParsingRequest(std::string fullRequest)
     std::istringstream obj(fullRequest);
     request rq;
     getline(obj, line);
-
     rq.setStartLine(line);
 
-    while(getline(obj, line) && line != "\r\n" && !line.empty() && line[0] != '\n')
-    {
-        std::cout << line << std::endl;
+    while(getline(obj, line) && !line.empty() && line.size() != 1 && line != "\r\n" && line != "\n")
         rq.setHeaders(line);
-    }
     rq.setBody(fullRequest);
-
-//    std::map<std::string, std::string>::iterator it = rq.getHeaders().begin();
-//    std::cout << "|" << it->first <<"|" << std::endl;
-
     requestSyntaxError(rq);
-//    if (!rq.getBody().empty())
-//        std::cout << "body:\n" << rq.getBody() << "\n" << std::endl;
+    if (!rq.getBody().empty())
+        std::cout << "|" << rq.getBody() << "|" << std::endl;
 
 //    std::cout << rq.getHeaders().size() << std::endl;
 //    for (std::map<std::string, std::string>::iterator i = rq.getHeaders().begin(); i != rq.getHeaders().end(); ++i) {

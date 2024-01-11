@@ -11,12 +11,18 @@ std::vector<std::string> splitHeaderBycolon(std::string line) {
     while (line[i] && line[i] != ':')
         key += line[i++];
 
-    if (line[i] == ':')
+    if (line[i] != ':')
+        throw std::runtime_error("Bad request 400");
+    else
+    {
+        if (line[i - 1] == ' ' || line[i - 1] == '\t')
+            throw std::runtime_error("Bad request 400");
         i++;
+    }
     while (line[i])
         value += line[i++];
 
-    splited.push_back(trimStr(key));
+    splited.push_back(key);
     splited.push_back(trimStr(value));
     return splited;
 }
