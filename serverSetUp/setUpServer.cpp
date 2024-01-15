@@ -31,48 +31,42 @@ void    requestSyntaxError(request& rq)
 
 }
 
-void    startParsingRequest(std::string fullRequest)
+void    startParsingRequest(std::string fullRequest, request **rq)
 {
     std::string line;
     std::istringstream obj(fullRequest);
-    request rq;
     getline(obj, line);
-    rq.setStartLine(line);
+    (*rq)->setStartLine(line);
 
     while(getline(obj, line) && !line.empty() && line.size() != 1 && line != "\r\n" && line != "\n")
-        rq.setHeaders(line);
-    rq.setBody(fullRequest);
-    requestSyntaxError(rq);
-    if (!rq.getBody().empty())
-        std::cout << "|" << rq.getBody() << "|" << std::endl;
-
-//    std::cout << rq.getHeaders().size() << std::endl;
-//    for (std::map<std::string, std::string>::iterator i = rq.getHeaders().begin(); i != rq.getHeaders().end(); ++i) {
-//        std::cout << "|" << i->first << "| -> " << i->second << std::endl;
-//    }
-    std::cout << rq.getHeaders().size() << std::endl;
-//    std::cout << "method: " << rq.getStartLine().method << "\n" << "path: " << rq.getStartLine().path << "\n" <<
-//        "http version: " << rq.getStartLine().http_v << "\n";
+        (*rq)->setHeaders(line);
+    (*rq)->setBody(fullRequest);
+    requestSyntaxError(**rq);
 }
 
-void    parseRequest(int newFd)
+request *parseRequest(int newFd)
 {
     std::string fullRequest;
+    request *rq = new request;
 
 
     char buffer[BUFFER_SIZE];
     read(newFd, buffer, BUFFER_SIZE);
     fullRequest.append(buffer);
 
-    // std::cout << fullRequest << std::endl;
-//    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
-        startParsingRequest(fullRequest);
-//    std::cout << "8*******" << std::endl;
+    startParsingRequest(fullRequest, &rq);
+    std::cout << "Method : " << rq->getStartLine().method << std::endl;
+    
+    return rq;
+}
 
-
+void methods(request *req){
+    if (req->getStartLine().method == "GET")
+        GET(req);
 }
 
 void    startSetUp() {
+    request *req;
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         perror("Creating socket error");
@@ -108,7 +102,8 @@ void    startSetUp() {
             continue;
         }
         try {
-            parseRequest(newSockFd);
+            req = parseRequest(newSockFd);
+            methods(req);
         }
         catch (std::exception& e) {
             std::cerr << e.what() << std::endl;

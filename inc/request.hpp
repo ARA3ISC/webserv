@@ -30,3 +30,5 @@ public:
     std::map<std::string, std::string>& getHeaders();
     std::string& getBody();
 };
+
+void GET(request *req);
