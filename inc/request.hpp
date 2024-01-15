@@ -31,4 +31,4 @@ public:
     std::string& getBody();
 };
 
-void GET(request *req);
+void GET(int sockfd, request *req);

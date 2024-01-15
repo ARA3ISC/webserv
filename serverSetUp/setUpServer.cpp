@@ -53,6 +53,8 @@ request *parseRequest(int newFd)
     char buffer[BUFFER_SIZE];
     read(newFd, buffer, BUFFER_SIZE);
     fullRequest.append(buffer);
+    
+    std::cout << "the full request is : " << fullRequest << std::endl;
 
     startParsingRequest(fullRequest, &rq);
     std::cout << "Method : " << rq->getStartLine().method << std::endl;
@@ -60,9 +62,9 @@ request *parseRequest(int newFd)
     return rq;
 }
 
-void methods(request *req){
+void methods(int sockfd, request *req){
     if (req->getStartLine().method == "GET")
-        GET(req);
+        GET(sockfd, req);
 }
 
 void    startSetUp() {
@@ -103,7 +105,7 @@ void    startSetUp() {
         }
         try {
             req = parseRequest(newSockFd);
-            methods(req);
+            methods(newSockFd, req);
         }
         catch (std::exception& e) {
             std::cerr << e.what() << std::endl;
