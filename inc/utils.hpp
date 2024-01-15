@@ -18,4 +18,7 @@ std::string trimStr(const std::string& str);
 bool isNaN(std::string str);
 void    removeComment(std::vector<std::string>& splited);
 std::string removeLastColon(std::string& input);
+
+std::vector<std::string> splitBy(const std::string& input, char delimiter);
+
 #endif

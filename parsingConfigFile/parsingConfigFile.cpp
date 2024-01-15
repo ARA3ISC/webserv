@@ -1,19 +1,12 @@
 #include "../inc/parsingConfigFile.hpp"
 #include "../inc/error.hpp"
 #include "../inc/webserv.hpp"
-//#include "location.hpp"
+#include "../inc/setUpServer.hpp"
+
 #include <string>
 
 
 webserv webs;
-
-// void    checkValue(std::string line)
-// {
-//     if (getFirstWord(line) == "worker_processes")
-//         if (!is_digit(getSecondWord(line)))
-//             throwError("Invalid value");
-
-// }
 
 std::string rtrim(const std::string &str)
 {
@@ -227,61 +220,7 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-
-//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-//        {
-//            for (std::vector<location>::iterator l = it->getLocations().begin(); l != it->getLocations().end(); ++l)
-//            {
-//                for (std::vector<std::string>::iterator i = l->getMethods().begin(); i != l->getMethods().end(); i++)
-//                {
-//                    std::cout << *i << std::endl;
-//                }
-//            }
-//            std::cout << "****\n";
-//        }
-//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-//        {
-//            std::cout << it->getRoot() << std::endl;
-//            std::cout << "****\n";
-//        }
-
-//     std::vector<server>::iterator it = webs.getServers().begin();
-//     it++;
-//     it++;
-//     std::map<int, std::string>::iterator  i = it->get_error_pages().begin();
-//     std::cout << i->first << ": " << i->second << std::endl;
-//     i++;
-//     std::cout << i->first << ": " << i->second << std::endl;
-
-//        if (!webs.getServers()[0].get().empty())
-//            std::cout << webs.getServers()[0].getMethods()[0] << std::endl;
-//     std::cout << webs.getServers()[2].getRoot() << std::endl;
-
-//     std::cout << webs.getServers()[0].getServer_names()[0] << std::endl;
-//     std::cout << webs.getServers()[0].getListen()[0] << std::endl;
-//     std::cout << webs.getServers()[0].getRoot() << std::endl;
-//     std::cout << webs.getServers()[0].getIndex()[0] << std::endl;
-//     std::cout << webs.getServers()[0].getCgiPath().size() << std::endl;
-//     std::cout << (webs.getServers()[0].getCgiPath().begin())->first << ": " << (webs.getServers()[0].getCgiPath().begin())->second << std::endl;
-//     std::cout << (++webs.getServers()[0].getCgiPath().begin())->first << ": " << (++webs.getServers()[0].getCgiPath().begin())->second << std::endl;
-//     std::cout << (++(++webs.getServers()[0].getCgiPath().begin()))->first << ": " << (++(++webs.getServers()[0].getCgiPath().begin()))->second << std::endl;
-
-//     std::cout << webs.getServers()[0].getMaxBodySize() << std::endl;
-//     std::cout << webs.getServers()[0].getLocations()[0].get_dir_listing() << std::endl;
-//     std::cout << webs.getServers()[0].getLocations()[0].getMethods().size() << std::endl;
-//     std::cout << webs.getServers()[0].getLocations()[0].getMethods()[1] << std::endl;
-//     std::cout << webs.getServers()[0].getLocations()[0].getMethods()[2] << std::endl;
-
-
-//        for (std::vector<server>::iterator it = webs.getServers().begin(); it != webs.getServers().end(); it++)
-//        {
-//            for (std::map<std::string, std::string>::iterator l = it->getCgiPath().begin(); l != it->getCgiPath().end(); ++l)
-//            {
-//                std::cout << l->first << ": " << l->second << std::endl;
-//            }
-//            std::cout << "****\n";
-//        }
-
+        startSetUp(webs);
         obj.close();
 
     }

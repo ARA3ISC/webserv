@@ -10,7 +10,7 @@ void m(int ac, char *av[])
         else if (ac == 2)
         {
             startParsing(av[1]);
-            startSetUp();
+//            startSetUp();
         }
         else if (ac == 1)
         {

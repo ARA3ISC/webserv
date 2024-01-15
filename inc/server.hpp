@@ -11,7 +11,7 @@ class server
 private:
 	int _locations_count;
 	std::vector<std::string> _server_name;
-	std::string _listen;
+	std::vector<std::string> _listen;
 	std::string _root;
 	std::vector<std::string> _indx;
 	std::map<std::string, std::string> _cgi_path;
@@ -54,7 +54,7 @@ public:
 	{
           return this->_cgi_path;
     }
-	std::string& getListen(){
+	std::vector<std::string>& getListen(){
 		return this->_listen;
 	}
 	std::string getRoot(){return this->_root;}

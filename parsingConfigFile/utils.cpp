@@ -134,3 +134,15 @@ std::string removeLastColon(std::string& input) {
     std::string result = input.substr(0, input.length() - 1);
     return result;
 }
+
+std::vector<std::string> splitBy(const std::string& input, char delimiter) {
+    std::vector<std::string> tokens;
+    std::stringstream ss(input);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}

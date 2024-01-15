@@ -2,6 +2,7 @@
 #include "../inc/request.hpp"
 
 
+
 #define BUFFER_SIZE 3000
 void    requestSyntaxError(request& rq)
 {
@@ -43,14 +44,14 @@ void    startParsingRequest(std::string fullRequest)
         rq.setHeaders(line);
     rq.setBody(fullRequest);
     requestSyntaxError(rq);
-    if (!rq.getBody().empty())
-        std::cout << "|" << rq.getBody() << "|" << std::endl;
+//    if (!rq.getBody().empty())
+//        std::cout << "|" << rq.getBody() << "|" << std::endl;
 
 //    std::cout << rq.getHeaders().size() << std::endl;
 //    for (std::map<std::string, std::string>::iterator i = rq.getHeaders().begin(); i != rq.getHeaders().end(); ++i) {
 //        std::cout << "|" << i->first << "| -> " << i->second << std::endl;
 //    }
-    std::cout << rq.getHeaders().size() << std::endl;
+//    std::cout << rq.getHeaders().size() << std::endl;
 //    std::cout << "method: " << rq.getStartLine().method << "\n" << "path: " << rq.getStartLine().path << "\n" <<
 //        "http version: " << rq.getStartLine().http_v << "\n";
 }
@@ -65,54 +66,90 @@ void    parseRequest(int newFd)
     fullRequest.append(buffer);
 
     // std::cout << fullRequest << std::endl;
-//    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
+    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
         startParsingRequest(fullRequest);
 //    std::cout << "8*******" << std::endl;
 
 
 }
-
-void    startSetUp() {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
-        perror("Creating socket error");
-        throw std::runtime_error("");
-    }
-    std::cout << "Creating server socket ..." << std::endl;
-
+#include <arpa/inet.h>
+void    startSetUp(webserv& webs)
+{
+    char *end;
+    int serv_sock;
+    int epollfd;
+    std::vector<int> serv_fds;
     struct sockaddr_in hostAddr;
     int host_addrlen = sizeof(hostAddr);
 
-    hostAddr.sin_family = AF_INET;
-    hostAddr.sin_port = htons(PORT);
-    hostAddr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(sockfd, (struct sockaddr *) &hostAddr, host_addrlen) != 0) {
-        perror("Binding socket error");
-        throw std::runtime_error("");
-    }
-    std::cout << "Binding server socket ..." << std::endl;
-
-    if (listen(sockfd, SOMAXCONN) < 0)
-    {
-        perror("Error listening socket");
-        throw std::runtime_error("");
-    }
-
-    for (;;) {
-        std::cout << "Server is listening on port " << PORT << std::endl;
-        int newSockFd = accept(sockfd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
-        if (newSockFd == -1)
+    int enable = 1;
+    for (int i = 0; i < webs.get_serverCount(); ++i) {
+        /* creating server based on conf file */
+        serv_sock = socket(AF_INET, SOCK_STREAM, 0);
+        setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+        if (serv_sock < 0) {
+            perror("Creating server socket error");
+            throw std::runtime_error("Error creating socket");
+        }
+        hostAddr.sin_family = AF_INET;
+        if (webs.getServers()[i].getListen().size() == 2)
         {
-            perror("Error accepting socket");
-            continue;
+            hostAddr.sin_port = htons(std::strtol(webs.getServers()[i].getListen()[1].c_str(), &end, 10));
+            hostAddr.sin_addr.s_addr = inet_addr(webs.getServers()[i].getListen()[0].c_str());
         }
-        try {
-            parseRequest(newSockFd);
+        else {
+            hostAddr.sin_port = htons(static_cast<short unsigned int>(std::strtol(webs.getServers()[i].getListen()[0].c_str(), &end, 10)));
+            hostAddr.sin_addr.s_addr = htonl(INADDR_ANY);
         }
-        catch (std::exception& e) {
-            std::cerr << e.what() << std::endl;
+
+        /* binding socket to a port from conf file */
+        bind(serv_sock, reinterpret_cast<struct sockaddr *>(&hostAddr), host_addrlen);
+        /* Server listens */
+        if (listen(serv_sock, SOMAXCONN) < 0)
+        {
+            perror("Error listening socket");
+            throw std::runtime_error("");
         }
-        close(newSockFd);
+        serv_fds.push_back(serv_sock);
+        std::cout << "*\n";
     }
+
+    struct epoll_event ev;
+    epollfd = epoll_create(1);
+    if (epollfd == -1){
+        perror("creating epoll");
+    }
+    for (unsigned long i = 0; i < serv_fds.size(); ++i) {
+        ev.events = EPOLLIN;
+        ev.data.fd = serv_fds[i];
+        if (epoll_ctl(epollfd, EPOLL_CTL_ADD, serv_fds[i], &ev) == -1)
+        {
+            perror("epoll_ctl");
+            throw std::runtime_error("Error listening socket");
+        }
+
+    }
+
+    accept(serv_fds[1], (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
+    std::cout << "**********\n";
+    close(serv_fds[1]);
+
+
+//    exit(0);
+//    for (;;) {
+//        std::cout << "Server is listening on port " << PORT << std::endl;
+//        int newSockFd = accept(sockfd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
+//        if (newSockFd == -1)
+//        {
+//            perror("Error accepting socket");
+//            continue;
+//        }
+//        try {
+//            parseRequest(newSockFd);
+//        }
+//        catch (std::exception& e) {
+//            std::cerr << e.what() << std::endl;
+//        }
+//        close(newSockFd);
+//    }
 }

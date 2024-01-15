@@ -1,6 +1,6 @@
 - server:
     server_name: server1 kkkk1
-    listen: 33
+    listen: 127.0.0.1:9090
     index: indexxxxx1.html index111
     cgi_path: py /usr/bin/python3
     cgi_path: php /Users/maneddam/.local/bin/php-cgi
@@ -32,7 +32,7 @@
 
 - server:
     server_name: server2 kkkk2
-    listen: 80
+    listen: 9999
     root: root2
     allow_methods: GET POST DELETE
     index: index2.html index222
@@ -51,7 +51,7 @@
 
 - server:
     index: index3.html index333
-    listen: 9090
+    listen: 9999
     root: root3
     server_name: server3 kkkk3
 

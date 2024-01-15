@@ -3,6 +3,30 @@
 #include "../inc/utils.hpp"
 #include <stdexcept>
 
+bool checkIpSyntax(std::string ip)
+{
+    std::vector<std::string> tokens = splitBy(ip, '.');
+    if (tokens.size() != 4)
+        return false;
+    for (unsigned long i = 0; i < tokens.size(); i++) {
+        if (isNaN(tokens[i]))
+            return false;
+        else if (std::atoi(tokens[i].c_str()) > 255 || std::atoi(tokens[i].c_str()) < 0)
+            return false;
+    }
+    return true;
+}
+
+bool checkListen(std::string ipport)
+{
+    std::vector<std::string> splited = splitBy(ipport, ':');
+    if (splited.size() != 2)
+        return false;
+
+    if (!checkIpSyntax(splited[0]) || isNaN(splited[1]))
+        return false;
+    return true;
+}
 
 // class members
 server::server() {
@@ -64,12 +88,30 @@ void    server::set_listen(std::string line, int nbln) {
     splited = splitBySpace(line);
     removeComment(splited);
 
-    if (splited.size() != 2 || isNaN(splited[1]))
+    if (splited.size() != 2) {
         throwError("Syntax error", nbln);
-
+    }
     if (!this->_listen.empty())
         throwError("Duplicated directive", nbln);
-    this->_listen = splited[1];
+
+    if (splited[1].find(':') != std::string::npos)
+    {
+        if (!checkListen(splited[1])) {
+            throwError("Syntax error", nbln);
+        }
+        this->_listen.push_back(splitBy(splited[1], ':')[0]);
+        this->_listen.push_back(splitBy(splited[1], ':')[1]);
+    }
+    else
+    {
+        if (isNaN(splited[1])) {
+            throwError("Syntax error", nbln);
+        }
+        else {
+            this->_listen.push_back(splited[1]);
+        }
+    }
+//    std::cout << "-->" << this->_listen.size() << std::endl;
 }
 
 void    server::setRoot(std::string line, int nbln){
