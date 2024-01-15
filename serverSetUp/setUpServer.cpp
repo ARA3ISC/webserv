@@ -111,7 +111,6 @@ void    startSetUp(webserv& webs)
             throw std::runtime_error("");
         }
         serv_fds.push_back(serv_sock);
-        std::cout << "*\n";
     }
 
     struct epoll_event ev;
@@ -125,13 +124,28 @@ void    startSetUp(webserv& webs)
         if (epoll_ctl(epollfd, EPOLL_CTL_ADD, serv_fds[i], &ev) == -1)
         {
             perror("epoll_ctl");
-            throw std::runtime_error("Error listening socket");
+            throw std::runtime_error("Error epoll ctl");
         }
-
+        std::cout << "**********\n";
     }
 
+    int nfds;
+    struct epoll_event events[MAX_EVENTS];
+    while (true)
+    {
+        nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+        if (nfds == -1) {
+            perror("epoll_wait");
+            throw std::runtime_error("Error epoll wait");
+        }
+        for (int i = 0; i < nfds; i++)
+        {
+            if (std::find(serv_fds.begin(), serv_fds.end(), events[i].data.fd) != serv_fds.end())
+                std::cout << "server needed\n";
+        }
+    }
     accept(serv_fds[1], (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
-    std::cout << "**********\n";
+
     close(serv_fds[1]);
 
 

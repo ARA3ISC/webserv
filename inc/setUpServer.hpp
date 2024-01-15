@@ -12,6 +12,7 @@
 #define PORT 8000
 //class webserv;
 #include "webserv.hpp"
+#define MAX_EVENTS 10
 
 void    startSetUp(webserv& webs);
 
