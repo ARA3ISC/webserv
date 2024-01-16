@@ -288,3 +288,8 @@ void startParsing(std::string filename)
     else
         throw std::runtime_error("Cannot open file.");
 }
+
+
+webserv getServer(){
+    return webs;
+}

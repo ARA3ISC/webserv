@@ -33,3 +33,5 @@ public:
         return this->_servers;
     }
 };
+
+webserv getServer();
