@@ -1,9 +1,6 @@
 #include "../inc/setUpServer.hpp"
 #include "../inc/request.hpp"
 
-
-
-#define BUFFER_SIZE 3000
 void    requestSyntaxError(request& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
@@ -72,45 +69,53 @@ void    parseRequest(int newFd)
 
 
 }
-#include <arpa/inet.h>
+
+int createSingServSocket(webserv& webs, struct sockaddr_in hostAddr, int i)
+{
+    int serv_sock;
+    char *end;
+    int enable = 1;
+    /* creating server based on conf file */
+    serv_sock = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+    if (serv_sock < 0) {
+        perror("Creating server socket error");
+        throw std::runtime_error("Error creating socket");
+    }
+    hostAddr.sin_family = AF_INET;
+    if (webs.getServers()[i].getListen().size() == 2)
+    {
+        hostAddr.sin_port = htons(std::strtol(webs.getServers()[i].getListen()[1].c_str(), &end, 10));
+        hostAddr.sin_addr.s_addr = inet_addr(webs.getServers()[i].getListen()[0].c_str());
+    }
+    else {
+        hostAddr.sin_port = htons(static_cast<short unsigned int>(std::strtol(webs.getServers()[i].getListen()[0].c_str(), &end, 10)));
+        hostAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    }
+
+    /* binding socket to a port from conf file */
+    bind(serv_sock, reinterpret_cast<struct sockaddr *>(&hostAddr),  sizeof(hostAddr));
+    /* Server listens */
+    if (listen(serv_sock, SOMAXCONN) < 0)
+    {
+        perror("Error listening socket");
+        throw std::runtime_error("");
+    }
+    return serv_sock;
+}
+
 void    startSetUp(webserv& webs)
 {
-    char *end;
-    int serv_sock;
     int epollfd;
     std::vector<int> serv_fds;
     struct sockaddr_in hostAddr;
     int host_addrlen = sizeof(hostAddr);
 
-    int enable = 1;
-    for (int i = 0; i < webs.get_serverCount(); ++i) {
-        /* creating server based on conf file */
-        serv_sock = socket(AF_INET, SOCK_STREAM, 0);
-        setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
-        if (serv_sock < 0) {
-            perror("Creating server socket error");
-            throw std::runtime_error("Error creating socket");
-        }
-        hostAddr.sin_family = AF_INET;
-        if (webs.getServers()[i].getListen().size() == 2)
-        {
-            hostAddr.sin_port = htons(std::strtol(webs.getServers()[i].getListen()[1].c_str(), &end, 10));
-            hostAddr.sin_addr.s_addr = inet_addr(webs.getServers()[i].getListen()[0].c_str());
-        }
-        else {
-            hostAddr.sin_port = htons(static_cast<short unsigned int>(std::strtol(webs.getServers()[i].getListen()[0].c_str(), &end, 10)));
-            hostAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-        }
-
-        /* binding socket to a port from conf file */
-        bind(serv_sock, reinterpret_cast<struct sockaddr *>(&hostAddr), host_addrlen);
-        /* Server listens */
-        if (listen(serv_sock, SOMAXCONN) < 0)
-        {
-            perror("Error listening socket");
-            throw std::runtime_error("");
-        }
-        serv_fds.push_back(serv_sock);
+    /* Creating and binding and listening servers sockets based on config file + saving servers sockets that will be added to the epoll instance  */
+    for (int i = 0; i < webs.get_serverCount(); ++i)
+    {
+        int sck = createSingServSocket(webs, hostAddr, i);
+        serv_fds.push_back(sck);
     }
 
     struct epoll_event ev;
@@ -126,9 +131,10 @@ void    startSetUp(webserv& webs)
             perror("epoll_ctl");
             throw std::runtime_error("Error epoll ctl");
         }
-        std::cout << "**********\n";
+        std::cout << "fd of server added to the instance -> " << serv_fds[i] << '\n';
     }
 
+    char r[BUFFER_SIZE];
     int nfds;
     struct epoll_event events[MAX_EVENTS];
     while (true)
@@ -138,15 +144,37 @@ void    startSetUp(webserv& webs)
             perror("epoll_wait");
             throw std::runtime_error("Error epoll wait");
         }
+//        exit(0);
         for (int i = 0; i < nfds; i++)
         {
+            int clientSocket;
             if (std::find(serv_fds.begin(), serv_fds.end(), events[i].data.fd) != serv_fds.end())
-                std::cout << "server needed\n";
+            {
+                clientSocket = accept(events[i].data.fd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
+                if (clientSocket == -1)
+                {
+                    perror("Error accepting socket");
+                    continue;
+                }
+                ev.events = EPOLLIN | EPOLLET;
+                ev.data.fd = clientSocket;
+                if (epoll_ctl(epollfd, EPOLL_CTL_ADD, clientSocket,
+                              &ev) == -1) {
+                    perror("epoll_ctl: conn_sock");
+                    exit(EXIT_FAILURE);
+                }
+                read(clientSocket, r, 1024);
+                std::cout << r << std::endl;
+//                close(clientSocket);
+            }
+            else
+            {
+                std::cout << nfds << std::endl;
+                close(clientSocket);
+            }
         }
     }
-    accept(serv_fds[1], (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
 
-    close(serv_fds[1]);
 
 
 //    exit(0);
