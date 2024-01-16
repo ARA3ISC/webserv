@@ -6,7 +6,7 @@
 /*   By: rlarabi <rlarabi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:56:32 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/01/16 15:30:28 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/01/16 16:49:59 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <string>
 #include <fstream>
+#include <dirent.h>
 
 void sendResponse(int clientSocket, int statusCode, std::string statusMessage, std::string content, std::string contentType) {
     // Construct the HTTP response
@@ -99,8 +100,7 @@ void GET(int sockfd, request *req){
         sendResponse(sockfd, 404, "Not Found", Error404(), "text/html; charset=utf-8");
         return ;
     }
-    
-    if (path.find(".html")){
+    if (path.find(".html") != std::string::npos){
         path.insert(0, ".");
         std::ifstream input(path.c_str());
         if(!input.is_open())
@@ -109,8 +109,33 @@ void GET(int sockfd, request *req){
             return ;
         }
         sendResponse(sockfd, 200, "OK", getContent(input), "text/html; charset=utf-8");
+        return ;
+    }
+    else
+    {
+        path.insert(0, ".");
+        DIR* dir = opendir(path.c_str());
+        std::string res;
+        if (dir != NULL) {
+            struct dirent* entry;
+            res = "<html><body><h1>Directory Listing</h1><ul>";
+            while ((entry = readdir(dir)) != NULL) {
+                std::string tmp = entry->d_name;
+                res += "<a href=\"" + path + "/" +tmp + "\">" + tmp + "</a><br>";
+            }
+            res += "</ul></body></html>";
+            closedir(dir);
+            sendResponse(sockfd, 200, "OK", res, "text/html; charset=utf-8");
+            return ;
+        }
         
     }
 
     sendResponse(sockfd, 200, "OK", DefaultResponse(), "text/html; charset=utf-8");
 }
+
+    // std::vector<server> serv = getServer().getServers();
+    // std::vector<location> loc = serv[0].getLocations();
+    // std::string path = loc[0].getRoot();
+    // path.erase(path.size() - 1);
+    // path += req->getStartLine().path;

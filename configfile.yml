@@ -1,6 +1,6 @@
 - server:
     server_name: server1 kkkk1
-    listen: 33
+    listen: 8000
     index: indexxxxx1.html index111
     cgi_path: py /usr/bin/python3
     cgi_path: php /Users/maneddam/.local/bin/php-cgi
@@ -14,7 +14,7 @@
     - location /blog:
         dir_listing: on
         allow_methods: GET POST
-        root: ./wwwlocation1
+        root: .
 
     - location /portfolio:
         dir_listing: on

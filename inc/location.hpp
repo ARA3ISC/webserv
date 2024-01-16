@@ -34,6 +34,10 @@ public:
     {
         return this->_path;
     }
+    std::string getRoot()
+    {
+        return this->_root;
+    }
 //    std::vector<std::string>& getMethods() {return this->_allow_methods;}
 
 

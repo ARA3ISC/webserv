@@ -80,7 +80,7 @@ void    startSetUp() {
     int host_addrlen = sizeof(hostAddr);
 
     hostAddr.sin_family = AF_INET;
-    hostAddr.sin_port = htons(PORT);
+    hostAddr.sin_port = htons(8002);
     hostAddr.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(sockfd, (struct sockaddr *) &hostAddr, host_addrlen) != 0) {
