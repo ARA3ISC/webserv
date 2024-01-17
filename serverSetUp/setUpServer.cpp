@@ -29,45 +29,33 @@ void    requestSyntaxError(request& rq)
 
 }
 
-void    startParsingRequest(std::string fullRequest)
+void    startParsingRequest(int fd, std::map<int, request>& mp)
 {
+//    std::cout << mp[fd].getFullRequest() << std::endl;
     std::string line;
-    std::istringstream obj(fullRequest);
-    request rq;
+    std::stringstream obj(mp[fd].getFullRequest());
     getline(obj, line);
-    rq.setStartLine(line);
+    mp[fd].setStartLine(line);
 
-    while(getline(obj, line) && !line.empty() && line.size() != 1 && line != "\r\n" && line != "\n")
-        rq.setHeaders(line);
-    rq.setBody(fullRequest);
-    requestSyntaxError(rq);
-//    if (!rq.getBody().empty())
-//        std::cout << "|" << rq.getBody() << "|" << std::endl;
-
-//    std::cout << rq.getHeaders().size() << std::endl;
-//    for (std::map<std::string, std::string>::iterator i = rq.getHeaders().begin(); i != rq.getHeaders().end(); ++i) {
-//        std::cout << "|" << i->first << "| -> " << i->second << std::endl;
-//    }
-//    std::cout << rq.getHeaders().size() << std::endl;
-//    std::cout << "method: " << rq.getStartLine().method << "\n" << "path: " << rq.getStartLine().path << "\n" <<
-//        "http version: " << rq.getStartLine().http_v << "\n";
+//    std::cout << "[" << mp[fd].getStartLine().http_v << "]";
+    while(getline(obj, line) && line != "\r")
+    {
+        std::cout << "size : " <<  line.size() << std::endl;
+        mp[fd].setHeaders(line);
+    }
+//    mp[fd].setBody(mp[fd].getFullRequest());
+//    requestSyntaxError(mp[fd]);
 }
 
-void    parseRequest(int newFd)
+void    reading(int fd, std::map<int, request>& mp)
 {
-    std::string fullRequest;
-
-
     char buffer[BUFFER_SIZE];
-    read(newFd, buffer, BUFFER_SIZE);
-    fullRequest.append(buffer);
-
-    // std::cout << fullRequest << std::endl;
-    if (fullRequest.find("\r\n\r\n", 0) != std::string::npos)
-        startParsingRequest(fullRequest);
-//    std::cout << "8*******" << std::endl;
+    read(fd, buffer, BUFFER_SIZE);
+    mp[fd].setFullRequest(buffer);
 
 
+    if (mp[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
+        startParsingRequest(fd, mp);
 }
 
 int createSingServSocket(webserv& webs, struct sockaddr_in hostAddr, int i)
@@ -112,12 +100,14 @@ void    startSetUp(webserv& webs)
     int host_addrlen = sizeof(hostAddr);
 
     /* Creating and binding and listening servers sockets based on config file + saving servers sockets that will be added to the epoll instance  */
+//    std::cout << "Webserv is listening on ports : ";
     for (int i = 0; i < webs.get_serverCount(); ++i)
     {
         int sck = createSingServSocket(webs, hostAddr, i);
         serv_fds.push_back(sck);
+//        std::cout << webs.getServers()[i].getListen()[0] << " ";
     }
-
+//    std::cout << "\n";
     struct epoll_event ev;
     epollfd = epoll_create(1);
     if (epollfd == -1){
@@ -131,12 +121,12 @@ void    startSetUp(webserv& webs)
             perror("epoll_ctl");
             throw std::runtime_error("Error epoll ctl");
         }
-        std::cout << "fd of server added to the instance -> " << serv_fds[i] << '\n';
     }
 
-    char r[BUFFER_SIZE];
+//    char r[BUFFER_SIZE];
     int nfds;
     struct epoll_event events[MAX_EVENTS];
+    std::map<int, request> mapClientFds;
     while (true)
     {
         nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
@@ -144,35 +134,60 @@ void    startSetUp(webserv& webs)
             perror("epoll_wait");
             throw std::runtime_error("Error epoll wait");
         }
-//        exit(0);
         for (int i = 0; i < nfds; i++)
         {
-            int clientSocket;
+            /* check if the if the fd is a server fd */
             if (std::find(serv_fds.begin(), serv_fds.end(), events[i].data.fd) != serv_fds.end())
             {
-                clientSocket = accept(events[i].data.fd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
+                int clientSocket = accept(events[i].data.fd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
                 if (clientSocket == -1)
                 {
                     perror("Error accepting socket");
                     continue;
                 }
-                ev.events = EPOLLIN | EPOLLET;
+                ev.events = EPOLLIN | EPOLLOUT;
                 ev.data.fd = clientSocket;
+                request rq;
+                mapClientFds[clientSocket] = rq;
                 if (epoll_ctl(epollfd, EPOLL_CTL_ADD, clientSocket,
                               &ev) == -1) {
                     perror("epoll_ctl: conn_sock");
                     exit(EXIT_FAILURE);
                 }
-                read(clientSocket, r, 1024);
-                std::cout << r << std::endl;
-//                close(clientSocket);
             }
             else
             {
-                std::cout << nfds << std::endl;
-                close(clientSocket);
+                if (events[i].events & EPOLLIN)
+                {
+//                    request rq = mapClientFds.at(events[i].data.fd);
+//                    Client c = map.find(fd);
+//                    reading(events[i].data.fd, mapClientFds);
+                    char r[BUFFER_SIZE];
+//                    std::string pp;
+                    size_t a;
+                    do {
+                        a = read(events[i].data.fd, r, sizeof(r));
+                        if (a > 0) {
+                            // Ensure that the null character is appended within the valid range
+                            if (a < sizeof(r)) {
+                                r[a] = '\0';
+                            } else {
+                                // Handle the case where the buffer is full
+                                // or take appropriate action based on your requirements
+                            }
+                        }
+                        std::cout <<r << std::endl;
+                        std::cout << "*";
+                    } while (a > 0);
+
+//                    std::cout << mapClientFds[events[i].data.fd].getStartLine().method << std::endl;
+                    close(events[i].data.fd);
+
+                    exit(0);
+                }
             }
         }
+
     }
 
 

@@ -12,7 +12,7 @@ std::vector<std::string> splitHeaderBycolon(std::string line) {
         key += line[i++];
 
     if (line[i] != ':')
-        throw std::runtime_error("Bad request 400");
+        throw std::runtime_error("Bad request 4500");
     else
     {
         if (line[i - 1] == ' ' || line[i - 1] == '\t')

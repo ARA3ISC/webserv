@@ -51,7 +51,7 @@
 
 - server:
     index: index3.html index333
-    listen: 9999
+    listen: 2222
     root: root3
     server_name: server3 kkkk3
 

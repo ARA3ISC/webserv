@@ -13,6 +13,7 @@ typedef struct startLine_s
 class request
 {
 private:
+    std::string _fullRequest;
     startLine_t _startLine;
     std::map<std::string, std::string> _headers;
     std::string _body;
@@ -22,10 +23,12 @@ public:
     request& operator=(const request& rhs);
     ~request();
 
+    void setFullRequest(std::string line);
     void setStartLine(std::string line);
     void setHeaders(std::string line);
     void setBody(std::string line);
 
+    std::string getFullRequest();
     startLine_t getStartLine();
     std::map<std::string, std::string>& getHeaders();
     std::string& getBody();
