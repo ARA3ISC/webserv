@@ -1,8 +1,6 @@
 #include "../inc/parsingConfigFile.hpp"
 #include "../inc/error.hpp"
-#include "../inc/webserv.hpp"
-#include "../inc/setUpServer.hpp"
-
+#include "../inc/dataCenter.hpp"
 #include <string>
 
 
@@ -220,7 +218,8 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-        startSetUp(webs);
+//        startSetUp(webs);
+        dataCenter ds(webs);
         obj.close();
 
     }

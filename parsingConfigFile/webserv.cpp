@@ -21,11 +21,6 @@ webserv& webserv::operator=(const webserv &rhs) {
     {
         this->_serverCount = rhs._serverCount;
         this->_servers = rhs._servers;
-//        delete[] this->_servers;
-//        this->_servers = new server[rhs._serverCount];
-//        for (int i = 0; i < rhs._serverCount; ++i) {
-//            this->_servers[i] = rhs._servers[i];
-//        }
     }
     return *this;
 }
