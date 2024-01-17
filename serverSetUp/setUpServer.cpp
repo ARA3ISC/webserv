@@ -1,8 +1,8 @@
 #include "../inc/setUpServer.hpp"
-#include "../inc/request.hpp"
+#include "../inc/client.hpp"
 #include "../inc/dataCenter.hpp"
 
-void    requestSyntaxError(request& rq)
+void    requestSyntaxError(client& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 
@@ -14,23 +14,23 @@ void    requestSyntaxError(request& rq)
     else // check absence of content len and transfer encoding and presence of POST method
         if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end())
             if (rq.getStartLine().method == "POST")
-                throw std::runtime_error("Bad request 400");
+                throw std::runtime_error("Bad client 400");
 
     // check URI allowed characters
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
-            throw std::runtime_error("Bad request 400");
+            throw std::runtime_error("Bad client 400");
     }
     // check the length of the URI
     if (rq.getStartLine().path.size() > 2048)
         throw std::runtime_error("Request-URI Too Long 414");
 
     if (rq.getHeaders().find("Host") == rq.getHeaders().end())
-        throw std::runtime_error("Bad request 400");
+        throw std::runtime_error("Bad client 400");
 
 }
 
-void    startParsingRequest(int fd, std::map<int, request>& mp)
+void    startParsingRequest(int fd, std::map<int, client>& mp)
 {
 //    std::cout << mp[fd].getFullRequest() << std::endl;
     std::string line;
@@ -48,7 +48,7 @@ void    startParsingRequest(int fd, std::map<int, request>& mp)
 //    requestSyntaxError(mp[fd]);
 }
 
-void    reading(int fd, std::map<int, request>& mp)
+void    reading(int fd, std::map<int, client>& mp)
 {
     char buffer[BUFFER_SIZE];
     read(fd, buffer, BUFFER_SIZE);

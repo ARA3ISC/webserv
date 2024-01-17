@@ -4,7 +4,7 @@ CXXFLAGS = -Wextra -Werror -Wall -std=c++98 #-fsanitize=address
 RM = rm -f
 SRC = parsingConfigFile/webserv.cpp main.cpp parsingConfigFile/parsingConfigFile.cpp parsingConfigFile/server.cpp \
 parsingConfigFile/location.cpp parsingConfigFile/utils.cpp parsingConfigFile/error.cpp serverSetUp/setUpServer.cpp \
-serverSetUp/request.cpp serverSetUp/utils2.cpp serverSetUp/utils3.cpp \
+serverSetUp/client.cpp serverSetUp/utils2.cpp serverSetUp/utils3.cpp \
 dataCenter/dataCenter.cpp
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.cpp=%.o))

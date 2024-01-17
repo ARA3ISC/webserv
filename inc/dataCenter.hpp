@@ -6,6 +6,7 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <fcntl.h>
 #define BUFFER_SIZE 1024
 #define MAX_EVENTS 10
 # include "webserv.hpp"
@@ -18,6 +19,7 @@ private:
     int epollfd;
     std::vector<int> serv_fds;
 
+    int setNonBlocking(int sckt);
     int createSingServSocket(webserv& webs, struct sockaddr_in hostAddr, int i);
     void createEpoll();
     void handlingRequests();

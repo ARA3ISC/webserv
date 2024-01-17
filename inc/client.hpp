@@ -10,7 +10,7 @@ typedef struct startLine_s
     std::string http_v;
 }           startLine_t;
 
-class request
+class client
 {
 private:
     std::string _fullRequest;
@@ -18,10 +18,10 @@ private:
     std::map<std::string, std::string> _headers;
     std::string _body;
 public:
-    request();
-    request(const request& rhs);
-    request& operator=(const request& rhs);
-    ~request();
+    client();
+    client(const client& rhs);
+    client& operator=(const client& rhs);
+    ~client();
 
     void setFullRequest(std::string line);
     void setStartLine(std::string line);

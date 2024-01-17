@@ -90,6 +90,40 @@ void dataCenter::createEpoll()
     }
 }
 
+bool dataCenter::isServerFd(std::vector<int> vc, int fd)
+{
+    if (std::find(vc.begin(), vc.end(), fd) != vc.end())
+        return true;
+    return false;
+}
+
+
+int dataCenter::setNonBlocking(int sckt) {
+    int flag = fcntl(sckt, F_GETFL, 0);
+    if (flag == -1)
+        return -1;
+    flag |= O_NONBLOCK;
+    if (fcntl(sckt, F_SETFL, flag))
+        return -1;
+    return 0;
+}
+
+void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen)
+{
+    int clientSocket = accept(fd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
+    if (clientSocket == -1)
+        perror("Error accepting socket");
+    ev.events = EPOLLIN | EPOLLOUT;
+    ev.data.fd = clientSocket;
+    if (setNonBlocking(clientSocket) == -1)
+        throw std::runtime_error("Error: non-blocking failed");
+    if (epoll_ctl(this->epollfd, EPOLL_CTL_ADD, clientSocket,
+                  &ev) == -1) {
+        perror("epoll_ctl: conn_sock");
+        exit(EXIT_FAILURE);
+    }
+}
+
 void dataCenter::handlingRequests()
 {
     struct sockaddr_in hostAddr;
@@ -118,27 +152,5 @@ void dataCenter::handlingRequests()
             }
         }
 
-    }
-}
-
-
-bool dataCenter::isServerFd(std::vector<int> vc, int fd)
-{
-    if (std::find(vc.begin(), vc.end(), fd) != vc.end())
-        return true;
-    return false;
-}
-
-void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen)
-{
-    int clientSocket = accept(fd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
-    if (clientSocket == -1)
-        perror("Error accepting socket");
-    ev.events = EPOLLIN | EPOLLOUT;
-    ev.data.fd = clientSocket;
-    if (epoll_ctl(this->epollfd, EPOLL_CTL_ADD, clientSocket,
-                  &ev) == -1) {
-        perror("epoll_ctl: conn_sock");
-        exit(EXIT_FAILURE);
     }
 }
