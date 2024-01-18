@@ -14,21 +14,23 @@
     - location /blog:
         dir_listing: on
         allow_methods: GET POST
-        root: .
+        auto_index: on
+        root: ./myWebsite
+        index: index.html
 
     - location /portfolio:
         dir_listing: on
         allow_methods: GET
-        root: ./www/portfoliolocation11
-        auto_index: on location11
-        index: index.html location11
+        auto_index: on
+        root: ./myWebsite
+        index: index.html
 
     - location /about:
         dir_listing:  on
         allow_methods: GET DELETE
-        root: ./www/portfoliolocation111
-        auto_index: on location111
-        index: index.html location111
+        root: ./myWebsite
+        auto_index: on
+        index: index.html
 
 - server:
     server_name: server2 kkkk2

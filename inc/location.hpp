@@ -34,6 +34,14 @@ public:
     {
         return this->_path;
     }
+    std::string getIndex()
+    {
+        return this->_index;
+    }
+    bool getAutoIndex()
+    {
+        return this->_auto_index;
+    }
     std::string getRoot()
     {
         return this->_root;

@@ -6,7 +6,7 @@
 /*   By: rlarabi <rlarabi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:56:32 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/01/16 16:49:59 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/01/16 18:17:14 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,24 @@ std::string DefaultResponse(){
     return res;
 }
 
+std::vector<location>::iterator get_Location(std::vector<location> loc, std::string path){
+    std::vector<location>::iterator it = loc.begin();
+    
+    while(it != loc.end()){
+        if(it->getPath() == path)
+            return it;
+        it++;
+    }
+    return it;
+}
 void GET(int sockfd, request *req){
+    std::vector<server> serv = getServer().getServers();
+    std::vector<location> loc = serv[0].getLocations();
+    std::vector<location>::iterator locIt;
     
     std::string path = req->getStartLine().path;
     
-    if (!checkMatchingLocations(path) && !path.find(".html")){
+    if (!checkMatchingLocations(path) && path.find(".html") == std::string::npos){
         sendResponse(sockfd, 404, "Not Found", Error404(), "text/html; charset=utf-8");
         return ;
     }
@@ -113,6 +126,11 @@ void GET(int sockfd, request *req){
     }
     else
     {
+        // locIt = get_Location(loc, path);
+        
+        // check if auto index
+        // std::cout << locIt->getIndex();
+        
         path.insert(0, ".");
         DIR* dir = opendir(path.c_str());
         std::string res;
@@ -121,7 +139,7 @@ void GET(int sockfd, request *req){
             res = "<html><body><h1>Directory Listing</h1><ul>";
             while ((entry = readdir(dir)) != NULL) {
                 std::string tmp = entry->d_name;
-                res += "<a href=\"" + path + "/" +tmp + "\">" + tmp + "</a><br>";
+                res += "<a href=\"" + path + "/" + tmp + "\">" + tmp + "</a><br>";
             }
             res += "</ul></body></html>";
             closedir(dir);
