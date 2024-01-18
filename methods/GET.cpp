@@ -32,7 +32,14 @@ void sendResponse(int clientSocket, int statusCode, std::string statusMessage, s
     // Send the response back to the client
     write(clientSocket, httpResponse.str().c_str(), httpResponse.str().length());
 }
-
+std::string getUrlPath(std::string path){
+    
+    size_t lastSlash = path.find_last_of('/');
+    
+    if (lastSlash != std::string::npos)
+        path = path.substr(0, lastSlash);
+    return path;
+}
 bool checkMatchingLocations(std::string path){
     std::vector<server> serv = getServer().getServers();
     std::vector<location> loc = serv[0].getLocations();
@@ -41,7 +48,7 @@ bool checkMatchingLocations(std::string path){
         std::string str = it->getPath();
         str.erase(str.size() - 1);
         std::cout << "paths of the server : " << str << " and " << path << std::endl;
-        if(str == path)
+        if(str == (path))
             return true;
         it++;
     }
@@ -102,19 +109,33 @@ std::vector<location>::iterator get_Location(std::vector<location> loc, std::str
     }
     return it;
 }
+std::string getPath(std::string path){
+     size_t lastSlash = path.find_last_of('/');
+
+    std::string fileName = path.substr(lastSlash + 1);
+
+    size_t firstQuestionMark = fileName.find_first_of('?');
+
+    if (firstQuestionMark != std::string::npos) {
+        fileName = fileName.substr(0, firstQuestionMark);
+    }
+    return fileName;
+}
 void GET(int sockfd, request *req){
     std::vector<server> serv = getServer().getServers();
     std::vector<location> loc = serv[0].getLocations();
     std::vector<location>::iterator locIt;
     
-    std::string path = req->getStartLine().path;
+    std::string path = "myWebsite" + req->getStartLine().path;
     
-    if (!checkMatchingLocations(path) && path.find(".html") == std::string::npos){
+    if (!checkMatchingLocations(getUrlPath(path)) && path.find(".html") == std::string::npos){
         sendResponse(sockfd, 404, "Not Found", Error404(), "text/html; charset=utf-8");
         return ;
     }
     if (path.find(".html") != std::string::npos){
-        path.insert(0, ".");
+        path = getUrlPath(path) + "/" + getPath(path);
+        if (path[0] == '.')
+            path.insert(0, ".");
         std::ifstream input(path.c_str());
         if(!input.is_open())
         {

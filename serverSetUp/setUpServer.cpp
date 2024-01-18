@@ -74,6 +74,9 @@ void    startSetUp() {
         perror("Creating socket error");
         throw std::runtime_error("");
     }
+    int enable = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+
     std::cout << "Creating server socket ..." << std::endl;
 
     struct sockaddr_in hostAddr;
