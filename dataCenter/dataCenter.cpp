@@ -2,7 +2,9 @@
 
 /* Canonical form */
 
-dataCenter::dataCenter() {}
+dataCenter::dataCenter() {
+
+}
 dataCenter::dataCenter(webserv& webs) {
     this->wes = webs;
     this->createServerSockets();
@@ -34,6 +36,8 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
     /* creating server based on conf file */
     serv_sock = socket(AF_INET, SOCK_STREAM, 0);
     setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+    if (setNonBlocking(serv_sock) == -1)
+        throw std::runtime_error("Error: non-blocking failed");
     if (serv_sock < 0) {
         perror("Creating server socket error");
         throw std::runtime_error("Error creating socket");
@@ -120,10 +124,11 @@ void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct socka
     if (epoll_ctl(this->epollfd, EPOLL_CTL_ADD, clientSocket,
                   &ev) == -1) {
         perror("epoll_ctl: conn_sock");
-        exit(EXIT_FAILURE);
     }
-    client c;
-    this->clientList.insert(std::pair<int, client>(clientSocket, c));
+//    std::cout << "****\n";
+//    std::cout << "client Socket: " << clientSocket << std::endl;
+    this->clientList.insert(std::make_pair(clientSocket, client()));
+    std::cout << clientList.size() << std::endl;
 }
 
 void dataCenter::handlingRequests()
@@ -135,6 +140,7 @@ void dataCenter::handlingRequests()
     struct epoll_event events[MAX_EVENTS];
     while (true)
     {
+//        std::cout << this->clientList.size()<< std::endl;
         nfds = epoll_wait(this->epollfd, events, MAX_EVENTS, -1);
         if (nfds == -1) {
             perror("epoll_wait");
@@ -148,7 +154,10 @@ void dataCenter::handlingRequests()
             else
             {
                 if (events[i].events & EPOLLIN)
+                {
                     this->reading(events[i].data.fd);
+                }
+
 //                else if (events[i].events & EPOLLOUT) {}
                 /* check if the response is ready to send */
             }

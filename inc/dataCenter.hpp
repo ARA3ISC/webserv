@@ -22,6 +22,7 @@ private:
     std::vector<int> serv_fds;
     std::map<int, client> clientList;
 
+
     /* private member functions */
     int setNonBlocking(int sckt);
     int createSingServSocket(webserv& webs, struct sockaddr_in hostAddr, int i);
@@ -32,9 +33,9 @@ private:
     void acceptClientSocket(int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen);
 
     /* parsing requests functions */
-
     void    reading(int fd);
-    void    startParsingRequest(int fd, std::map<int, client>& mp);
+    void    loadHeaders(int fd);
+    void    startParsingRequest(int fd);
     void    requestSyntaxError(client& rq);
 
 public:

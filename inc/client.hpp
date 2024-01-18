@@ -17,6 +17,7 @@ private:
     startLine_t _startLine;
     std::map<std::string, std::string> _headers;
     std::string _body;
+    bool _headerareloaded;
 public:
     client();
     client(const client& rhs);
@@ -27,9 +28,11 @@ public:
     void setStartLine(std::string line);
     void setHeaders(std::string line);
     void setBody(std::string line);
+    void headersLoaded(bool r);
 
     std::string getFullRequest();
     startLine_t getStartLine();
     std::map<std::string, std::string>& getHeaders();
     std::string& getBody();
+    bool isHeadersLoaded();
 };
