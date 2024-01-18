@@ -1,8 +1,6 @@
-#include "../inc/setUpServer.hpp"
-#include "../inc/client.hpp"
 #include "../inc/dataCenter.hpp"
 
-void    requestSyntaxError(client& rq)
+void    dataCenter::requestSyntaxError(client& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 
@@ -12,9 +10,9 @@ void    requestSyntaxError(client& rq)
             throw std::runtime_error("Not implemented 501");
     }
     else // check absence of content len and transfer encoding and presence of POST method
-        if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end())
-            if (rq.getStartLine().method == "POST")
-                throw std::runtime_error("Bad client 400");
+    if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end())
+        if (rq.getStartLine().method == "POST")
+            throw std::runtime_error("Bad client 400");
 
     // check URI allowed characters
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
@@ -30,7 +28,7 @@ void    requestSyntaxError(client& rq)
 
 }
 
-void    startParsingRequest(int fd, std::map<int, client>& mp)
+void    dataCenter::startParsingRequest(int fd, std::map<int, client>& mp)
 {
 //    std::cout << mp[fd].getFullRequest() << std::endl;
     std::string line;
@@ -48,13 +46,12 @@ void    startParsingRequest(int fd, std::map<int, client>& mp)
 //    requestSyntaxError(mp[fd]);
 }
 
-void    reading(int fd, std::map<int, client>& mp)
+void    dataCenter::reading(int fd)
 {
     char buffer[BUFFER_SIZE];
     read(fd, buffer, BUFFER_SIZE);
-    mp[fd].setFullRequest(buffer);
+    this->clientList[fd].setFullRequest(buffer);
 
-
-    if (mp[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
+    if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
         startParsingRequest(fd, mp);
 }

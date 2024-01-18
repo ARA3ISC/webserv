@@ -122,6 +122,8 @@ void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct socka
         perror("epoll_ctl: conn_sock");
         exit(EXIT_FAILURE);
     }
+    client c;
+    this->clientList.insert(std::pair<int, client>(clientSocket, c));
 }
 
 void dataCenter::handlingRequests()
@@ -145,8 +147,8 @@ void dataCenter::handlingRequests()
                 acceptClientSocket(events[i].data.fd, ev, hostAddr, host_addrlen);
             else
             {
-//                if (events[i].events & EPOLLIN)
-//                    reading(events[i].data.fd, mapClientFds);
+                if (events[i].events & EPOLLIN)
+                    this->reading(events[i].data.fd);
 //                else if (events[i].events & EPOLLOUT) {}
                 /* check if the response is ready to send */
             }

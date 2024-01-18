@@ -1,5 +1,4 @@
 #include "inc/parsingConfigFile.hpp"
-#include "inc/setUpServer.hpp"
 //#include <sys/qos.h>
 
 void m(int ac, char *av[])
