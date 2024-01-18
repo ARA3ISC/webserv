@@ -48,9 +48,9 @@ bool invalidMethod(std::vector<std::string> splited)
 {
     for (unsigned long i = 1; i < splited.size(); ++i) {
         if (splited[i] != "GET" && splited[i] != "POST" && splited[i] != "DELETE")
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 bool hasDuplicates(const std::vector<std::string>& vec) {

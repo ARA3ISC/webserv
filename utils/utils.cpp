@@ -128,9 +128,6 @@ std::string removeLastColon(std::string& input) {
         throw std::invalid_argument("Empty string provided.");
     }
 
-//    if (input.back() != ':') {
-//        throw std::invalid_argument("No colon at the end of the string.");
-//    }
     std::string result = input.substr(0, input.length() - 1);
     return result;
 }

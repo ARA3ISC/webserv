@@ -31,7 +31,7 @@ void checkIndentation(std::string s, int c, int &nbline)
     }
     if (s[c] && (s[c] == ' ' || s[c] == '\t'))
     {
-        std::cout << "[" << s[c] << c << "]" << std::endl;
+//        std::cout << "[" << s[c] << c << "]" << std::endl;
         throwError("Indentation error", nbline);
     }
 }
@@ -39,7 +39,7 @@ void checkIndentation(std::string s, int c, int &nbline)
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
     location *l = s->createLocation();
-    l->setPath(line, nbline);
+    l->setPath(line, nbline, s);
     while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
     {
         nbline++;
@@ -47,11 +47,16 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             continue;
 
         if (getFirstWord(trimStr(line)) == "dir_listing:")
-        {
             l->set_dir_listing(line, nbline);
-        }
         else if (getFirstWord(trimStr(line)) == "allow_methods:")
             l->setMethods(line, nbline);
+        else if (getFirstWord(trimStr(line)) == "root:")
+            l->setRoot(line, nbline);
+        else if (getFirstWord(trimStr(line)) == "index:")
+        {
+//            std::cout << line << std::endl;
+            l->setIndexes(line, nbline);
+        }
         if (trimStr(line).find("- location") != std::string::npos)
         {
             s->addLocation(*l);
@@ -74,7 +79,6 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 void fillServerAttr(std::ifstream &obj, int &nbline)
 {
     server *s = webs.createServer();
-
     std::string line;
     while (getline(obj, line))
     {
@@ -218,10 +222,9 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-//        startSetUp(webs);
-        dataCenter ds(webs);
+        std::cout << webs.getServers()[0].getLocations()[1].getIndexes()[0] << std::endl;
+//        dataCenter ds(webs);
         obj.close();
-
     }
     else
         throw std::runtime_error("Cannot open file.");

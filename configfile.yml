@@ -1,6 +1,6 @@
 - server:
     server_name: server1 kkkk1
-    listen: 127.0.0.1:9090
+    listen: 8888
     index: indexxxxx1.html index111
     cgi_path: py /usr/bin/python3
     cgi_path: php /Users/maneddam/.local/bin/php-cgi
@@ -11,14 +11,14 @@
 
     upload: ./upload
 
-    - location /blog:
+    - location /path:
         dir_listing: on
         allow_methods: GET POST
         root: ./wwwlocation1
 
-    - location /portfolio:
-        dir_listing: on
-        allow_methods: GET
+    - location path:
+        dir_listing: off
+        allow_methods: GET POST # this is comment GET
         root: ./www/portfoliolocation11
         auto_index: on location11
         index: index.html location11
@@ -27,8 +27,8 @@
         dir_listing:  on
         allow_methods: GET DELETE
         root: ./www/portfoliolocation111
-        auto_index: on location111
         index: index.html location111
+        auto_index: on location111
 
 - server:
     server_name: server2 kkkk2
@@ -62,8 +62,9 @@
     - location /akheruahd1:
         dir_listing: on
         allow_methods: GET POST
-        root: ./www/portfoliolocation2
+        root: ./www/portfoliolocation244444
     - location /akheruahd2:
         dir_listing: on
         allow_methods: GET
         root: ./www/portfoliolocation2
+        index: 777

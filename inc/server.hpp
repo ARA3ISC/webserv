@@ -6,6 +6,9 @@
 # include "location.hpp"
 # include <map>
 # include <vector>
+
+class location;
+
 class server
 {
 private:

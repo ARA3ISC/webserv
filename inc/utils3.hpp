@@ -1,12 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <algorithm>
-#include <vector>
-#include <arpa/inet.h>
-#include <sys/epoll.h>
-#include <sys/socket.h>
-#include <cstdio>
+#include "utils.hpp"
 
 
-bool isServerFd(std::vector<int> vc, int fd);
+//std::string validPath(std::string path);
+void checkSlash(std::string &path);
