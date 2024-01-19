@@ -38,7 +38,10 @@ void    location::setPath(std::string line, int nbl, server* s)
     removeComment(splited);
 
     if (splited.size() != 2 && splited.size() != 3)
+    {
+        delete this;
         throwError("Syntax error", nbl);
+    }
     if (splited.size() == 2) {
         this->_path = s->getRoot();
     }
@@ -46,7 +49,10 @@ void    location::setPath(std::string line, int nbl, server* s)
     {
         this->_path = removeLastColon(splited[2]);
         if (this->_path.empty())
+        {
+            delete this;
             throwError("Syntax error", nbl);
+        }
         checkSlash(this->_path);
     }
 }
@@ -58,7 +64,10 @@ void location::set_dir_listing(std::string line, int nbl)
     removeComment(splited);
 
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off") )
+    {
+        delete this;
         throwError("Syntax error", nbl);
+    }
 
     if (splited[1] == "on")
         this->_dir_listing = true;
@@ -74,14 +83,19 @@ void    location::setMethods(std::string line, int nbln) {
 
 
     if (splited.size() == 1)
+    {
+        delete this;
         throwError("Syntax error", nbln);
+    }
     if (invalidMethod(splited))
     {
+        delete this;
         std::cout << "Invalid method (line: " << nbln << ")";
         throw std::runtime_error("");
     }
     if (hasDuplicates(splited))
     {
+        delete this;
         std::cout << "Duplicated symbol (line: " << nbln << ")";
         throw std::runtime_error("");
     }
@@ -96,7 +110,10 @@ void location::setRoot(std::string line, int nbln)
     std::vector<std::string> splited;
     splited = splitBySpace(line);
     if (splited.size() != 2)
+    {
+        delete this;
         throwError("Syntax error", nbln);
+    }
     this->_root = splited[1];
 }
 
@@ -107,9 +124,13 @@ void location::setIndexes(std::string line, int nbln) {
     removeComment(splited);
 
     if (splited.size() == 1)
+    {
+        delete this;
         throwError("Syntax error", nbln);
+    }
     if (hasDuplicates(splited))
     {
+        delete this;
         std::cout << "Duplicated symbol (line: " << nbln << ")";
         throw std::runtime_error("");
     }
@@ -127,12 +148,17 @@ void location::setAutoIndex(std::string line, int nbln)
     removeComment(splited);
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off"))
     {
-        std::cout << splited.size() << " - [" << splited[1] << "]" << std::endl;
+        delete this;
+//        std::cout << splited.size() << " - [" << splited[1] << "]" << std::endl;
         throwError("Syntax error", nbln);
     }
 
     if (splited[1] == "on")
         this->_auto_index = true;
+}
+
+void location::freeup() {
+    delete this;
 }
 
 std::string location::getRoot()

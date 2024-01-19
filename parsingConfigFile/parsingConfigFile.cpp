@@ -68,7 +68,10 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             return;
         }
         else if (invalid_directive(trimStr(line), 1))
+        {
+            delete l;
             throwError("Invalid direction error", nbline);
+        }
         else
             checkIndentation(line, 8, nbline);
     }
@@ -80,7 +83,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 
 void fillServerAttr(std::ifstream &obj, int &nbline)
 {
-    server *s = webs.createServer();
+    server s;
     std::string line;
     while (getline(obj, line))
     {
@@ -89,25 +92,25 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             continue;
 
         if (getFirstWord(line) == "server_name:")
-            s->set_server_name(line, nbline);
+            s.set_server_name(line, nbline);
         else if (getFirstWord(line) == "listen:")
-            s->set_listen(line, nbline);
+            s.set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
-            s->setRoot(line, nbline);
+            s.setRoot(line, nbline);
         else if (getFirstWord(line) == "allow_methods:")
-            s->setMethods(line, nbline);
+            s.setMethods(line, nbline);
         else if (getFirstWord(line) == "cgi_path:")
-            s->setCgiPath(line, nbline);
+            s.setCgiPath(line, nbline);
         else if (getFirstWord(line) == "client_max_body_size:")
-            s->setMaxBodySize(line, nbline);
+            s.setMaxBodySize(line, nbline);
         else if (getFirstWord(line) == "error:")
-            s->setErrorPages(line, nbline);
+            s.setErrorPages(line, nbline);
         else if (getFirstWord(line) == "upload:")
-            s->setUpload(line, nbline);
+            s.setUpload(line, nbline);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
-            fillLocationAttr(obj, line, nbline, s);
+            fillLocationAttr(obj, line, nbline, &s);
         }
         else if (invalid_directive(trimStr(line), 0))
              throwError("Invalid direction error", nbline);
@@ -117,8 +120,7 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             fillServerAttr(obj, nbline);
         }
     }
-    webs.addServer(s);
-    delete s;
+    webs.addServer(&s);
 }
 
 void    countServers(std::string filename)
@@ -222,16 +224,10 @@ void startParsing(std::string filename)
     obj.open(filename.c_str());
     if (obj.is_open())
     {
-        try {
-            countServers(filename);
-            checkServerBlock(obj);
+        countServers(filename);
+        checkServerBlock(obj);
 //        std::cout << webs.getServers()[0].getLocations()[0].getIndexes()[1] << std::endl;
-            dataCenter ds(webs);
-        }
-        catch (...)
-        {
-//            webs.freeup();
-        }
+        dataCenter ds(webs);
 
         obj.close();
     }

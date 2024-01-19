@@ -51,4 +51,6 @@ public:
     std::string getRoot();
     std::vector<std::string>& getIndexes();
     bool isAutoIndex();
+
+    void freeup();
 };
