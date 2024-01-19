@@ -13,8 +13,6 @@ bool invalid_directive(std::string line, int c)
     std::vector<std::string> serverAttr;
     serverAttr.push_back("server_name:");
     serverAttr.push_back("listen:");
-    serverAttr.push_back("index:");
-    serverAttr.push_back("cgi_path:");
     serverAttr.push_back("default_dir_file:");
     serverAttr.push_back("allow_methods:");
     serverAttr.push_back("Error:");

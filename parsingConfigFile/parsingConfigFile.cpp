@@ -57,6 +57,8 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 //            std::cout << line << std::endl;
             l->setIndexes(line, nbline);
         }
+        else if (getFirstWord(trimStr(line)) == "auto_index:")
+            l->setAutoIndex(line, nbline);
         if (trimStr(line).find("- location") != std::string::npos)
         {
             s->addLocation(*l);
@@ -92,8 +94,6 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s->set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
             s->setRoot(line, nbline);
-        else if (getFirstWord(line) == "index:")
-            s->setIndex(line, nbline);
         else if (getFirstWord(line) == "allow_methods:")
             s->setMethods(line, nbline);
         else if (getFirstWord(line) == "cgi_path:")
@@ -168,6 +168,8 @@ void    checkMissingData()
         s++;
         if (it->getRoot().empty())
             missing("root", s);
+        if (it->getListen().empty())
+            missing("listen", s);
     }
 }
 
@@ -220,10 +222,17 @@ void startParsing(std::string filename)
     obj.open(filename.c_str());
     if (obj.is_open())
     {
-        countServers(filename);
-        checkServerBlock(obj);
-        std::cout << webs.getServers()[0].getLocations()[1].getIndexes()[0] << std::endl;
-//        dataCenter ds(webs);
+        try {
+            countServers(filename);
+            checkServerBlock(obj);
+//        std::cout << webs.getServers()[0].getLocations()[0].getIndexes()[1] << std::endl;
+            dataCenter ds(webs);
+        }
+        catch (...)
+        {
+//            webs.freeup();
+        }
+
         obj.close();
     }
     else

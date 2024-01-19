@@ -17,6 +17,7 @@ void m(int ac, char *av[])
     }
     catch (std::exception& e)
     {
+
         std::cerr << e.what() << std::endl;
     }
 
@@ -26,5 +27,5 @@ void m(int ac, char *av[])
 int main(int ac, char **av)
 {
     m(ac, av);
-//    system("leaks webserv");
+//    system("leak webserv");
 }

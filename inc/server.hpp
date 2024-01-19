@@ -16,7 +16,7 @@ private:
 	std::vector<std::string> _server_name;
 	std::vector<std::string> _listen;
 	std::string _root;
-	std::vector<std::string> _indx;
+//	std::vector<std::string> _indx;
 	std::map<std::string, std::string> _cgi_path;
 	std::vector<std::string> _allow_methods;
 	int _client_max_body_size;
@@ -33,7 +33,7 @@ public:
 	void set_server_name(std::string line, int nbln);
 	void set_listen(std::string line, int nbln);
 	void setRoot(std::string line, int nbln);
-	void setIndex(std::string line, int nbln);
+//	void setIndex(std::string line, int nbln);
 	void setMethods(std::string line, int nbln);
 	void setCgiPath(std::string line, int nbln);
     void setMaxBodySize(std::string line, int nbln);
@@ -41,10 +41,10 @@ public:
     void setUpload(std::string line, int nbln);
 
 
-	std::vector<std::string>& getIndex()
-	{
-		return this->_indx;
-	}
+//	std::vector<std::string>& getIndex()
+//	{
+//		return this->_indx;
+//	}
 	std::vector<std::string>& getServer_names()
 	{
 		return this->_server_name;

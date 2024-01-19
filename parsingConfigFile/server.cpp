@@ -30,8 +30,6 @@ bool checkListen(std::string ipport)
 
 // class members
 server::server() {
-    this->_indx.push_back("index.html");
-    this->_indx.push_back("index.htm");
     this->_client_max_body_size = 2000;
 }
 server::server(const server& rhs)
@@ -40,7 +38,6 @@ server::server(const server& rhs)
     this->_listen = rhs._listen;
     this->_server_name = rhs._server_name;
     this->_root = rhs._root;
-    this->_indx = rhs._indx;
     this->_cgi_path = rhs._cgi_path;
     this->_error_pages = rhs._error_pages;
     this->_allow_methods = rhs._allow_methods;
@@ -56,7 +53,6 @@ server &server::operator=(const server &rhs) {
         this->_listen = rhs._listen;
         this->_server_name = rhs._server_name;
         this->_root = rhs._root;
-        this->_indx = rhs._indx;
         this->_cgi_path = rhs._cgi_path;
         this->_error_pages = rhs._error_pages;
         this->_allow_methods = rhs._allow_methods;
@@ -127,22 +123,22 @@ void    server::setRoot(std::string line, int nbln){
     this->_root = splited[1];
 }
 
-void server::setIndex(std::string line, int nbln)
-{
-    std::vector<std::string> splited;
-
-    splited = splitBySpace(line);
-    removeComment(splited);
-
-    if (splited.size() == 1)
-        throwError("Syntax error", nbln);
-    this->_indx.clear();
-    for (unsigned long i = 1; i < splited.size(); ++i) {
-        this->_indx.push_back(splited[i]);
-    }
-    // this->_index.push_back(splited[1]);
-    // std::cout << "=> " << this->_index.size() << std::endl;
-}
+//void server::setIndex(std::string line, int nbln)
+//{
+//    std::vector<std::string> splited;
+//
+//    splited = splitBySpace(line);
+//    removeComment(splited);
+//
+//    if (splited.size() == 1)
+//        throwError("Syntax error", nbln);
+//    this->_indx.clear();
+//    for (unsigned long i = 1; i < splited.size(); ++i) {
+//        this->_indx.push_back(splited[i]);
+//    }
+//    // this->_index.push_back(splited[1]);
+//    // std::cout << "=> " << this->_index.size() << std::endl;
+//}
 
 void    server::setMethods(std::string line, int nbln) {
     std::vector<std::string> splited;

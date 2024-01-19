@@ -42,3 +42,13 @@ void webserv::addServer(server *newserv) {
     this->_servers.push_back(*newserv);
 //    std::cout << "server created\n";
 }
+
+//void    webserv::freeup() {
+//    for (std::vector<server>::iterator it = this->_servers.begin(); it != this->_servers.end() ; it++) {
+//        for (std::vector<location>::iterator l = it->getLocations().begin(); l != it->getLocations().end(); l++) {
+//            if (*l)
+//
+//        }
+//
+//    }
+//}

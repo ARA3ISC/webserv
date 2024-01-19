@@ -4,8 +4,10 @@
 #include "../inc/error.hpp"
 #include "../inc/utils3.hpp"
 
-location::location(): _dir_listing(false)
+location::location(): _dir_listing(false), _auto_index(false)
 {
+    this->_index.push_back("index.html");
+    this->_index.push_back("index.htm");
 }
 location::location(const location &rhs) {
     this->_path = rhs._path;
@@ -117,6 +119,22 @@ void location::setIndexes(std::string line, int nbln) {
     }
 }
 
+void location::setAutoIndex(std::string line, int nbln)
+{
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+    removeComment(splited);
+    if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off"))
+    {
+        std::cout << splited.size() << " - [" << splited[1] << "]" << std::endl;
+        throwError("Syntax error", nbln);
+    }
+
+    if (splited[1] == "on")
+        this->_auto_index = true;
+}
+
 std::string location::getRoot()
 {
     return this->_root;
@@ -125,6 +143,11 @@ std::string location::getRoot()
 std::vector<std::string>& location::getIndexes()
 {
     return this->_index;
+}
+
+bool location::isAutoIndex()
+{
+    return this->_auto_index;
 }
 
 location::~location() {}

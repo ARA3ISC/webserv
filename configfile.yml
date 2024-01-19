@@ -15,56 +15,19 @@
         dir_listing: on
         allow_methods: GET POST
         root: ./wwwlocation1
+        index: index.html flow.php
 
+        auto_index: on
     - location path:
         dir_listing: off
         allow_methods: GET POST # this is comment GET
         root: ./www/portfoliolocation11
-        auto_index: on location11
-        index: index.html location11
+        auto_index: on
+        index: index.html flow.php
 
     - location /about:
         dir_listing:  on
         allow_methods: GET DELETE
         root: ./www/portfoliolocation111
         index: index.html location111
-        auto_index: on location111
-
-- server:
-    server_name: server2 kkkk2
-    listen: 5555
-    root: root2
-    allow_methods: GET POST DELETE
-    index: index2.html index222
-
-
-    - location /dd:
-        dir_listing: off
-        allow_methods: GET
-        root: ./www/portfoliolocation2
-    - location /lherba:
-        dir_listing: off
-        allow_methods: GET
-        root: ./www/portfoliolocation2
-
-
-
-- server:
-    index: index3.html index333
-    listen: 2222
-    root: root3
-    server_name: server3 kkkk3
-
-    error: 404 ./error_pages/404.html
-    error: 302 ./error_pages/404.html
-
-    allow_methods: DELETE POST GET
-    - location /akheruahd1:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./www/portfoliolocation244444
-    - location /akheruahd2:
-        dir_listing: on
-        allow_methods: GET
-        root: ./www/portfoliolocation2
-        index: 777
+        auto_index: off

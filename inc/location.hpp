@@ -30,6 +30,7 @@ public:
     void setMethods(std::string line, int nbln);
     void setRoot(std::string line, int nbln);
     void setIndexes(std::string line, int nbln);
+    void setAutoIndex(std::string line, int nbln);
 
 
     bool get_dir_listing()
@@ -49,4 +50,5 @@ public:
     }
     std::string getRoot();
     std::vector<std::string>& getIndexes();
+    bool isAutoIndex();
 };

@@ -32,4 +32,6 @@ public:
     std::vector<server>& getServers() {
         return this->_servers;
     }
+
+//    void freeup();
 };
