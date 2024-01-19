@@ -24,7 +24,7 @@ public:
     client& operator=(const client& rhs);
     ~client();
 
-    void setFullRequest(std::string line);
+    void setFullRequest(const std::string &line);
     void setStartLine(std::string line);
     void setHeaders(std::string line);
     void setBody(std::string line);

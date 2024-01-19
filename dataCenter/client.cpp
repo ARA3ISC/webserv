@@ -27,7 +27,8 @@ client::~client() {}
 
 /* end of canonical form */
 
-void client::setFullRequest(std::string line) {
+void client::setFullRequest(const std::string &line) {
+    std::cout << this->_fullRequest.size() << std::endl;
     this->_fullRequest.append(line);
 }
 

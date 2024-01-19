@@ -2,33 +2,18 @@
     server_name: server1 kkkk1
     listen: 8888
     #index: indexxxxx1.html index111
-    cgi_path: py /usr/bin/python3
-    cgi_path: php /Users/maneddam/.local/bin/php-cgi
-    cgi_path: purl /usr/bin/purl
     default_dir_file: error_pages/dir_ans_file.html
     root: /
     allow_methods: GET POST DELETE
 
-    upload: ./upload
-
     - location /path:
-         dir_listing: on
-        kk: ff
+        dir_listing: off
         allow_methods: GET POST
         root: ./wwwlocation1
-        index: index.html flow.php
-
-        auto_index: on
-    - location path:
-        dir_listing: off
-        allow_methods: GET POST # this is comment GET
-        root: ./www/portfoliolocation11
-        auto_index: on
-        index: index.html flow.php
-
-    - location /about:
-        dir_listing:  on
-        allow_methods: GET DELETE
-        root: ./www/portfoliolocation111
-        index: index.html location111
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
         auto_index: off
+        upload: ./upload
+

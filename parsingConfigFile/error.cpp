@@ -16,14 +16,16 @@ bool invalid_directive(std::string line, int c)
     serverAttr.push_back("default_dir_file:");
     serverAttr.push_back("allow_methods:");
     serverAttr.push_back("Error:");
-    serverAttr.push_back("upload:");
+
 
     std::vector<std::string> locationAttr;
     locationAttr.push_back("dir_listing:");
     locationAttr.push_back("allow_methods:");
+    locationAttr.push_back("cgi_path:");
     locationAttr.push_back("root:");
     locationAttr.push_back("auto_index:");
     locationAttr.push_back("index:");
+    locationAttr.push_back("upload:");
     if (!c)
     {
         if (std::find(serverAttr.begin(), serverAttr.end(), getFirstWord(line)) == serverAttr.end())

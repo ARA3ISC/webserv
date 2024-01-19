@@ -44,15 +44,16 @@ void    dataCenter::loadHeaders(int fd)
     requestSyntaxError(this->clientList[fd]);
     this->clientList[fd].headersLoaded(true);
 }
+#include <cstring>
 
 void    dataCenter::reading(int fd)
 {
     char buffer[BUFFER_SIZE] = {0};
-    int a = read(fd, buffer, BUFFER_SIZE);
+    int a = read(fd, buffer, BUFFER_SIZE - 1);
     if (a == 0)
     {
-        if (!this->clientList[fd].getBody().empty())
-            std::cout << "[" << this->clientList[fd].getBody() << "]" << std::endl;
+//        if (!this->clientList[fd].getBody().empty())
+//            std::cout << "[" << this->clientList[fd].getBody() << "]" << std::endl;
 
 //        std::cout << this->clientList[fd].getStartLine().method << std::endl;
         this->clientList.erase(fd);

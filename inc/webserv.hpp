@@ -27,7 +27,7 @@ public:
         this->_serverCount = i;
     }
     server* createServer();
-    void   addServer(server *newserv);
+    void   addServer(server &newserv);
 
     std::vector<server>& getServers() {
         return this->_servers;
