@@ -237,7 +237,7 @@ void startParsing(std::string filename)
         countServers(filename);
         checkServerBlock(obj);
         location loc = webs.getServers()[0].getLocations()[0];
-        std::cout << loc.getCgiPath().size() << std::endl;
+//        std::cout << loc.getCgiPath().size() << std::endl;
 
 //        for (std::map<std::string, std::string>::iterator it = loc.getCgiPath().begin(); it != loc.getCgiPath().begin() ; ++it) {
 //            std::cout << it->first << ": " << it->second << std::endl;
@@ -245,7 +245,7 @@ void startParsing(std::string filename)
 //        }
 //        std::cout << .get_dir_listing() << std::endl;
 //        printEntryMsg();
-//        dataCenter ds(webs);
+        dataCenter ds(webs);
 
         obj.close();
     }

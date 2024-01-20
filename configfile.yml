@@ -1,6 +1,6 @@
 - server:
     server_name: server1 kkkk1
-    listen: 8888
+    listen: 9090
     #index: indexxxxx1.html index111
     default_dir_file: error_pages/dir_ans_file.html
     root: /

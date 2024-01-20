@@ -38,6 +38,7 @@ void    dataCenter::loadHeaders(int fd)
 
     while (getline(obj, line) && line != "\r") {
         this->clientList[fd].setHeaders(line);
+//        std::cout << this->clientList[fd].getHeaders().begin()->first << std::endl;
     }
     this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
 
@@ -53,22 +54,34 @@ void    dataCenter::reading(int fd)
     if (a == 0)
     {
 //        if (!this->clientList[fd].getBody().empty())
-//            std::cout << "[" << this->clientList[fd].getBody() << "]" << std::endl;
+//        {
+//            for (size_t it = 0; it < this->clientList[fd].getBody().size()  ; it++) {
+//
+//                std::cout << "[" << static_cast<int>(this->clientList[fd].getBody()[it]) << "]";
+//            }
+//        }
 
 //        std::cout << this->clientList[fd].getStartLine().method << std::endl;
         this->clientList.erase(fd);
         close(fd);
         // remove the fd from the map
     }
-    this->clientList[fd].setFullRequest(buffer);
+    std::string rqline(buffer, sizeof(buffer));
+    this->clientList[fd].setFullRequest(rqline);
 
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
     {
         if (!this->clientList[fd].isHeadersLoaded())
             loadHeaders(fd);
         else {
-            std::cout << "[" << this->clientList[fd].getBody() << "]" << std::endl;
-            // here where u should continue reading from where I stopped
+            this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
+            std::cout << "**\n";
+//            for (size_t it = 0; it < this->clientList[fd].getBody().size()  ; it++) {
+//                std::cout << "[" << static_cast<int>(this->clientList[fd].getBody()[it]) << "]";
+//            }
+//                std::cout << "****\n";
         }
     }
+
+
 }

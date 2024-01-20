@@ -128,7 +128,7 @@ void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct socka
 //    std::cout << "****\n";
 //    std::cout << "client Socket: " << clientSocket << std::endl;
     this->clientList.insert(std::make_pair(clientSocket, client()));
-    std::cout << clientList.size() << std::endl;
+//    std::cout << clientList.size() << std::endl;
 }
 
 void dataCenter::handlingRequests()
