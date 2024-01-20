@@ -165,3 +165,7 @@ void dataCenter::handlingRequests()
 
     }
 }
+
+webserv dataCenter::getWebserv(){
+    return this->wes;
+}

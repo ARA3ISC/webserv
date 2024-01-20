@@ -53,15 +53,6 @@ void    dataCenter::reading(int fd)
     int a = read(fd, buffer, BUFFER_SIZE - 1);
     if (a == 0)
     {
-//        if (!this->clientList[fd].getBody().empty())
-//        {
-//            for (size_t it = 0; it < this->clientList[fd].getBody().size()  ; it++) {
-//
-//                std::cout << "[" << static_cast<int>(this->clientList[fd].getBody()[it]) << "]";
-//            }
-//        }
-
-//        std::cout << this->clientList[fd].getStartLine().method << std::endl;
         this->clientList.erase(fd);
         close(fd);
         // remove the fd from the map
@@ -75,11 +66,9 @@ void    dataCenter::reading(int fd)
             loadHeaders(fd);
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
-            std::cout << "**\n";
-//            for (size_t it = 0; it < this->clientList[fd].getBody().size()  ; it++) {
-//                std::cout << "[" << static_cast<int>(this->clientList[fd].getBody()[it]) << "]";
-//            }
-//                std::cout << "****\n";
+            // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;
+            if (this->clientList[fd].getStartLine().method == "GET")
+                get(this->clientList[fd]);
         }
     }
 

@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include "../inc/utils.hpp"
+#include "../inc/webserv.hpp"
 #include "../inc/utils2.hpp"
 typedef struct startLine_s
 {
