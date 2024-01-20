@@ -49,6 +49,7 @@ void    dataCenter::loadHeaders(int fd)
 
 void    dataCenter::reading(int fd)
 {
+
     char buffer[BUFFER_SIZE] = {0};
     int a = read(fd, buffer, BUFFER_SIZE - 1);
     if (a == 0)
@@ -67,8 +68,8 @@ void    dataCenter::reading(int fd)
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
             // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;
-            if (this->clientList[fd].getStartLine().method == "GET")
-                get(this->clientList[fd]);
+//            if (this->clientList[fd].getStartLine().method == "GET")
+//                get(this->clientList[fd]);
         }
     }
 

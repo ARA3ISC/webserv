@@ -15,12 +15,15 @@ dataCenter::dataCenter(const dataCenter &rhs) {
     this->wes = rhs.wes;
     this->epollfd = rhs.epollfd;
     this->serv_fds= rhs.serv_fds;
+    this->clientList = rhs.clientList;
+
 }
 dataCenter &dataCenter::operator=(const dataCenter &rhs) {
     if (&rhs != this) {
         this->wes = rhs.wes;
         this->epollfd = rhs.epollfd;
         this->serv_fds= rhs.serv_fds;
+        this->clientList = rhs.clientList;
     }
     return *this;
 }
@@ -66,7 +69,6 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
 
 void dataCenter::createServerSockets() {
     struct sockaddr_in hostAddr;
-//    int host_addrlen = sizeof(hostAddr);
 
     /* Creating and binding and listening servers sockets based on config file + saving servers sockets that will be added to the epoll instance  */
     for (int i = 0; i < this->wes.get_serverCount(); ++i)
@@ -112,7 +114,14 @@ int dataCenter::setNonBlocking(int sckt) {
     return 0;
 }
 
-void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen)
+size_t dataCenter::getServerIndex(std::vector<int> s, int fd) {
+    std::vector<int>::iterator it = std::find(s.begin(), s.end(), fd);
+    size_t indx = std::distance(s.begin(), it );
+//    std::cout << indx << "---------\n";
+    return indx;
+}
+
+void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen)
 {
     int clientSocket = accept(fd, (struct sockaddr *)&hostAddr, (socklen_t *)&host_addrlen);
     if (clientSocket == -1)
@@ -127,8 +136,11 @@ void dataCenter::acceptClientSocket(int fd, struct epoll_event &ev, struct socka
     }
 //    std::cout << "****\n";
 //    std::cout << "client Socket: " << clientSocket << std::endl;
-    this->clientList.insert(std::make_pair(clientSocket, client()));
-//    std::cout << clientList.size() << std::endl;
+    size_t indx = this->getServerIndex(server_fds, fd);
+    client c(indx);
+    this->clientList.insert(std::pair<int, client>(clientSocket, c));
+    std::cout << this->clientList[clientSocket].servIndx() << std::endl;
+
 }
 
 void dataCenter::handlingRequests()
@@ -150,9 +162,13 @@ void dataCenter::handlingRequests()
         {
             /* check if the fd is a server fd */
             if (isServerFd(serv_fds, events[i].data.fd))
-                acceptClientSocket(events[i].data.fd, ev, hostAddr, host_addrlen);
+            {
+                acceptClientSocket(serv_fds, events[i].data.fd, ev, hostAddr, host_addrlen);
+
+            }
             else
             {
+//                std::cout << this->clientList.begin()->second.servIndx() << std::endl;
                 if (events[i].events & EPOLLIN)
                 {
                     this->reading(events[i].data.fd);

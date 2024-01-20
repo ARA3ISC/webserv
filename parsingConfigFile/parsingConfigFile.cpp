@@ -91,7 +91,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
     std::cout << l.getCgiPath().size() << ";"<< std::endl;
 
     s->addLocation(l);
-    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
+//    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
 //    delete l;
 }
 

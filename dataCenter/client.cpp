@@ -4,6 +4,11 @@ client::client() {
     this->_headerareloaded = false;
 }
 
+client::client(size_t serverIndex) {
+    this->_headerareloaded = false;
+    this->_serverIndex = serverIndex;
+}
+
 client::client(const client &rhs) {
     this->_startLine = rhs._startLine;
     this->_headers = rhs._headers;
@@ -83,3 +88,5 @@ std::map<std::string, std::string>& client::getHeaders() {
 std::string& client::getBody() {
     return this->_body;
 }
+
+size_t client::servIndx() {return this->_serverIndex;}

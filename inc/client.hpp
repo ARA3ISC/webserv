@@ -14,6 +14,7 @@ typedef struct startLine_s
 class client
 {
 private:
+    size_t _serverIndex;
     std::string _fullRequest;
     startLine_t _startLine;
     std::map<std::string, std::string> _headers;
@@ -21,6 +22,7 @@ private:
     bool _headerareloaded;
 public:
     client();
+    client(size_t serverIndex);
     client(const client& rhs);
     client& operator=(const client& rhs);
     ~client();
@@ -36,4 +38,5 @@ public:
     std::map<std::string, std::string>& getHeaders();
     std::string& getBody();
     bool isHeadersLoaded();
+    size_t servIndx();
 };

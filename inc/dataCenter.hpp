@@ -30,7 +30,8 @@ private:
     void handlingRequests();
     void createServerSockets();
     bool isServerFd(std::vector<int> vc, int fd);
-    void acceptClientSocket(int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen);
+    void acceptClientSocket(std::vector<int> s, int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen);
+    size_t getServerIndex(std::vector<int> s, int fd);
 
     /* parsing requests functions */
     void    reading(int fd);
