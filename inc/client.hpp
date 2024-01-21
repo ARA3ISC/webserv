@@ -39,4 +39,5 @@ public:
     std::string& getBody();
     bool isHeadersLoaded();
     size_t servIndx();
+    void setServIndx(size_t s);
 };

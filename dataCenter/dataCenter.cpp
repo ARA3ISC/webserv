@@ -138,8 +138,10 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
 //    std::cout << "client Socket: " << clientSocket << std::endl;
     size_t indx = this->getServerIndex(server_fds, fd);
     client c(indx);
-    this->clientList.insert(std::pair<int, client>(clientSocket, c));
-    std::cout << this->clientList[clientSocket].servIndx() << std::endl;
+    
+    this->clientList[clientSocket] = c;
+    
+    std::cout << clientSocket << " " << c.servIndx() << " " << this->clientList[clientSocket].servIndx() << std::endl;
 
 }
 

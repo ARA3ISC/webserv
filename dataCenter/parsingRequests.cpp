@@ -68,8 +68,11 @@ void    dataCenter::reading(int fd)
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
             // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;
-//            if (this->clientList[fd].getStartLine().method == "GET")
-//                get(this->clientList[fd]);
+        }
+        if (this->clientList[fd].getStartLine().method == "GET")
+        {
+            get(this->clientList[fd], fd);
+            close(fd);
         }
     }
 

@@ -46,7 +46,7 @@ public:
     dataCenter& operator=(const dataCenter& rhs);
     ~dataCenter();
     webserv getWebserv();
-    void get(client clnt);
+    void get(client clnt, int fd);
 
 };
 

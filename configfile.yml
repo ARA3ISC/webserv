@@ -22,17 +22,18 @@
     server_name: server2 kkkk2
     listen: 9999
     root: root2
+    error: 404 ./CustomErrors/404.html
     allow_methods: GET POST DELETE
 
 
-    - location /dd:
+    - location /about:
         dir_listing: off
         allow_methods: GET
-        root: ./www/portfoliolocation2
+        root: ./myWebsite
     - location /lherba:
         dir_listing: off
         allow_methods: GET
-        root: ./www/portfoliolocation2
+        root: ./myWebsite
 
 
 - server:
