@@ -13,6 +13,8 @@
 # include "webserv.hpp"
 # include "client.hpp"
 # define BUFFER_SIZE 1024
+#include <dirent.h>
+#include <sys/stat.h>
 
 class dataCenter
 {

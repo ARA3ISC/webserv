@@ -30,7 +30,7 @@
         dir_listing: off
         allow_methods: GET
         root: ./myWebsite
-    - location /lherba:
+    - location /home:
         dir_listing: off
         allow_methods: GET
         root: ./myWebsite
