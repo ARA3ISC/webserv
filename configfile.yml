@@ -7,9 +7,9 @@
     allow_methods: GET POST DELETE
 
     - location /path:
-        dir_listing: off
+        dir_listing: on
         allow_methods: GET POST
-        root: ./wwwlocation1
+        root: ./myWebsite
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
@@ -27,7 +27,7 @@
 
 
     - location /about:
-        dir_listing: off
+        dir_listing: on
         allow_methods: GET
         root: ./myWebsite
     - location /home:
