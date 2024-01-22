@@ -64,6 +64,39 @@ void listDirectory(std::string path, std::string directory, int fd){
     sendResponse(fd, 200, "OK", response, "text/html");
 }
 
+bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
+    
+    std::string nameFile;
+    for (size_t i = 2; i < index.size(); i++)
+    {
+        nameFile = path + "/" + index[i];
+        std::ifstream input(index[i].c_str());
+        if (input.is_open())
+        {
+            content = getContentFile(path + "/" + index[i]);
+            input.close();
+            return true;
+        }
+        input.close();
+    }
+    for (size_t i = 0; i < 2; i++)
+    {
+        nameFile = path + "/" + index[i];
+        std::ifstream input(nameFile.c_str());
+        std::cout << "file " << i << " " << index[i] << std::endl;
+        if (input.is_open())
+        {
+            content = getContentFile(path + "/" + index[i]);
+            input.close();
+            return true;
+        }
+        input.close();
+    }
+    
+    std::cout << "*******directory of file to open " << path << "/" << index[0] << std::endl;
+    return false;
+}
+
 void dataCenter::get(client clnt, int fd){
     std::string directory, file;
 
@@ -93,7 +126,13 @@ void dataCenter::get(client clnt, int fd){
     {
         std::cout << "directory\n";
         if (srv.getLocations()[j].isAutoIndex()){
-            // sendResponse(fd, 200, "OK", getContentFile("Errors/403.html"), "text/html");
+            std::string content;
+            if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), content))
+            {
+                sendResponse(fd, 200, "OK", content, "text/html");
+                return ;
+            }
+            sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
 
         }
         if (!srv.getLocations()[j].get_dir_listing())
