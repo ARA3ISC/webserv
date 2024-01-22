@@ -1,6 +1,6 @@
+/* Canonical form */
 #include "../inc/dataCenter.hpp"
 
-/* Canonical form */
 
 dataCenter::dataCenter() {
 
@@ -16,6 +16,7 @@ dataCenter::dataCenter(const dataCenter &rhs) {
     this->epollfd = rhs.epollfd;
     this->serv_fds= rhs.serv_fds;
     this->clientList = rhs.clientList;
+
 
 }
 dataCenter &dataCenter::operator=(const dataCenter &rhs) {
@@ -137,11 +138,11 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
 //    std::cout << "****\n";
 //    std::cout << "client Socket: " << clientSocket << std::endl;
     size_t indx = this->getServerIndex(server_fds, fd);
-    client c(indx);
+    client c(indx, clientSocket);
     
     this->clientList[clientSocket] = c;
     
-    std::cout << clientSocket << " " << c.servIndx() << " " << this->clientList[clientSocket].servIndx() << std::endl;
+//    std::cout << clientSocket << " " << c.servIndx() << " " << this->clientList[clientSocket].servIndx() << std::endl;
 
 }
 
@@ -170,7 +171,16 @@ void dataCenter::handlingRequests()
             {
                 if (events[i].events & EPOLLIN)
                 {
-                    this->reading(events[i].data.fd);
+                    try {
+                        this->reading(events[i].data.fd);
+                    }
+                    catch (returnError& e) {
+                        (void)e;
+//                        std::cout << "hahahaha\n";
+//                        std::cout << "first fd " << events[i].data.fd << std::endl;
+
+                        close(events[i].data.fd);
+                    }
                 }
 //                else if (events[i].events & EPOLLOUT) {}
                 /* check if the response is ready to send */

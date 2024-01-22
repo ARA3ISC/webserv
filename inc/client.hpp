@@ -14,6 +14,7 @@ typedef struct startLine_s
 class client
 {
 private:
+    int _fd;
     size_t _serverIndex;
     std::string _fullRequest;
     startLine_t _startLine;
@@ -22,7 +23,7 @@ private:
     bool _headerareloaded;
 public:
     client();
-    client(size_t serverIndex);
+    client(size_t serverIndex, int clientFd);
     client(const client& rhs);
     client& operator=(const client& rhs);
     ~client();
@@ -40,4 +41,7 @@ public:
     bool isHeadersLoaded();
     size_t servIndx();
     void setServIndx(size_t s);
+
+    int getFd() {return this->_fd;}
+
 };

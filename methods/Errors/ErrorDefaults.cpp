@@ -9,6 +9,7 @@ std::string getContentFile(std::string path){
         while (std::getline(input, line)) {
             fileContent += line;
         }
+        input.close();
     }
     return fileContent;
 }

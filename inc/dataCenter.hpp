@@ -15,6 +15,22 @@
 # define BUFFER_SIZE 1024
 #include <dirent.h>
 #include <sys/stat.h>
+#include "returnError.hpp"
+
+//enum statusCodes {
+//    BadRequest = 400,
+//    NotFound = 404,
+//    NotImplemented = 501,
+//    RequestURIToLong = 414,
+//    MethodNotAllowed = 405,
+//    InternalServerError = 500,
+//    Forbidden = 403,
+//    RequestTimeOut = 408,
+//    Conflict = 409,
+//    HTTPVersionNotSupported = 505,
+//    PayloadTooLarge = 413,
+//    LengthRequired = 411
+//};
 
 class dataCenter
 {
@@ -23,6 +39,7 @@ private:
     int epollfd;
     std::vector<int> serv_fds;
     std::map<int, client> clientList;
+
 
 
     /* private member functions */
@@ -49,6 +66,8 @@ public:
     ~dataCenter();
     webserv getWebserv();
     void get(client clnt, int fd);
+//    const std::string& getErrorPath();
+
 
 };
 

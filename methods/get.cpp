@@ -154,20 +154,25 @@ void dataCenter::get(client clnt, int fd){
             if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), content))
             {
                 // sould be replaced with CGI
+//                throw returnError(srv, fd, 501);
+
                 sendResponse(fd, 200, "OK", content, "text/html");
                 return ;
             } 
             else if (!srv.getLocations()[j].get_dir_listing()){ // checking if auto_index false and dir_listing false
-                sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
-                return ;
+//                sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
+//                return ;
+                throw returnError(srv, fd, 403);
+
             }
         }
 
         //cheking dir listing 
         if (!srv.getLocations()[j].get_dir_listing())
         {
-            sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
-            return ;
+            throw returnError(srv, fd, 403);
+//            sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
+//            return ;
         }
         else // if auto index is false or none of the indexed file exist but dir_listing is true
             listDirectory(clnt.getStartLine().path, path, fd);

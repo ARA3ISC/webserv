@@ -4,12 +4,14 @@ client::client() {
     this->_headerareloaded = false;
 }
 
-client::client(size_t serverIndex) {
+client::client(size_t serverIndex, int clientFd) {
     this->_headerareloaded = false;
     this->_serverIndex = serverIndex;
+    this->_fd = clientFd;
 }
 
 client::client(const client &rhs) {
+    this->_fd = rhs._fd;
     this->_startLine = rhs._startLine;
     this->_headers = rhs._headers;
     this->_body = rhs._body;
@@ -21,6 +23,8 @@ client::client(const client &rhs) {
 client& client::operator=(const client &rhs) {
     if (this != &rhs)
     {
+        this->_fd = rhs._fd;
+
         this->_startLine = rhs._startLine;
         this->_headers = rhs._headers;
         this->_body = rhs._body;
@@ -42,7 +46,7 @@ void client::setFullRequest(const std::string &line) {
 
 void client::setStartLine(std::string line) {
     if (line.at(0) == 32 || line.at(0) == '\t')
-        throw std::runtime_error("Bad client 400");
+        throw 400;
     std::vector<std::string> values = splitBySpace(line);
 
     if (values.size() != 3)
@@ -55,7 +59,7 @@ void client::setStartLine(std::string line) {
 
 void client::setHeaders(std::string line) {
     if (line[0] == 32 || line[0] == '\t')
-        throw std::runtime_error("Bad client 400");
+        throw 400;
     std::vector<std::string> values = splitHeaderBycolon(line);
     if (values.size() != 2) {
         throw std::runtime_error("Bad client!!!");
@@ -97,3 +101,4 @@ size_t client::servIndx() {return this->_serverIndex;}
 void client::setServIndx(size_t serverIndex) {
     this->_serverIndex = serverIndex;
 }
+

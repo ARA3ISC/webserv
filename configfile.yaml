@@ -11,7 +11,7 @@
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
-        auto_index: off
+        auto_index: on
         upload: ./upload
 
     - location /about:
