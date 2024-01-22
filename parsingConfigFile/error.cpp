@@ -14,7 +14,6 @@ bool invalid_directive(std::string line, int c)
     serverAttr.push_back("server_name:");
     serverAttr.push_back("listen:");
     serverAttr.push_back("default_dir_file:");
-    serverAttr.push_back("allow_methods:");
     serverAttr.push_back("Error:");
 
 

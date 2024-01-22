@@ -42,6 +42,7 @@ void    location::setPath(std::string line, int nbl, server* s)
     std::vector<std::string> splited;
     splited = splitBySpace(line);
     removeComment(splited);
+    std::cout << splited.size() << "<-\n";
 
     if (splited.size() != 2 && splited.size() != 3)
     {

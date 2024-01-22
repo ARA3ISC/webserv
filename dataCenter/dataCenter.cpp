@@ -154,7 +154,6 @@ void dataCenter::handlingRequests()
     struct epoll_event events[MAX_EVENTS];
     while (true)
     {
-//        std::cout << this->clientList.size()<< std::endl;
         nfds = epoll_wait(this->epollfd, events, MAX_EVENTS, -1);
         if (nfds == -1) {
             perror("epoll_wait");
@@ -166,16 +165,13 @@ void dataCenter::handlingRequests()
             if (isServerFd(serv_fds, events[i].data.fd))
             {
                 acceptClientSocket(serv_fds, events[i].data.fd, ev, hostAddr, host_addrlen);
-
             }
             else
             {
-//                std::cout << this->clientList.begin()->second.servIndx() << std::endl;
                 if (events[i].events & EPOLLIN)
                 {
                     this->reading(events[i].data.fd);
                 }
-
 //                else if (events[i].events & EPOLLOUT) {}
                 /* check if the response is ready to send */
             }

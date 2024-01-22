@@ -32,6 +32,7 @@ void Error404(std::string fileName, int fd){
 
     //content of the file provided in config file
     std::string content = getContentFile(fileName);
+    std::cout << content << std::endl;
     // in case error file not provivde in config file we get our default file in Errors folder
     if(content == "")
         content = getDefaultError404();

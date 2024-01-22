@@ -39,7 +39,6 @@ server::server(const server& rhs)
     this->_server_name = rhs._server_name;
     this->_root = rhs._root;
     this->_error_pages = rhs._error_pages;
-    this->_allow_methods = rhs._allow_methods;
     this->_client_max_body_size = rhs._client_max_body_size;
     this->_locations = rhs._locations;
 }
@@ -52,7 +51,6 @@ server &server::operator=(const server &rhs) {
         this->_server_name = rhs._server_name;
         this->_root = rhs._root;
         this->_error_pages = rhs._error_pages;
-        this->_allow_methods = rhs._allow_methods;
         this->_client_max_body_size = rhs._client_max_body_size;
         this->_locations = rhs._locations;
     }
@@ -117,27 +115,6 @@ void    server::setRoot(std::string line, int nbln){
         throwError("Syntax error", nbln);
 
     this->_root = splited[1];
-}
-
-void    server::setMethods(std::string line, int nbln) {
-    std::vector<std::string> splited;
-
-    splited = splitBySpace(line);
-    removeComment(splited);
-
-    if (splited.size() == 1)
-        throwError("Syntax error", nbln);
-    if (invalidMethod(splited))
-    {
-        std::cout << "Invalid method (line: " << nbln << ")";
-        throw std::runtime_error("");
-    }
-    if (hasDuplicates(splited))
-        throwError("Duplicated symbol", nbln);
-    this->_allow_methods.clear();
-    for (unsigned long i = 1; i < splited.size(); ++i) {
-        this->_allow_methods.push_back(splited[i]);
-    }
 }
 
 void server::setMaxBodySize(std::string line, int nbln) {

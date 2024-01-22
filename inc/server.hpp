@@ -16,7 +16,6 @@ private:
 	std::vector<std::string> _server_name;
 	std::vector<std::string> _listen;
 	std::string _root;
-	std::vector<std::string> _allow_methods;
 	int _client_max_body_size;
     std::map<int, std::string> _error_pages;
 	std::vector<location> _locations;
@@ -30,7 +29,6 @@ public:
 	void set_server_name(std::string line, int nbln);
 	void set_listen(std::string line, int nbln);
 	void setRoot(std::string line, int nbln);
-	void setMethods(std::string line, int nbln);
     void setMaxBodySize(std::string line, int nbln);
     void setErrorPages(std::string line, int nbln);
 
@@ -39,10 +37,7 @@ public:
 	{
 		return this->_server_name;
 	}
-	std::vector<std::string>& getMethods()
-	{
-		return this->_allow_methods;
-	}
+
 	std::vector<std::string>& getListen(){
 		return this->_listen;
 	}

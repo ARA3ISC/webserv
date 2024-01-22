@@ -110,6 +110,7 @@ void dataCenter::get(client clnt, int fd){
     
     std::string path = srv.getLocations()[j].getRoot() + clnt.getStartLine().path;
 
+//    std::cout << "---> " << path << std::endl;
     // no matching loaction or the location not found in the server
     if (j == -1 || !pathExists(path))
     {
