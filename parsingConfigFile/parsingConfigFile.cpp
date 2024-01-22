@@ -19,8 +19,8 @@ std::string rtrim(const std::string &str)
 
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
-    location *l = s->createLocation();
-    l->setPath(line, nbline, s);
+    location l;
+    l.setPath(line, nbline, s);
     while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
     {
         nbline++;
@@ -28,49 +28,42 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             continue;
 
         if (getFirstWord(trimStr(line)) == "dir_listing:")
-            l->set_dir_listing(line, nbline);
+            l.set_dir_listing(line, nbline);
         else if (getFirstWord(trimStr(line)) == "allow_methods:")
-            l->setMethods(line, nbline);
+            l.setMethods(line, nbline);
         else if (getFirstWord(trimStr(line)) == "root:")
-            l->setRoot(line, nbline);
+            l.setRoot(line, nbline);
         else if (getFirstWord(trimStr(line)) == "index:")
-            l->setIndexes(line, nbline);
+            l.setIndexes(line, nbline);
         else if (getFirstWord(trimStr(line)) == "auto_index:")
-            l->setAutoIndex(line, nbline);
+            l.setAutoIndex(line, nbline);
         else if (getFirstWord(trimStr(line)) == "cgi_path:")
-        {
-            l->setCgiPath(line, nbline);
-
-        }
+            l.setCgiPath(line, nbline);
         else if (getFirstWord(line) == "upload:")
-        {
-
-            l->setUpload(line, nbline);
-
-        }
+            l.setUpload(line, nbline);
+        else if (getFirstWord(line) == "max_body_size:")
+            l.setMaxBodySize(line, nbline);
         if (trimStr(line).find("- location") != std::string::npos)
         {
 //            std::cout << l.getCgiPath().size() << "==" << std::endl;
-            s->addLocation(*l);
-            checkIndentation(line, 4, nbline, l, true);
+            s->addLocation(l);
+            checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
-            delete l;
             return;
         }
         else if (invalid_directive(trimStr(line), 1))
         {
-            delete l;
             throwError("Invalid direction error", nbline);
         }
         else
-            checkIndentation(line, 8, nbline, l, true);
+            checkIndentation(line, 8, nbline);
     }
     nbline++;
 //    std::cout << l->getCgiPath().size() << ";"<< std::endl;
 
-    s->addLocation(*l);
+    s->addLocation(l);
 //    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
-    delete l;
+//    delete l;
 }
 
 void fillServerAttr(std::ifstream &obj, int &nbline)
@@ -84,23 +77,21 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             continue;
 
         if (getFirstWord(line) == "server_name:")
-            s.set_server_name(line, nbline, &s);
+            s.set_server_name(line, nbline);
         else if (getFirstWord(line) == "listen:")
-            s.set_listen(line, nbline, &s);
+            s.set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
-            s.setRoot(line, nbline, &s);
-        else if (getFirstWord(line) == "client_max_body_size:")
-            s.setMaxBodySize(line, nbline, &s);
+            s.setRoot(line, nbline);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
-            checkIndentation(line, 4, nbline, &s, false);
+            checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, &s);
         }
         else if (invalid_directive(trimStr(line), 0))
              throwError("Invalid direction error", nbline);
         if (rtrim(line).find("- server:") != std::string::npos)
         {
-            checkIndentation(line, 0, nbline, &s, false);
+            checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
         }
     }
@@ -177,7 +168,7 @@ void    checkServerBlock(std::ifstream &obj)
         {
             c++;
             server s;
-            checkIndentation(line, 0, nbline, &s, true);
+            checkIndentation(line, 0, nbline);
             fillServerAttr(obj, nbline);
             std::reverse(webs.getServers().begin(), webs.getServers().end());
             checkMissingData();
@@ -223,9 +214,9 @@ void startParsing(std::string filename)
 //            std::cout << "**\n";
 //        }
 //        std::cout << .get_dir_listing() << std::endl;
-//        printEntryMsg();
-//        std::cout << webs.getServers().size() << std::endl;
 //        exit(0);
+//        std::cout << webs.getServers().size() << std::endl;
+        printEntryMsg();
         dataCenter ds(webs);
 
         obj.close();

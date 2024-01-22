@@ -3,6 +3,8 @@
     listen: 127.0.0.1:9090
     root: /
     error: 404 /path/to/404.html
+
+
     - location /myWebsite:
         dir_listing: on
         allow_methods: GET
@@ -13,50 +15,17 @@
         cgi_path: purl /usr/bin/purl
         auto_index: on
         upload: ./upload
+        max_body_size: 4000M
 
-    - location /about:
-        dir_listing: off
-        allow_methods: GET POST
+    - location /myWebsite:
+        dir_listing: on
+        allow_methods: GET
         root: ./myWebsite
-        index: loc1.html flow.php  gg ds
+        index: loc1.html flow.php
         cgi_path: py /usr/bin/python3
-        cgi_path: php /Users/maneddam/.local/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: off
+        cgi_path: ff /Users/maneddam/.local/bin/php-cgi
+#        cgi_path: purl /usr/bin/purl
+#        cgi_path: sh /usr/bin/purl
+        auto_index: on
         upload: ./upload
-
-
-- server:
-    server_name: server2 kkkk2
-    listen: 9999
-    root: root2
-    error: 404 ./CustomErrors/404.html
-
-
-    - location /about:
-        dir_listing: on
-        index: index.html
-        allow_methods: GET
-        auto_index: on
-        root: ./myWebsite
-    - location /home:
-        dir_listing: off
-        allow_methods: GET
-        auto_index: on
-        root: ./myWebsite
-
-
-- server:
-    listen: 2222
-    root: root3
-    server_name: server3 kkkk3
-    error: 404 ./error_pages/404.html
-    error: 302 ./error_pages/404.html
-    - location /akheruahd1:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./www/portfoliolocation2
-    - location /akheruahd2:
-        dir_listing: on
-        allow_methods: GET
-        root: ./www/portfoliolocation2
+        max_body_size: 4000M
