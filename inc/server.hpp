@@ -7,6 +7,7 @@
 # include <map>
 # include <vector>
 
+
 class location;
 
 class server
@@ -26,10 +27,10 @@ public:
 	server& operator=(const server& rhs);
 	~server();
 
-	void set_server_name(std::string line, int nbln);
-	void set_listen(std::string line, int nbln);
-	void setRoot(std::string line, int nbln);
-    void setMaxBodySize(std::string line, int nbln);
+	void set_server_name(std::string line, int nbln, server *s);
+	void set_listen(std::string line, int nbln, server *s);
+	void setRoot(std::string line, int nbln, server *s);
+    void setMaxBodySize(std::string line, int nbln, server *s);
     void setErrorPages(std::string line, int nbln);
 
 

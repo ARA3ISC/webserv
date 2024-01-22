@@ -138,6 +138,7 @@ void dataCenter::get(client clnt, int fd){
         }
         if (!srv.getLocations()[j].get_dir_listing())
         {
+            // error 404
             sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
             return ;
         }

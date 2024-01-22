@@ -17,28 +17,6 @@ std::string rtrim(const std::string &str)
     return str.substr(0, end + 1);
 }
 
-template<class T>
-void checkIndentation(std::string s, int c, int &nbline, T* allocated, bool deleteit)
-{
-    // std::cout <<  "|"<<s<<"|" << std::endl;
-    int i;
-    for (i = 0; i < c; ++i)
-    {
-        if (!std::isspace(s[i]))
-        {
-            if (deleteit)
-                delete allocated;
-            throwError("Indentation error", nbline);
-        }
-    }
-    if (s[c] && (s[c] == ' ' || s[c] == '\t'))
-    {
-        if (deleteit)
-            delete allocated;
-        throwError("Indentation error", nbline);
-    }
-}
-
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
     location *l = s->createLocation();
@@ -88,7 +66,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             checkIndentation(line, 8, nbline, l, true);
     }
     nbline++;
-    std::cout << l->getCgiPath().size() << ";"<< std::endl;
+//    std::cout << l->getCgiPath().size() << ";"<< std::endl;
 
     s->addLocation(*l);
 //    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
@@ -106,15 +84,13 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             continue;
 
         if (getFirstWord(line) == "server_name:")
-            s.set_server_name(line, nbline);
+            s.set_server_name(line, nbline, &s);
         else if (getFirstWord(line) == "listen:")
-            s.set_listen(line, nbline);
+            s.set_listen(line, nbline, &s);
         else if (getFirstWord(line) == "root:")
-            s.setRoot(line, nbline);
+            s.setRoot(line, nbline, &s);
         else if (getFirstWord(line) == "client_max_body_size:")
-            s.setMaxBodySize(line, nbline);
-        else if (getFirstWord(line) == "error:")
-            s.setErrorPages(line, nbline);
+            s.setMaxBodySize(line, nbline, &s);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline, &s, false);
@@ -148,7 +124,6 @@ void    countServers(std::string filename)
                 continue;
             if (rtrim(line.c_str()) != "- server:")
             {
-                // std::cout << "-> "<< line << '\n';
                 throwError("Syntax error", ln);
             }
             if (rtrim(line.c_str()) == "- server:")
@@ -191,12 +166,18 @@ void    checkServerBlock(std::ifstream &obj)
     while (getline(obj, line))
     {
         nbline++;
-        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#' || line.at(0) == 32 || line.at(0) == '\t')
+        if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#')
             continue;
-
+        if (c > 0)
+        {
+            if (line.at(0) == 32 || line.at(0) == '\t')
+                continue;
+        }
         if (rtrim(line) == "- server:")
         {
             c++;
+            server s;
+            checkIndentation(line, 0, nbline, &s, true);
             fillServerAttr(obj, nbline);
             std::reverse(webs.getServers().begin(), webs.getServers().end());
             checkMissingData();
@@ -243,7 +224,8 @@ void startParsing(std::string filename)
 //        }
 //        std::cout << .get_dir_listing() << std::endl;
 //        printEntryMsg();
-        exit(0);
+//        std::cout << webs.getServers().size() << std::endl;
+//        exit(0);
         dataCenter ds(webs);
 
         obj.close();

@@ -8,7 +8,7 @@ int main(int ac, char *av[]) {
         else if (ac == 2) {
             startParsing(av[1]);
         } else if (ac == 1) {
-            std::cout << "No config file specified\nUsign default one -> configfile.yaml\n";
+            std::cout << "No config file specified\nUsing default one -> configfile.yaml\n";
             startParsing("configfile.yaml");
         }
     }

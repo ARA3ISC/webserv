@@ -38,7 +38,6 @@ server::server(const server& rhs)
     this->_listen = rhs._listen;
     this->_server_name = rhs._server_name;
     this->_root = rhs._root;
-    this->_error_pages = rhs._error_pages;
     this->_client_max_body_size = rhs._client_max_body_size;
     this->_locations = rhs._locations;
 }
@@ -50,14 +49,15 @@ server &server::operator=(const server &rhs) {
         this->_listen = rhs._listen;
         this->_server_name = rhs._server_name;
         this->_root = rhs._root;
-        this->_error_pages = rhs._error_pages;
         this->_client_max_body_size = rhs._client_max_body_size;
         this->_locations = rhs._locations;
     }
     return *this;
 }
 
-void    server::set_server_name(std::string line, int nbln) {
+void    server::set_server_name(std::string line, int nbln, server *s) {
+    checkIndentation(line, 4, nbln, s, false);
+
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
@@ -72,7 +72,9 @@ void    server::set_server_name(std::string line, int nbln) {
 
 }
 
-void    server::set_listen(std::string line, int nbln) {
+void    server::set_listen(std::string line, int nbln, server *s) {
+    checkIndentation(line, 4, nbln, s, false);
+
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
@@ -104,7 +106,9 @@ void    server::set_listen(std::string line, int nbln) {
 //    std::cout << "-->" << this->_listen.size() << std::endl;
 }
 
-void    server::setRoot(std::string line, int nbln){
+void    server::setRoot(std::string line, int nbln, server *s){
+    checkIndentation(line, 4, nbln, s, false);
+
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
@@ -117,7 +121,9 @@ void    server::setRoot(std::string line, int nbln){
     this->_root = splited[1];
 }
 
-void server::setMaxBodySize(std::string line, int nbln) {
+# include "../inc/parsingConfigFile.hpp"
+void server::setMaxBodySize(std::string line, int nbln, server *s) {
+    checkIndentation(line, 4, nbln, s, false);
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);

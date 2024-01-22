@@ -3,6 +3,7 @@
 
 #include "utils.hpp"
 #include "utils3.hpp"
+#include "error.hpp"
 
 #include <cstdlib>
 
