@@ -13,6 +13,7 @@ bool invalid_directive(std::string line, int c)
     std::vector<std::string> serverAttr;
     serverAttr.push_back("server_name:");
     serverAttr.push_back("listen:");
+    serverAttr.push_back("root:");
     serverAttr.push_back("error:");
 
 
@@ -22,6 +23,7 @@ bool invalid_directive(std::string line, int c)
     locationAttr.push_back("cgi_path:");
     locationAttr.push_back("root:");
     locationAttr.push_back("auto_index:");
+    locationAttr.push_back("max_body_size:");
     locationAttr.push_back("index:");
     locationAttr.push_back("upload:");
     if (!c)
@@ -32,13 +34,6 @@ bool invalid_directive(std::string line, int c)
     else
         if (std::find(locationAttr.begin(), locationAttr.end(), getFirstWord(line)) == locationAttr.end())
             return 1;
-    return 0;
-}
-
-bool invalidCgi(std::string cgi)
-{
-    if (cgi != "py" && cgi != "php" && cgi != "purl" )
-        return 1;
     return 0;
 }
 
@@ -61,4 +56,18 @@ bool hasDuplicates(const std::vector<std::string>& vec) {
         seenElements.push_back(vec[i]);
     }
     return false;
+}
+
+void checkIndentation(std::string s, int c, int &nbline)
+{
+    int i;
+    for (i = 0; i < c; ++i)
+    {
+        if (!std::isspace(s[i]))
+            throwError("Indentation error", nbline);
+    }
+    if (s[c] && (s[c] == ' ' || s[c] == '\t'))
+    {
+        throwError("Indentation error", nbline);
+    }
 }

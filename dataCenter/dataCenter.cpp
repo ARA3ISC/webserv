@@ -16,8 +16,6 @@ dataCenter::dataCenter(const dataCenter &rhs) {
     this->epollfd = rhs.epollfd;
     this->serv_fds= rhs.serv_fds;
     this->clientList = rhs.clientList;
-
-
 }
 dataCenter &dataCenter::operator=(const dataCenter &rhs) {
     if (&rhs != this) {

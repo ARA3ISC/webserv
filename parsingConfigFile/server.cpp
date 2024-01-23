@@ -30,7 +30,7 @@ bool checkListen(std::string ipport)
 
 // class members
 server::server() {
-    this->_client_max_body_size = 2000;
+
 }
 server::server(const server& rhs)
 {
@@ -38,7 +38,6 @@ server::server(const server& rhs)
     this->_listen = rhs._listen;
     this->_server_name = rhs._server_name;
     this->_root = rhs._root;
-    this->_client_max_body_size = rhs._client_max_body_size;
     this->_locations = rhs._locations;
 }
 
@@ -49,14 +48,14 @@ server &server::operator=(const server &rhs) {
         this->_listen = rhs._listen;
         this->_server_name = rhs._server_name;
         this->_root = rhs._root;
-        this->_client_max_body_size = rhs._client_max_body_size;
+
         this->_locations = rhs._locations;
     }
     return *this;
 }
 
-void    server::set_server_name(std::string line, int nbln, server *s) {
-    checkIndentation(line, 4, nbln, s, false);
+void    server::set_server_name(std::string line, int nbln) {
+    checkIndentation(line, 4, nbln);
 
     std::vector<std::string> splited;
 
@@ -72,8 +71,8 @@ void    server::set_server_name(std::string line, int nbln, server *s) {
 
 }
 
-void    server::set_listen(std::string line, int nbln, server *s) {
-    checkIndentation(line, 4, nbln, s, false);
+void    server::set_listen(std::string line, int nbln) {
+    checkIndentation(line, 4, nbln);
 
     std::vector<std::string> splited;
 
@@ -106,8 +105,8 @@ void    server::set_listen(std::string line, int nbln, server *s) {
 //    std::cout << "-->" << this->_listen.size() << std::endl;
 }
 
-void    server::setRoot(std::string line, int nbln, server *s){
-    checkIndentation(line, 4, nbln, s, false);
+void    server::setRoot(std::string line, int nbln){
+    checkIndentation(line, 4, nbln);
 
     std::vector<std::string> splited;
 
@@ -119,20 +118,6 @@ void    server::setRoot(std::string line, int nbln, server *s){
         throwError("Syntax error", nbln);
 
     this->_root = splited[1];
-}
-
-# include "../inc/parsingConfigFile.hpp"
-void server::setMaxBodySize(std::string line, int nbln, server *s) {
-    checkIndentation(line, 4, nbln, s, false);
-    std::vector<std::string> splited;
-
-    splited = splitBySpace(line);
-    removeComment(splited);
-
-
-    if (splited.size() != 2)
-        throwError("Syntax error", nbln);
-    this->_client_max_body_size = std::atoi(splited[1].c_str());
 }
 
 void server::setErrorPages(std::string line, int nbln)

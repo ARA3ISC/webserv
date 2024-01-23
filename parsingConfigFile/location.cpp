@@ -8,6 +8,7 @@ location::location(): _dir_listing(false), _auto_index(false)
 {
     this->_index.push_back("index.html");
     this->_index.push_back("index.htm");
+    this->_client_max_body_size = 2000;
 }
 location::location(const location &rhs) {
 
@@ -19,6 +20,7 @@ location::location(const location &rhs) {
     this->_cgi_path = rhs._cgi_path;
     this->_auto_index = rhs._auto_index;
     this->_upload = rhs._upload;
+    this->_client_max_body_size = rhs._client_max_body_size;
 
 }
 
@@ -33,6 +35,7 @@ location &location::operator=(const location &rhs) {
         this->_cgi_path = rhs._cgi_path;
         this->_auto_index = rhs._auto_index;
         this->_upload = rhs._upload;
+        this->_client_max_body_size = rhs._client_max_body_size;
     }
     return *this;
 }
@@ -45,7 +48,7 @@ void    location::setPath(std::string line, int nbl, server* s)
 
     if (splited.size() != 2 && splited.size() != 3)
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbl);
     }
     if (splited.size() == 2) {
@@ -56,7 +59,7 @@ void    location::setPath(std::string line, int nbl, server* s)
         this->_path = removeLastColon(splited[2]);
         if (this->_path.empty())
         {
-            delete this;
+//            delete this;
             throwError("Syntax error", nbl);
         }
         checkSlash(this->_path);
@@ -71,7 +74,7 @@ void location::set_dir_listing(std::string line, int nbl)
 
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off") )
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbl);
     }
 
@@ -90,18 +93,18 @@ void    location::setMethods(std::string line, int nbln) {
 
     if (splited.size() == 1)
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbln);
     }
     if (invalidMethod(splited))
     {
-        delete this;
+//        delete this;
         std::cout << "Invalid method (line: " << nbln << ")";
         throw std::runtime_error("");
     }
     if (hasDuplicates(splited))
     {
-        delete this;
+//        delete this;
         std::cout << "Duplicated symbol (line: " << nbln << ")";
         throw std::runtime_error("");
     }
@@ -117,7 +120,7 @@ void location::setRoot(std::string line, int nbln)
     splited = splitBySpace(line);
     if (splited.size() != 2)
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbln);
     }
     this->_root = splited[1];
@@ -131,12 +134,12 @@ void location::setIndexes(std::string line, int nbln) {
 
     if (splited.size() == 1)
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbln);
     }
     if (hasDuplicates(splited))
     {
-        delete this;
+//        delete this;
         std::cout << "Duplicated symbol (line: " << nbln << ")";
         throw std::runtime_error("");
     }
@@ -154,7 +157,7 @@ void location::setAutoIndex(std::string line, int nbln)
     removeComment(splited);
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off"))
     {
-        delete this;
+//        delete this;
 //        std::cout << splited.size() << " - [" << splited[1] << "]" << std::endl;
         throwError("Syntax error", nbln);
     }
@@ -172,16 +175,11 @@ void location::setCgiPath(std::string& line, int nbln)
 
     if (splited.size() != 3)
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbln);
     }
-    if (invalidCgi(splited[1]))
-    {
-        delete this;
-        throwError("Invalid cgi", nbln);
-    }
     if (this->_cgi_path.find(splited[1]) != this->_cgi_path.end()) {
-        delete this;
+//        delete this;
         throwError("Duplicated symbol", nbln);
     }
 //    this->_cgi_path[splited[1]] = splited[2];
@@ -199,10 +197,27 @@ void    location::setUpload(std::string line, int nbln)
 
     if (splited.size() != 2)
     {
-        delete this;
+//        delete this;
         throwError("Syntax error", nbln);
     }
     this->_upload = splited[1];
+}
+
+void location::setMaxBodySize(std::string line, int nbln) {
+//    checkIndentation(line, 4, nbln, s, false);
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+    removeComment(splited);
+
+
+    if (splited.size() != 2 || checkMaxBodySize(splited[1]))
+    {
+        throwError("Syntax error", nbln);
+    }
+
+//    if ()
+    this->_client_max_body_size = std::atoi(splited[1].c_str());
 }
 
 std::string location::getRoot()

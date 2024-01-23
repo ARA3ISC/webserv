@@ -17,7 +17,6 @@ private:
 	std::vector<std::string> _server_name;
 	std::vector<std::string> _listen;
 	std::string _root;
-	int _client_max_body_size;
     std::map<int, std::string> _error_pages;
 	std::vector<location> _locations;
 public:
@@ -27,9 +26,9 @@ public:
 	server& operator=(const server& rhs);
 	~server();
 
-	void set_server_name(std::string line, int nbln, server *s);
-	void set_listen(std::string line, int nbln, server *s);
-	void setRoot(std::string line, int nbln, server *s);
+	void set_server_name(std::string line, int nbln);
+	void set_listen(std::string line, int nbln);
+	void setRoot(std::string line, int nbln);
     void setMaxBodySize(std::string line, int nbln, server *s);
     void setErrorPages(std::string line, int nbln);
 
@@ -43,7 +42,6 @@ public:
 		return this->_listen;
 	}
 	std::string getRoot(){return this->_root;}
-    int getMaxBodySize() {return this->_client_max_body_size;}
     std::map<int, std::string>& get_error_pages()
     {
         return this->_error_pages;

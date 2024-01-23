@@ -33,14 +33,31 @@ void printEntryMsg()
 
 }
 
-//void printEntryMsg()
-//{
-//    std::cout << GREEN << "                                       _                                 _             " << std::endl;
-//    std::cout << "                                      (_)                               (_)            " << std::endl;
-//    std::cout << "  ___ _____  ____ _   _ _____  ____    _  ___     ____ _   _ ____  ____  _ ____   ____ " << std::endl;
-//    std::cout << " /___) ___ |/ ___) | | | ___ |/ ___)  | |/___)   / ___) | | |  _ \\|  _ \\| |  _ \\ / _  |" << std::endl;
-//    std::cout << "|___ | ____| |    \\ V /| ____| |      | |___ |  | |   | |_| | | | | | | | | | | ( (_| |" << std::endl;
-//    std::cout << "(___/|_____)_|     \\_/ |_____)_|      |_(___/   |_|   |____/|_| |_|_| |_|_|_| |_|\\___ |" << std::endl;
-//    std::cout << "                                                                                (_____|" << std::endl;
-//
-//}
+bool checkMaxBodySize(std::string line)
+{
+    // kb -> b (x 1024)
+    // mb -> b (x 1024 x 1024)
+    // gb -> b (x 1024 x 1024 x 1024)
+    char *end;
+    double n = std::strtod(line.c_str(), &end);
+    if (*end)
+    {
+        if (strcmp(end, "m") != 0 && strcmp(end, "M") != 0 && strcmp(end, "g") != 0
+         && strcmp(end, "G") != 0 && strcmp(end, "k") != 0 && strcmp(end, "K") != 0)
+            return 1;
+        else
+        {
+            if (strcmp(end, "m") == 0 || strcmp(end, "M") == 0)
+                if (n > 2000)
+                    return 1;
+            if (strcmp(end, "g") == 0 || strcmp(end, "G") == 0)
+                if (n > 2)
+                    return 1;
+            if (strcmp(end, "k") == 0 || strcmp(end, "K") == 0)
+                if (n > 20000)
+                    return 1;
+        }
+    }
+    (void)n;
+    return 0;
+}
