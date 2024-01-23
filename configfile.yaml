@@ -38,10 +38,17 @@
         index: index.html
         allow_methods: GET
         auto_index: on
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
         root: ./myWebsite
     - location /home:
         dir_listing: off
         allow_methods: GET
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: sh /usr/bin/sh
+        index: loc1.html
         auto_index: on
         root: ./myWebsite
 

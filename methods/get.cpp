@@ -1,30 +1,41 @@
 #include "../inc/dataCenter.hpp"
 #include "../inc/get.hpp"
 
-void cgi(std::string path){
-    (void)path;
-}
+// void cgi(std::string path){
+//     (void)path;
+// }
 
 bool pathExists(const std::string& path) {
     struct stat buffer;
     return (stat(path.c_str(), &buffer) == 0);
 }
 
-std::string getPathWithoutSlash(std::string path){
-    std::size_t last;
-    for (size_t i = 0; i < path.size(); i++)
-    {
-        last = path.find_last_of("/");
+std::string cleanPath(std::string path) {
+    std::string result;
 
-        if (last == path.size() - 1)
-            path = path.substr(0, last);
+    // Remove leading slashes
+    size_t startPos = path.find_first_not_of('/');
+    if (startPos != std::string::npos) {
+        result = path.substr(startPos);
     }
-    return path;
+
+    // Remove trailing slashes
+    size_t endPos = result.find_last_not_of('/');
+    if (endPos != std::string::npos) {
+        result = result.substr(0, endPos + 1);
+    }
+
+    // Add a single leading slash
+    if (!result.empty() && result[0] != '/') {
+        result = '/' + result;
+    }
+
+    return result;
 }
 
 int getLocationRequested(std::vector<location> loc, std::string path){
 
-    path = getPathWithoutSlash(path);
+    path = cleanPath(path);
 
     for (size_t i = 0; i < loc.size(); i++)
         if (loc[i].getPath() == path)
@@ -83,7 +94,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
         std::ifstream input(nameFile.c_str());
         if (input.is_open())
         {
-            content = getContentFile(path + "/" + index[i]);
+            content = path + "/" + index[i];
             input.close();
             return true;
         }
@@ -96,7 +107,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
         std::ifstream input(nameFile.c_str());
         if (input.is_open())
         {
-            content = getContentFile(path + "/" + index[i]);
+            content = path + "/" + index[i];
             input.close();
             return true;
         }
@@ -114,66 +125,42 @@ void dataCenter::get(client clnt, int fd){
     
     //split the directory and file fron the client request
     splitPath(clnt.getStartLine().path, directory, file); 
-    
-    // std::cout << clnt.getStartLine().path << " | " << directory << " | " << file << std::endl;
 
     //get the index of the location 
     int j = getLocationRequested(srv.getLocations(), directory);
     if (j == -1)
-    {
-        Error404(srv.get_error_pages()[404], fd);
-        return ;
-    }
+        throw returnError(srv, fd, 404);
 
     //the complite path of the directory or the file 
     std::string path = srv.getLocations()[j].getRoot() + clnt.getStartLine().path;
     
     //cheking existing of the file on the server
     if (!pathExists(path))
-    {
-        // std::cout << j << " ERROR : " << path << std::endl;
-        Error404(srv.get_error_pages()[404], fd);
-        return ;
-    }
+        throw returnError(srv, fd, 404);
 
     // file or directory requested
     if (file != "")
     {
         std::cout << "file\n";
-        cgi(path);
-        return;
+        cgi(srv.getLocations()[j], path, fd);
     }
     else
     {
-        std::cout << "directory\n";
+        std::cout << "directory " << directory << "\n";
 
         //checking auto index
         if (srv.getLocations()[j].isAutoIndex()){
-            std::string content;
+            std::string fileIndexed;
             // get the files indexed and put the content in variable content 
-            if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), content))
-            {
-                // sould be replaced with CGI
-//                throw returnError(srv, fd, 501);
-
-                sendResponse(fd, 200, "OK", content, "text/html");
-                return ;
-            } 
-            else if (!srv.getLocations()[j].get_dir_listing()){ // checking if auto_index false and dir_listing false
-//                sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
-//                return ;
+            if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed))
+                cgi(srv.getLocations()[j], fileIndexed, fd);
+            else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
                 throw returnError(srv, fd, 403);
-
-            }
         }
 
         //cheking dir listing 
         if (!srv.getLocations()[j].get_dir_listing())
-        {
             throw returnError(srv, fd, 403);
-//            sendResponse(fd, 403, "Forbidden", getContentFile("Errors/403.html"), "text/html");
-//            return ;
-        }
         else // if auto index is false or none of the indexed file exist but dir_listing is true
             listDirectory(clnt.getStartLine().path, path, fd);
     }
