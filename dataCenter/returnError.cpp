@@ -25,6 +25,7 @@ returnError::returnError(server& wes, int fd, int statusCode) {
     this->statusCodeMsgs[400] = "BadRequest";
     this->statusCodeMsgs[404] = "NotFound";
     this->statusCodeMsgs[501] = "NotImplemented";
+    this->statusCodeMsgs[502] = "BadGateway";
     this->statusCodeMsgs[414] = "RequestURIToLong";
     this->statusCodeMsgs[405] = "MethodNotAllowed";
     this->statusCodeMsgs[500] = "InternalServerError";
