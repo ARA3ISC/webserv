@@ -61,3 +61,10 @@ bool checkMaxBodySize(std::string line)
     (void)n;
     return 0;
 }
+
+long getValue(std::string value)
+{
+    char *end;
+    long n = std::strtol(value.c_str(), &end, 10);
+    return n;
+}

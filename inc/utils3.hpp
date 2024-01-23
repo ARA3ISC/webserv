@@ -12,3 +12,4 @@
 void checkSlash(std::string &path);
 bool checkMaxBodySize(std::string line);
 void printEntryMsg();
+long getValue(std::string value);

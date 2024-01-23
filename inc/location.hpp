@@ -21,7 +21,7 @@ private:
     std::vector<std::string> _index;
     bool _auto_index;
     std::string _upload;
-    int _client_max_body_size;
+    long _client_max_body_size;
 public:
     location();
     location(const location& rhs);

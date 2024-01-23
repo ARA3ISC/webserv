@@ -213,11 +213,21 @@ void location::setMaxBodySize(std::string line, int nbln) {
 
     if (splited.size() != 2 || checkMaxBodySize(splited[1]))
     {
+        std::cout << splited.size() << "\n";
         throwError("Syntax error", nbln);
     }
 
-//    if ()
-    this->_client_max_body_size = std::atoi(splited[1].c_str());
+//    std::string value = splited[1];
+    long  lastResult;
+    if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
+        lastResult = getValue(splited[1].c_str()) * 1024 * 1024;
+    else if (*(splited[1].end() - 1) == 'G' || *(splited[1].end() - 1) == 'g')
+        lastResult = getValue(splited[1].c_str()) * 1024 * 1024 * 1024;
+    else
+        lastResult = getValue(splited[1].c_str()) * 1024;
+
+    this->_client_max_body_size = lastResult;
+    std::cout << this->_client_max_body_size << std::endl;
 }
 
 std::string location::getRoot()

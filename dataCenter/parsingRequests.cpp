@@ -26,8 +26,10 @@ void    dataCenter::requestSyntaxError(client& rq)
     if (rq.getStartLine().path.size() > 2048)
         throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 414);
 
+    /* if no host present in the headers*/
     if (rq.getHeaders().find("Host") == rq.getHeaders().end())
         throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 400);
+
 
 }
 
