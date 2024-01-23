@@ -179,6 +179,10 @@ void dataCenter::handlingRequests()
 
                         close(events[i].data.fd);
                     }
+                    catch(int){
+
+                        close(events[i].data.fd);
+                    }
                 }
 //                else if (events[i].events & EPOLLOUT) {}
                 /* check if the response is ready to send */
