@@ -71,4 +71,6 @@ public:
 
 };
 
+void cgi(location loc,std::string path, int fd);
+
 #endif
