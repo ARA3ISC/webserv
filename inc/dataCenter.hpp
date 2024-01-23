@@ -66,11 +66,11 @@ public:
     ~dataCenter();
     webserv getWebserv();
     void get(client clnt, int fd);
+    void cgi(location loc,std::string path, int fd);
 //    const std::string& getErrorPath();
 
 
 };
 
-void cgi(location loc,std::string path, int fd);
 
 #endif

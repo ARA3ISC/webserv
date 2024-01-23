@@ -17,49 +17,64 @@ std::string getExtention(std::string path){
     return "";
 }
 
-void cgi(location loc, std::string path, int fd){
+std::string readFileToString(int fd) {
+    std::string content;
+    char buffer[1024];
+
+    ssize_t bytesRead;
+    while ((bytesRead = read(fd, buffer, sizeof(buffer))) > 0) {
+        content.append(buffer, bytesRead);
+    }
+    close(fd);
+    return content;
+}
+
+bool checkCgiPaths(std::string path){
+    std::cout << path << std::endl;
+    if (access(path.c_str(), F_OK) != 0)
+        return true;
+    return false;
+}
+
+void dataCenter::cgi(location loc, std::string path, int fd){
     if (checkHtmlfile(path))
     {
         sendResponse(fd, 200, "OK", getContentFile(path), "text/html");
         throw 0;
     }
-    // char *cmd = loc.getCgiPath()[getExtention(path)].c_str();
-    // char **argv = {}
+    if (checkCgiPaths(loc.getCgiPath()[getExtention(path)])){
+        sendResponse(fd, 200, "OK", getContentFile(path), "text/plain");
+        throw 0;
+    }
     int status;
-    int id = fork();
     
-    // int fileDescriptor = open("./randomfile", O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     int pipefd[2];
     if(pipe(pipefd) == -1)
         perror("pipe");
-
+        
+    int id = fork();
     if (id == 0){
         
         const char* programPath = path.c_str();
-        char* const argv[] = {(char*)programPath, NULL};
+        char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
         char* const envp[] = {NULL};
-        
-        dup2(pipefd[0], 0);
+
+
         close(pipefd[0]);
+
         dup2(pipefd[1], 1);
         close(pipefd[1]);
 
         execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
-        std::cout << "EXECVE ERROR\n";
-        exit(1);
+        std::cerr << "EXECVE ERROR\n";
+        perror("execve");
+        exit(4);
     }
     waitpid(id, &status, 0);
-    while (wait(NULL) != -1)
-        ;
-
+    
     close(pipefd[1]);
 
-    char buffer[100];
-    ssize_t bytesRead = read(pipefd[0], buffer, sizeof(buffer));
-    close(pipefd[0]);
-    (void)bytesRead;
-    // std::string content = getContentFile("./randomfile");
+    sendResponse(fd, 200, "OK", readFileToString(pipefd[0]), "text/html");
 
-    std::cout << path << " " << loc.getCgiPath()[getExtention(path)] << WEXITSTATUS(status) << "|" << buffer << "|" << std::endl;
-    std::cout << "not an html file\n";
+    throw 0;
 }

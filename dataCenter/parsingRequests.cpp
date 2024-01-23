@@ -80,6 +80,9 @@ void    dataCenter::reading(int fd)
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
             // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;
         }
+        // checking body size with content-length
+
+        
         if (this->clientList[fd].getStartLine().method == "GET")
         {
             get(this->clientList[fd], fd);

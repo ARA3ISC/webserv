@@ -40,17 +40,18 @@
         auto_index: on
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
-        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: php /usr/bim/php
         cgi_path: purl /usr/bin/purl
 
     - location /home:
-        dir_listing: off
+        dir_listing: on
         allow_methods: GET
         auto_index: on
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
-        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
+        cgi_path: sh /usr/bin/sh
 
 
 - server:
