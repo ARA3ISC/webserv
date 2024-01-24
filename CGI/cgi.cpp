@@ -36,16 +36,17 @@ bool checkCgiPaths(std::string path){
     return false;
 }
 
-void dataCenter::cgi(location loc, std::string path, int fd){
+void dataCenter::cgi(int servIndx ,location loc, std::string path, int fd){
+    server srv = getWebserv().getServers()[servIndx];
+
     if (checkHtmlfile(path))
     {
         sendResponse(fd, 200, "OK", getContentFile(path), "text/html");
         throw 0;
     }
-    if (checkCgiPaths(loc.getCgiPath()[getExtention(path)])){
-        sendResponse(fd, 200, "OK", getContentFile(path), "text/plain");
-        throw 0;
-    }
+    if (checkCgiPaths(loc.getCgiPath()[getExtention(path)]))
+        throw returnError(srv, fd, 502);
+
     int status;
     
     int pipefd[2];
