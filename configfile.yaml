@@ -55,10 +55,10 @@
         cgi_path: sh /usr/bin/sh
 
     - location /home/test:
-        dir_listing: off
+        dir_listing: on
         index: index.html
         allow_methods: GET
-        auto_index: off
+        auto_index: on
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php

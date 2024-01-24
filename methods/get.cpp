@@ -163,9 +163,9 @@ void dataCenter::get(client clnt, int fd){
         throw returnError(srv, fd, 404);
 
     // file or directory requested
-    if (!file.empty())
+    if (!file.empty() && file.find('.') != std::string::npos)
     {
-        std::cout << "file " << "\n";
+        std::cout << "file " <<   "\n";
         cgi(clnt.servIndx(), srv.getLocations()[j], path, fd);
     }
     else
