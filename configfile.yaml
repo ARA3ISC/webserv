@@ -1,8 +1,10 @@
 - server:
     server_name: server1 kkkk1
-    listen: 127.0.0.1:9090
+    listen: 127.0.0.2:9090
     root: /
     error: 404 /path/to/404.html
+
+
     - location /myWebsite:
         dir_listing: on
         allow_methods: GET
@@ -25,6 +27,17 @@
         auto_index: off
         upload: ./upload
 
+    - location /home/test:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: ./upload
+
 
 - server:
     server_name: server2 kkkk2
@@ -37,25 +50,33 @@
         dir_listing: on
         index: index.html
         allow_methods: GET
-        auto_index: on
+        auto_index: off
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
 
+
+    - location /:
+        dir_listing: off
+        allow_methods: GET
+        auto_index: on
+        root: ./myWebsite
+        index: home.html index.html
+
     - location /home:
         dir_listing: off
-        allow_methods: POST GET
+#        allow_methods: POST GET
         auto_index: on
-        index: mcksamck.php
+#        index: mcksamck.php
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
         cgi_path: sh /usr/bin/sh
 
-    - location /home/test:
-        dir_listing: on
+    - location /contact:
+        dir_listing: off
         index: index.html
         allow_methods: GET
         auto_index: on
@@ -63,6 +84,7 @@
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
+        index: contact.html
 
 
 - server:

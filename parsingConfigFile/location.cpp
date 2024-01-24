@@ -151,7 +151,6 @@ void location::setIndexes(std::string line, int nbln) {
     }
     for (unsigned long i = 1; i < splited.size(); ++i) {
         this->_index.push_back(splited[i]);
-//        std::cout << "added -> " << this->_index[i - 1] << std::endl;
     }
 }
 

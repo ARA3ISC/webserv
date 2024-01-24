@@ -42,7 +42,9 @@ std::string getCleanPath(std::string path){
 
 int getLocationRequested(std::vector<location> loc, std::string path){
 
-    path = cleanPath(path);
+    // here error when path is "/"
+//    path = cleanPath(path);
+//    std::cout << path << "---\n";
 
     for (size_t i = 0; i < loc.size(); i++)
         if (loc[i].getPath() == path)
@@ -148,8 +150,11 @@ void dataCenter::get(client clnt, int fd){
 
     //get the index of the location 
     int j = getLocationRequested(srv.getLocations(), directory);
-    if (j == -1)
+    if (j == -1) {
+        std::cout << "****\n";
         throw returnError(srv, fd, 404);
+    }
+
 
     //is method allowed in config file
     if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))

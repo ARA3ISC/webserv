@@ -77,9 +77,9 @@ void    dataCenter::reading(int fd)
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
+
+//            std::cout << this->clientList[fd].getStartLine().path << '\n';
         }
-
-
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
             // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;
