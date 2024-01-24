@@ -77,9 +77,6 @@ void    dataCenter::reading(int fd)
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
-            if (this->clientList[fd].getStartLine().method != "GET" && this->clientList[fd].getStartLine().method != "POST"
-                && this->clientList[fd].getStartLine().method != "DELETE")
-                throw returnError(wes.getServers()[clientList[fd].servIndx()], fd, 405);
         }
 
 

@@ -52,6 +52,8 @@ void client::setStartLine(std::string line) {
     if (values.size() != 3)
         throw std::runtime_error("Bad client");
 //    std::cout << values[0] << std::endl;
+    if (values[0] != "GET" && values[0] != "POST" && values[0] != "DELETE")
+        throw 405;
     this->_startLine.method = values[0];
     this->_startLine.path = values[1];
     this->_startLine.http_v = values[2];
