@@ -75,7 +75,14 @@ void    dataCenter::reading(int fd)
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
     {
         if (!this->clientList[fd].isHeadersLoaded())
+        {
             loadHeaders(fd);
+            if (this->clientList[fd].getStartLine().method != "GET" && this->clientList[fd].getStartLine().method != "POST"
+                && this->clientList[fd].getStartLine().method != "DELETE")
+                throw returnError(wes.getServers()[clientList[fd].servIndx()], fd, 405);
+        }
+
+
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
             // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;

@@ -16,6 +16,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include "returnError.hpp"
+#include "utils3.hpp"
 
 //enum statusCodes {
 //    BadRequest = 400,
