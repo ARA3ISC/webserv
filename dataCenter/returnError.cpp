@@ -8,9 +8,23 @@ std::string getErrorPath(server& s, int statusCode) {
     std::map<int, std::string>::iterator it = s.get_error_pages().find(statusCode);
     std::stringstream ss;
     ss << statusCode;
+
     std::string myString = ss.str();
     if (it != s.get_error_pages().end())
-        path = it->second;
+    {
+        std::ifstream obj(path.c_str());
+        if (obj.is_open())
+        {
+            path = it->second;
+            obj.close();
+        }
+        else
+        {
+            path = "./Errors/";
+            path += myString;
+            path += ".html";
+        }
+    }
     else
     {
         path = "./Errors/";
@@ -39,6 +53,9 @@ returnError::returnError(server& wes, int fd, int statusCode) {
 
 
     std::string path = getErrorPath(wes, statusCode);
+
+    std::cout << "path: " << path << std::endl;
+
     std::string content;
     content = getContentFile(path);
     std::ostringstream httpResponse;

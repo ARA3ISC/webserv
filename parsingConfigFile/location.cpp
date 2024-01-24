@@ -8,7 +8,7 @@ location::location(): _dir_listing(false), _auto_index(false)
 {
     this->_index.push_back("index.html");
     this->_index.push_back("index.htm");
-    this->_client_max_body_size = 2000;
+    this->max_body_size = 2000;
 }
 location::location(const location &rhs) {
 
@@ -20,7 +20,8 @@ location::location(const location &rhs) {
     this->_cgi_path = rhs._cgi_path;
     this->_auto_index = rhs._auto_index;
     this->_upload = rhs._upload;
-    this->_client_max_body_size = rhs._client_max_body_size;
+    this->max_body_size = rhs.max_body_size;
+    this->_return = rhs._return;
 
 }
 
@@ -35,7 +36,9 @@ location &location::operator=(const location &rhs) {
         this->_cgi_path = rhs._cgi_path;
         this->_auto_index = rhs._auto_index;
         this->_upload = rhs._upload;
-        this->_client_max_body_size = rhs._client_max_body_size;
+        this->max_body_size = rhs.max_body_size;
+        this->_return = rhs._return;
+
     }
     return *this;
 }
@@ -119,11 +122,14 @@ void location::setRoot(std::string line, int nbln)
     std::vector<std::string> splited;
     splited = splitBySpace(line);
     if (splited.size() != 2)
-    {
-//        delete this;
         throwError("Syntax error", nbln);
+    if (this->_root.empty())
+        this->_root = splited[1];
+    else
+    {
+        std::cout << "Duplicated symbol (line: " << nbln << ")";
+        throw std::runtime_error("");
     }
-    this->_root = splited[1];
 }
 
 void location::setIndexes(std::string line, int nbln) {
@@ -226,8 +232,15 @@ void location::setMaxBodySize(std::string line, int nbln) {
     else
         lastResult = getValue(splited[1].c_str()) * 1024;
 
-    this->_client_max_body_size = lastResult;
-    std::cout << this->_client_max_body_size << std::endl;
+    this->max_body_size = lastResult;
+}
+
+void location::setReturn(std::string line, int nbln) {
+    std::vector<std::string> splited;
+    splited = splitBySpace(line);
+    if (splited.size() != 2)
+        throwError("Syntax error", nbln);
+    this->_return = splited[1];
 }
 
 std::string location::getRoot()
@@ -251,5 +264,5 @@ std::map<std::string, std::string>& location::getCgiPath()
 }
 
 std::string location::getUpload() {return this->_upload;}
-
+std::string location::getReturn() {return this->_return;}
 location::~location() {}

@@ -26,6 +26,7 @@ bool invalid_directive(std::string line, int c)
     locationAttr.push_back("max_body_size:");
     locationAttr.push_back("index:");
     locationAttr.push_back("upload:");
+    locationAttr.push_back("return:");
     if (!c)
     {
         if (std::find(serverAttr.begin(), serverAttr.end(), getFirstWord(line)) == serverAttr.end())

@@ -43,6 +43,10 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             l.setUpload(line, nbline);
         else if (getFirstWord(line) == "max_body_size:")
             l.setMaxBodySize(line, nbline);
+        else if (getFirstWord(line) == "return:")
+        {
+            l.setReturn(line, nbline);
+        }
         if (trimStr(line).find("- location") != std::string::npos)
         {
 //            std::cout << l.getCgiPath().size() << "==" << std::endl;
@@ -62,6 +66,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 //    std::cout << l->getCgiPath().size() << ";"<< std::endl;
 
     s->addLocation(l);
+//    std::cout << l.getRoot() << "********\n";
 //    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
 //    delete l;
 }
@@ -82,6 +87,8 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s.set_listen(line, nbline);
         else if (getFirstWord(line) == "root:")
             s.setRoot(line, nbline);
+        else if (getFirstWord(line) == "error:")
+            s.setErrorPages(line, nbline);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
@@ -206,8 +213,9 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-        location loc = webs.getServers()[0].getLocations()[0];
-//        std::cout << loc.getCgiPath().size() << std::endl;
+//        location loc = webs.getServers()[0].getLocations()[0];
+//        std::cout << loc.getReturn() << "<-" << std::endl;
+
 
 //        for (std::map<std::string, std::string>::iterator it = loc.getCgiPath().begin(); it != loc.getCgiPath().begin() ; ++it) {
 //            std::cout << it->first << ": " << it->second << std::endl;

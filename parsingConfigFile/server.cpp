@@ -39,6 +39,7 @@ server::server(const server& rhs)
     this->_server_name = rhs._server_name;
     this->_root = rhs._root;
     this->_locations = rhs._locations;
+    this->_error_pages = rhs._error_pages;
 }
 
 server &server::operator=(const server &rhs) {
@@ -48,7 +49,7 @@ server &server::operator=(const server &rhs) {
         this->_listen = rhs._listen;
         this->_server_name = rhs._server_name;
         this->_root = rhs._root;
-
+        this->_error_pages = rhs._error_pages;
         this->_locations = rhs._locations;
     }
     return *this;
