@@ -5,13 +5,13 @@
 //     (void)path;
 // }
 
-bool pathExists(const std::string& path) {
+bool dataCenter::pathExists(const std::string& path) {
     struct stat buffer;
     return (stat(path.c_str(), &buffer) == 0);
 }
 bool isDirectory(const char* path) {
     struct stat fileStat;
-    
+
     if (stat(path, &fileStat) != 0) {
         // Error handling: unable to retrieve file status
         std::cerr << "Error getting file status for " << path << std::endl;
@@ -20,7 +20,7 @@ bool isDirectory(const char* path) {
 
     return S_ISDIR(fileStat.st_mode);
 }
-std::string cleanPath(std::string path) {
+std::string dataCenter::cleanPath(std::string path) {
     std::string result;
 
     // Remove leading slashes
@@ -45,14 +45,14 @@ std::string cleanPath(std::string path) {
     return result;
 }
 
-std::string getCleanPath(std::string path){
+std::string dataCenter::getCleanPath(std::string path){
     std::size_t last = path.find_last_of("?");
     if (last != std::string::npos)
         return path.substr(0, last);
     return path;
 }
 
-int getLocationRequested(std::vector<location> loc, std::string path){
+int dataCenter::getLocationRequested(std::vector<location> loc, std::string path){
 
     for (size_t i = 0; i < loc.size(); i++)
         if (loc[i].getPath() == path)
@@ -61,14 +61,14 @@ int getLocationRequested(std::vector<location> loc, std::string path){
     return -1;
 }
 
-void splitPath(std::string fullPath, std::string& directory, std::string& file) {
+void dataCenter::splitPath(std::string fullPath, std::string& directory, std::string& file) {
 
     fullPath = cleanPath(fullPath);
-    
+
     std::size_t last = fullPath.find_last_of("/");
 
     if (last != std::string::npos){
-        
+
         if(fullPath.substr(last + 1).find(".") != std::string::npos){
             directory = fullPath.substr(0, last);
             if (directory.empty())
@@ -86,14 +86,14 @@ void splitPath(std::string fullPath, std::string& directory, std::string& file) 
         directory = fullPath;
         file = "";
     }
-    
+
     // removing ? form the uri
     directory = getCleanPath(directory);
     file = getCleanPath(file);
 }
 
 void listDirectory(std::string path, std::string directory, int fd){
-    
+
     DIR* dir;
     struct dirent* ent;
     std::string response = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
@@ -147,7 +147,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
     return false;
 }
 
-bool isMethodAllowed(std::vector<std::string> methods, std::string method){
+bool dataCenter::isMethodAllowed(std::vector<std::string> methods, std::string method){
     std::vector<std::string>::iterator it = std::find(methods.begin(), methods.end(), method);
     if (it != methods.end())
         return false;

@@ -92,6 +92,11 @@ void    dataCenter::reading(int fd)
             get(this->clientList[fd], fd);
             close(fd);
         }
+        if (this->clientList[fd].getStartLine().method == "DELETE")
+        {
+            deleteMethod(this->clientList[fd], fd);
+            close(fd);
+        }
     }
 
 
