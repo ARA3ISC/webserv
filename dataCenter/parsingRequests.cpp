@@ -47,14 +47,14 @@ void    dataCenter::loadHeaders(int fd)
 //        std::cout << this->clientList[fd].getHeaders().begin()->first << std::endl;
         }
         this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
+        requestSyntaxError(this->clientList[fd]);
+        this->clientList[fd].headersLoaded(true);
     }
     catch (int e)
     {
         throw returnError(wes.getServers()[this->clientList[fd].servIndx()], fd, e);
     }
 
-    requestSyntaxError(this->clientList[fd]);
-    this->clientList[fd].headersLoaded(true);
 }
 #include <cstring>
 
@@ -82,17 +82,28 @@ void    dataCenter::reading(int fd)
         }
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
-            // std::cout << "method : " << this->clientList[fd].getStartLine().method << std::endl;
+            std::cout << "`````````****\n";
         }
         // checking body size with content-length
-
+        // std::cout << "size : " << this->clientList[fd].getBody().size() << " " << this->clientList[fd].getHeaders()["Content-Length"]<< std::endl;
+        std::cout << "-- " << a << std::endl;
         
         if (this->clientList[fd].getStartLine().method == "GET")
         {
             get(this->clientList[fd], fd);
             close(fd);
         }
+        if (this->clientList[fd].getStartLine().method == "POST")
+        {
+            // std::cout << this->clientList[fd].getFullRequest() << std::endl;
+            post(this->clientList[fd], fd);
+            close(fd);
+        }
     }
+    std::cout << "11-- " << a << std::endl;
+    
+        // this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
+        // std::cout << "1size : " << this->clientList[fd].getBody().size() << " " << this->clientList[fd].getHeaders()["Content-Length"]<< std::endl;
 
 
 }

@@ -36,19 +36,20 @@ std::string getErrorPath(server& s, int statusCode) {
 
 returnError::returnError() {}
 returnError::returnError(server& wes, int fd, int statusCode) {
-    this->statusCodeMsgs[400] = "BadRequest";
-    this->statusCodeMsgs[404] = "NotFound";
-    this->statusCodeMsgs[501] = "NotImplemented";
-    this->statusCodeMsgs[502] = "BadGateway";
-    this->statusCodeMsgs[414] = "RequestURIToLong";
-    this->statusCodeMsgs[405] = "MethodNotAllowed";
-    this->statusCodeMsgs[500] = "InternalServerError";
+    this->statusCodeMsgs[400] = "Bad Request";
+    this->statusCodeMsgs[404] = "Not Found";
+    this->statusCodeMsgs[501] = "Not Implemented";
+    this->statusCodeMsgs[502] = "Bad Gateway";
+    this->statusCodeMsgs[414] = "Request URI ToLong";
+    this->statusCodeMsgs[405] = "Method Not Allowed";
+    this->statusCodeMsgs[500] = "Internal Server Error";
     this->statusCodeMsgs[403] = "Forbidden";
-    this->statusCodeMsgs[408] = "RequestTimeOut";
+    this->statusCodeMsgs[408] = "Request TimeOut";
     this->statusCodeMsgs[409] = "Conflict";
-    this->statusCodeMsgs[505] = "HTTPVersionNotSupported";
-    this->statusCodeMsgs[413] = "PayloadTooLarge";
-    this->statusCodeMsgs[411] = "LengthRequired";
+    this->statusCodeMsgs[505] = "HTTP Version Not Supported";
+    this->statusCodeMsgs[504] = "Gateway Timeout";
+    this->statusCodeMsgs[413] = "Payload Too Large";
+    this->statusCodeMsgs[411] = "Length Required";
 
 
 

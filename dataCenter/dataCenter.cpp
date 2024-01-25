@@ -167,6 +167,7 @@ void dataCenter::handlingRequests()
             }
             else
             {
+                std::cout << "out "<< (events[i].events & EPOLLIN) << " \n";
                 if (events[i].events & EPOLLIN)
                 {
                     try {

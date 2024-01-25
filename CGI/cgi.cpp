@@ -47,15 +47,16 @@ void dataCenter::cgi(int servIndx ,location loc, std::string path, int fd){
     if (checkCgiPaths(loc.getCgiPath()[getExtention(path)]))
         throw returnError(srv, fd, 502);
 
-    int status;
-    
+    int status = 0;
+    double timeoutSeconds = 0.0015;
     int pipefd[2];
     if(pipe(pipefd) == -1)
         perror("pipe");
         
+    // clock_t start = clock();
     int id = fork();
     if (id == 0){
-        
+        std::cout << "child\n";
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
         char* const envp[] = {NULL};
@@ -67,15 +68,50 @@ void dataCenter::cgi(int servIndx ,location loc, std::string path, int fd){
         close(pipefd[1]);
 
         execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
-        std::cerr << "EXECVE ERROR\n";
+        throw returnError(srv, fd, 500);
         perror("execve");
-        exit(4);
+        exit(12);
     }
-    waitpid(id, &status, 0);
+    else {
+        clock_t start = clock();
+
+        while (waitpid(id, &status, WNOHANG) == 0) {
+            
+            if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
+                kill(id, SIGKILL);
+                throw returnError(srv, fd, 504);
+            }
+            usleep(100000);
+        }
+        if (WIFEXITED(status)) {
+            std::cout << "Child process exited with status: " << WEXITSTATUS(status) << std::endl;
+        } else {
+            std::cout << "Child process did not exit normally." << std::endl;
+        }
+
+        // return 0;
+        std::cout << "end\n";
+    }
+    // std::cout << "parent\n";
+    // clock_t start = clock();
+
+    // while (1) {
+    //     std::cout <<  static_cast<double>(clock() - start) / CLOCKS_PER_SEC << " " << WEXITSTATUS(status) << std::endl;
+    //     if(static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
+    //         close(pipefd[1]);
+    //         throw returnError(srv, fd, 504);
+    //     }
+    //     std::cout << "wautpid : " << waitpid(id, &status, 1) << std::endl;
+    //     if (waitpid(id, &status, 1) == 0){
+    //         break;
+    //     }
+    //     usleep(100000);  // Sleep for 100 milliseconds
+    // }
     
     close(pipefd[1]);
+    // waitpid(id, &status, 0);
 
     sendResponse(fd, 200, "OK", readFileToString(pipefd[0]), "text/html");
-
+    std::cout << "send res 200";
     throw 0;
 }
