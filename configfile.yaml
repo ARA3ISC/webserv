@@ -43,13 +43,14 @@
     server_name: server2 kkkk2
     listen: 9999
     root: root2
+    # baqi had lblan
     error: 404 ./CustomErrors/404.html
 
 
     - location /about:
         dir_listing: on
         index: index.html
-        allow_methods: GET POST
+        allow_methods: GET
         auto_index: off
         root: ./myWebsite
         cgi_path: py /usr/bin/python3

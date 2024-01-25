@@ -66,13 +66,27 @@ public:
     dataCenter& operator=(const dataCenter& rhs);
     ~dataCenter();
     webserv getWebserv();
+
+    /* common functions */
+    bool isMethodAllowed(std::vector<std::string> methods, std::string method);;
+    std::string cleanPath(std::string path);
+    std::string getCleanPath(std::string path);
+    void splitPath(std::string fullPath, std::string& directory, std::string& file);
+    int getLocationRequested(std::vector<location> loc, std::string path);
+    bool pathExists(const std::string& path);
+
+        /* get method*/
     void get(client clnt, int fd);
     void post(client clnt, int fd);
     void cgi(int servIndx ,location loc,std::string path, int fd);
 //    const std::string& getErrorPath();
 
 
-};
+    /* delete method */
+
+    void deleteMethod(client clnt, int fd);
+
+    };
 
 
 #endif

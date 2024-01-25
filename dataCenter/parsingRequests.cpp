@@ -99,11 +99,12 @@ void    dataCenter::reading(int fd)
             post(this->clientList[fd], fd);
             close(fd);
         }
+        if (this->clientList[fd].getStartLine().method == "DELETE")
+        {
+            deleteMethod(this->clientList[fd], fd);
+            close(fd);
+        }
     }
-    std::cout << "11-- " << a << std::endl;
-    
-        // this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
-        // std::cout << "1size : " << this->clientList[fd].getBody().size() << " " << this->clientList[fd].getHeaders()["Content-Length"]<< std::endl;
 
 
 }
