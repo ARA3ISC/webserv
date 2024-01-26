@@ -4,6 +4,8 @@
 #include "../inc/utils.hpp"
 #include "../inc/webserv.hpp"
 #include "../inc/utils2.hpp"
+#include "../inc/response.hpp"
+
 typedef struct startLine_s
 {
     std::string method;
@@ -15,15 +17,17 @@ class client
 {
 private:
     int _fd;
-    size_t _serverIndex;
+    int _serverIndex;
     std::string _fullRequest;
     startLine_t _startLine;
     std::map<std::string, std::string> _headers;
     std::string _body;
     bool _headerareloaded;
+    response _response;
+
 public:
     client();
-    client(size_t serverIndex, int clientFd);
+    client(int serverIndex, int clientFd);
     client(const client& rhs);
     client& operator=(const client& rhs);
     ~client();
@@ -39,9 +43,11 @@ public:
     std::map<std::string, std::string>& getHeaders();
     std::string& getBody();
     bool isHeadersLoaded();
-    size_t servIndx();
-    void setServIndx(size_t s);
-
+    int servIndx();
+    void setServIndx(int s);
+    int getServIndx(int s);
+    response &getResponse();
     int getFd() {return this->_fd;}
+    void setResponse(response &res);
 
 };

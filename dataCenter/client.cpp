@@ -4,7 +4,7 @@ client::client() {
     this->_headerareloaded = false;
 }
 
-client::client(size_t serverIndex, int clientFd) {
+client::client(int serverIndex, int clientFd) {
     this->_headerareloaded = false;
     this->_serverIndex = serverIndex;
     this->_fd = clientFd;
@@ -18,6 +18,7 @@ client::client(const client &rhs) {
     this->_headerareloaded= rhs._headerareloaded;
     this->_serverIndex = rhs._serverIndex;
     this->_fullRequest = rhs._fullRequest;
+    this->_response = rhs._response;
 }
 
 client& client::operator=(const client &rhs) {
@@ -31,11 +32,13 @@ client& client::operator=(const client &rhs) {
         this->_headerareloaded= rhs._headerareloaded;
         this->_serverIndex = rhs._serverIndex;
         this->_fullRequest = rhs._fullRequest;
+        this->_response = rhs._response;
     }
     return *this;
 }
 
-client::~client() {}
+client::~client() {
+}
 
 /* end of canonical form */
 
@@ -98,9 +101,16 @@ std::string& client::getBody() {
     return this->_body;
 }
 
-size_t client::servIndx() {return this->_serverIndex;}
+int client::servIndx() {return this->_serverIndex;}
 
-void client::setServIndx(size_t serverIndex) {
+void client::setServIndx(int serverIndex) {
     this->_serverIndex = serverIndex;
 }
 
+response &client::getResponse(){
+    return this->_response;
+}
+
+void client::setResponse(response &res){
+    this->_response = res;
+}

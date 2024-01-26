@@ -39,6 +39,7 @@ void Error404(std::string fileName, int fd){
         content = getDefaultError404();
     sendResponse(fd, 404, "Not Found", content, "text/html; charset=utf-8");
 }
+
 void sendResponse(int clientSocket, int statusCode, std::string statusMessage, std::string content, std::string contentType) {
     // Construct the HTTP response
     std::ostringstream httpResponse;
@@ -50,5 +51,5 @@ void sendResponse(int clientSocket, int statusCode, std::string statusMessage, s
 
     // std::cout << "httpResponse : " << httpResponse.str() << std::endl;
     // Send the response back to the client
-    write(clientSocket, httpResponse.str().c_str(), httpResponse.str().length());
+    write(clientSocket, httpResponse.str().c_str(), 4000);
 }

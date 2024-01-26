@@ -92,28 +92,6 @@ void dataCenter::splitPath(std::string fullPath, std::string& directory, std::st
     file = getCleanPath(file);
 }
 
-void listDirectory(std::string path, std::string directory, int fd){
-
-    DIR* dir;
-    struct dirent* ent;
-    std::string response = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
-    if ((dir = opendir(path.c_str())) != NULL) {
-        while ((ent = readdir(dir)) != NULL) {
-            std::string tmp = ent->d_name;
-            if (tmp == ".." || tmp == ".")
-                continue;
-            if (directory == "/")
-                response += "<li><a href=\""  + directory + tmp + "\" >" + tmp + "</a></li>";
-            else
-                response += "<li><a href=\""  + directory + "/" + tmp + "\" >" + tmp + "</a></li>";
-        }
-        closedir(dir);
-    }
-    response += "</ul></body></html>";
-    sendResponse(fd, 200, "OK", response, "text/html");
-    throw 0;
-}
-
 bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
     
     std::string nameFile;
@@ -154,7 +132,7 @@ bool dataCenter::isMethodAllowed(std::vector<std::string> methods, std::string m
     return true;
 }
 
-void dataCenter::get(client clnt, int fd){
+void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
     
     server srv = getWebserv().getServers()[clnt.servIndx()];    
@@ -164,15 +142,13 @@ void dataCenter::get(client clnt, int fd){
     
     //get the index of the location 
     int j = getLocationRequested(srv.getLocations(), directory);
-    
-    if (j == -1) {
-        std::cout << "****\n";
-        throw returnError(srv, fd, 404);
-    }
+
+    if (j == -1)
+         throw clnt.getResponse().setAttributes(404, "text/html");
 
     //is method allowed in config file
     if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
-        throw returnError(srv, fd, 405);
+        throw clnt.getResponse().setAttributes(405, "text/html");
     
     //the complite path of the directory or the file 
     std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
@@ -180,7 +156,7 @@ void dataCenter::get(client clnt, int fd){
     //cheking existing of the file on the server
     
     if (!pathExists(path))
-        throw returnError(srv, fd, 404);
+        throw clnt.getResponse().setAttributes(404, "text/html");
 
     // file or directory requested
     if (!file.empty() && file.find('.') != std::string::npos)
@@ -199,15 +175,13 @@ void dataCenter::get(client clnt, int fd){
             if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed))
                 cgi(clnt.servIndx(), srv.getLocations()[j], fileIndexed, fd);
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
-                throw returnError(srv, fd, 403);
+                throw clnt.getResponse().setAttributes(403, "text/html");
         }
 
         //cheking dir listing 
         if (!srv.getLocations()[j].get_dir_listing())
-            throw returnError(srv, fd, 403);
+            throw clnt.getResponse().setAttributes(403, "text/html");
         else // if auto index is false or none of the indexed file exist but dir_listing is true
             listDirectory(srv.getLocations()[j].getRoot() + directory , directory, fd);
     }
-    // std::cout << clnt.getFullRequest() << std::endl;
-    // std::cout << clnt.servIndx() << "--" << path << " | " << clnt.getStartLine().path << std::endl;
 }

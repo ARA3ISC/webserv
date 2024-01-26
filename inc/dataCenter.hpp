@@ -55,6 +55,7 @@ private:
 
     /* parsing requests functions */
     void    reading(int fd);
+    void    sending(int fd);
     void    loadHeaders(int fd);
     void    startParsingRequest(int fd);
     void    requestSyntaxError(client& rq);
@@ -76,7 +77,7 @@ public:
     bool pathExists(const std::string& path);
 
         /* get method*/
-    void get(client clnt, int fd);
+    void get(client &clnt, int fd);
     void post(client clnt, int fd);
     void cgi(int servIndx ,location loc,std::string path, int fd);
 //    const std::string& getErrorPath();
@@ -85,8 +86,8 @@ public:
     /* delete method */
 
     void deleteMethod(client clnt, int fd);
-
-    };
+    void listDirectory(std::string path, std::string directory, int fd);
+};
 
 
 #endif

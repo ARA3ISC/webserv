@@ -1,0 +1,103 @@
+#include "../inc/response.hpp"
+
+response::response(){
+    this->isReading = true;
+    this->lisDir = false;
+    this->isHeaderSend = false;
+    std::cout << "reading seted\n";
+}
+
+response::response(const response &other){
+    this->isReading = other.isReading;
+    this->path = other.path;
+    this->statusCode = other.statusCode;
+    this->statusMessage = other.statusMessage;
+    this->contentType = other.contentType;
+    this->lisDir = other.lisDir;
+    this->isHeaderSend = other.isHeaderSend;
+}
+
+response &response::operator=(const response &other){
+    if(this != &other){
+        this->isReading = other.isReading;
+        this->path = other.path;
+        this->statusCode = other.statusCode;
+        this->statusMessage = other.statusMessage;
+        this->contentType = other.contentType;
+    }
+    return *this;
+}
+
+response::~response(){
+}
+
+bool response::getIsReading(){
+    return this->isReading;
+}
+
+void response::setIsReading(bool a){
+    this->isReading = a;
+}
+
+int response::setAttributes(int statusCode, std::string contentType){
+    this->statusCode = statusCode;
+    this->contentType = contentType;
+    this->setIsReading(false);
+    return 0;
+}
+
+void response::setPath(std::string path){
+    this->path = path;
+}
+int response::getStatusCode(){
+    return this->statusCode;
+}
+std::string response::getPath(){
+    return this->path;
+}
+std::string response::getStatusMessage(){
+    return this->statusMessage;
+}
+std::string response::getContentType(){
+    return this->contentType;
+}
+
+void response::setContent(std::string content){
+    this->lisDir = true;
+    this->content= content;
+}
+std::string response::getContent(){
+    return this->content;
+}
+
+void response::setLisDir(bool lisDir){
+    this->lisDir = lisDir;
+}
+
+bool response::getLisDir(){
+    return this->lisDir;
+}
+
+void response::openFile(std::string path){
+    this->filePath.open(path.c_str(), std::ios::binary);
+}
+
+void response::openfilePathError(std::string path){
+    this->filePathError.open(path.c_str(), std::ios::binary);
+}
+
+std::fstream &response::getFilePath(){
+    return this->filePath;
+}
+
+std::fstream &response::getFilePathError(){
+    return this->filePathError;
+}
+
+bool response::getIsHeaderSend(){
+    return this->isHeaderSend;
+}
+
+void response::setIsHeaderSend(bool a){
+    this->isHeaderSend = a;
+}

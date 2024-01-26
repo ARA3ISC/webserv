@@ -50,7 +50,7 @@
     - location /about:
         dir_listing: on
         index: index.html
-        allow_methods: GET
+        allow_methods: POST GET
         auto_index: off
         root: ./myWebsite
         cgi_path: py /usr/bin/python3

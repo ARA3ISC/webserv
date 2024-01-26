@@ -7,6 +7,7 @@
 class returnError: public std::exception {
 private:
     std::map<int, std::string> statusCodeMsgs;
+    // int isHeaderSent;
 //    int _statusCode;
 //    int _clientFd;
 //    int _serverIndx;

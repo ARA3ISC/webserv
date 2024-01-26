@@ -6,29 +6,26 @@ void    dataCenter::requestSyntaxError(client& rq)
 
     /* check transfer encoding value */
     if (rq.getHeaders().find("Transfer-Encoding") != rq.getHeaders().end()) {
-        if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked") {
-            throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 501);
-        }
+        if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
+            throw 501;
     }
     else // check absence of content len and transfer encoding and presence of POST method
         if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end())
             if (rq.getStartLine().method == "POST")
-                throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 400);
+                throw 400;
 
     // check URI allowed characters
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
-        {
-            throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 400);
-        }
+            throw 400;
     }
     // check the length of the URI
     if (rq.getStartLine().path.size() > 2048)
-        throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 414);
+        throw 414;
 
     /* if no host present in the headers*/
     if (rq.getHeaders().find("Host") == rq.getHeaders().end())
-        throw returnError(wes.getServers()[rq.servIndx()], rq.getFd(), 400);
+        throw 400;
 
 
 }
@@ -52,7 +49,9 @@ void    dataCenter::loadHeaders(int fd)
     }
     catch (int e)
     {
-        throw returnError(wes.getServers()[this->clientList[fd].servIndx()], fd, e);
+        this->clientList[fd].getResponse().setAttributes(e, "text/html");
+        throw 0;
+        // throw returnError(wes.getServers()[this->clientList[fd].servIndx()], fd, e);
     }
 
 }
@@ -74,36 +73,29 @@ void    dataCenter::reading(int fd)
 
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
     {
+
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
-
-//            std::cout << this->clientList[fd].getStartLine().path << '\n';
         }
         else {
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
-            std::cout << "`````````****\n";
         }
         // checking body size with content-length
-        // std::cout << "size : " << this->clientList[fd].getBody().size() << " " << this->clientList[fd].getHeaders()["Content-Length"]<< std::endl;
-        std::cout << "-- " << a << std::endl;
         
         if (this->clientList[fd].getStartLine().method == "GET")
         {
             get(this->clientList[fd], fd);
-            close(fd);
         }
-        if (this->clientList[fd].getStartLine().method == "POST")
-        {
-            // std::cout << this->clientList[fd].getFullRequest() << std::endl;
-            post(this->clientList[fd], fd);
-            close(fd);
-        }
-        if (this->clientList[fd].getStartLine().method == "DELETE")
-        {
-            deleteMethod(this->clientList[fd], fd);
-            close(fd);
-        }
+        // if (this->clientList[fd].getStartLine().method == "POST")
+        // {
+        //     // std::cout << this->clientList[fd].getFullRequest() << std::endl;
+        //     post(this->clientList[fd], fd);
+        // }
+        // if (this->clientList[fd].getStartLine().method == "DELETE")
+        // {
+        //     deleteMethod(this->clientList[fd], fd);
+        // }
     }
 
 

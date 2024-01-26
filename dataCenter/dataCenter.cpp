@@ -139,7 +139,8 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     client c(indx, clientSocket);
     
     this->clientList[clientSocket] = c;
-    
+    response res;
+    this->clientList[clientSocket].setResponse(res);
 //    std::cout << clientSocket << " " << c.servIndx() << " " << this->clientList[clientSocket].servIndx() << std::endl;
 
 }
@@ -167,25 +168,20 @@ void dataCenter::handlingRequests()
             }
             else
             {
-                std::cout << "out "<< (events[i].events & EPOLLIN) << " \n";
-                if (events[i].events & EPOLLIN)
+                if ((events[i].events & EPOLLIN) && this->clientList[events[i].data.fd].getResponse().getIsReading())
                 {
                     try {
                         this->reading(events[i].data.fd);
                     }
-                    catch (returnError& e) {
-                        (void)e;
-//                        std::cout << "hahahaha\n";
-//                        std::cout << "first fd " << events[i].data.fd << std::endl;
-
-                        close(events[i].data.fd);
-                    }
                     catch(int){
-
-                        close(events[i].data.fd);
+                         std::cout << this->clientList[events[i].data.fd].getResponse().getStatusCode() << "&&&&&&&&&\n";
+                        std::cout << this->clientList[events[i].data.fd].getBody() << std::endl;
+                        // close(events[i].data.fd);
                     }
                 }
-//                else if (events[i].events & EPOLLOUT) {}
+                else if ((events[i].events & EPOLLOUT) && !this->clientList[events[i].data.fd].getResponse().getIsReading()) {
+                    this->sending(events[i].data.fd);
+                }
                 /* check if the response is ready to send */
             }
         }
@@ -195,4 +191,30 @@ void dataCenter::handlingRequests()
 
 webserv dataCenter::getWebserv(){
     return this->wes;
+}
+
+void dataCenter::listDirectory(std::string path, std::string directory, int fd){
+
+    DIR* dir;
+    struct dirent* ent;
+    std::string response = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
+    if ((dir = opendir(path.c_str())) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            std::string tmp = ent->d_name;
+            if (tmp == ".." || tmp == ".")
+                continue;
+            if (directory == "/")
+                response += "<li><a href=\""  + directory + tmp + "\" >" + tmp + "</a></li>";
+            else
+                response += "<li><a href=\""  + directory + "/" + tmp + "\" >" + tmp + "</a></li>";
+        }
+        closedir(dir);
+    }
+    response += "</ul></body></html>";
+    this->clientList[fd].getResponse().setAttributes(200, "text/html");
+    this->clientList[fd].getResponse().setContent(response);
+    // sendResponse(fd, 200, "OK", response, "text/html");
+    // this->
+    // exit(0);
+    throw 0;
 }

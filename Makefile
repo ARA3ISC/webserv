@@ -6,7 +6,7 @@ SRC = parsingConfigFile/webserv.cpp main.cpp parsingConfigFile/parsingConfigFile
 parsingConfigFile/location.cpp utils/utils.cpp parsingConfigFile/error.cpp  \
 dataCenter/client.cpp utils/utils2.cpp utils/utils3.cpp \
 dataCenter/dataCenter.cpp dataCenter/parsingRequests.cpp methods/get.cpp  methods/post.cpp methods/Errors/ErrorDefaults.cpp \
-dataCenter/returnError.cpp CGI/cgi.cpp methods/delete.cpp
+dataCenter/returnError.cpp CGI/cgi.cpp methods/delete.cpp dataCenter/response.cpp dataCenter/sending.cpp
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.cpp=%.o))
 OBJ_SUBDIRS = $(sort $(dir $(OBJ)))

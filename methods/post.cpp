@@ -20,17 +20,17 @@ void dataCenter::post(client clnt, int fd){
     if(isMethodAllowed(srv.getLocations()[j].getMethods(), "POST"))
         throw returnError(srv, fd, 405);
 
-    std::stringstream postData;
+    // std::stringstream postData;
 
-    std::ofstream outputFile("output.jpeg", std::ios::binary);
+    // std::ofstream outputFile("output.jpeg", std::ios::binary);
 
-    if (outputFile.is_open()) {
-        outputFile.write(clnt.getBody().c_str(), clnt.getBody().size());
-        outputFile.close();
-        std::cout << "File received and saved successfully." << std::endl;
-    } else {
-        std::cerr << "Error opening the output file." << std::endl;
-    }
+    // if (outputFile.is_open()) {
+    //     outputFile.write(clnt.getBody().c_str(), clnt.getBody().size());
+    //     outputFile.close();
+    //     std::cout << "File received and saved successfully." << std::endl;
+    // } else {
+    //     std::cerr << "Error opening the output file." << std::endl;
+    // }
     // std::fstream input("./myWebsite/upload/myPhoto.txt");
     // if (input.is_open()){
     //     input << clnt.getBody();
@@ -40,5 +40,6 @@ void dataCenter::post(client clnt, int fd){
     //     std::cout << "error opening" << std::endl;
         
     // }
+    // std::cout << clnt.getBody() << std::endl;
     std::cout << clnt.getBody().size() << "*************" << clnt.getHeaders()["Content-Length"] << std::endl;
 }
