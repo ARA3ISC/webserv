@@ -162,7 +162,8 @@ void dataCenter::get(client &clnt, int fd){
     if (!file.empty() && file.find('.') != std::string::npos)
     {
         std::cout << "file " <<   "\n";
-        cgi(clnt.servIndx(), srv.getLocations()[j], path, fd);
+        cgi(clnt, srv.getLocations()[j], path, fd);
+        throw clnt.getResponse().setAttributes(500, "text/html");
     }
     else
     {
@@ -173,7 +174,8 @@ void dataCenter::get(client &clnt, int fd){
             std::string fileIndexed;
             // get the files indexed and put the content in variable content 
             if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed))
-                cgi(clnt.servIndx(), srv.getLocations()[j], fileIndexed, fd);
+                throw clnt.getResponse().setAttributes(500, "text/html");
+                // cgi(clnt.servIndx(), srv.getLocations()[j], fileIndexed, fd);
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
                 throw clnt.getResponse().setAttributes(403, "text/html");
         }

@@ -1,6 +1,6 @@
 #include "../inc/dataCenter.hpp"
 
-static std::string getErrorPath(server& s, int statusCode) {
+std::string getErrorPath(server& s, int statusCode) {
     std::string path;
     std::map<int, std::string>::iterator it = s.get_error_pages().find(statusCode);
     std::stringstream ss;
@@ -44,10 +44,10 @@ std::string getHeaderResponse(response res, std::string errorMsg){
     return httpResponse.str();
 }
 std::string readBufferFromFile(std::fstream &filePath){
-    // char buffer[1024];
+    char buffer[1024] = {0};
     std::string content;
-    filePath.read(&content[0], 1024);
-    // std::cout << "content : " << content << std::endl;
+    filePath.read(buffer, 1023);
+    content = buffer;
     return content;
 }
 void dataCenter::sending(int fd){
@@ -72,38 +72,65 @@ void dataCenter::sending(int fd){
     std::string content = "";
     
     if(!res.getIsHeaderSend()){
-        
-        res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], this->clientList[fd].getResponse().getStatusCode()));
-        std::cout << res.getFilePathError().is_open() << "`````````````````\n";
-        // filePath.open(path.c_str());
-        std::cout << "sending header with code : " << statusCodeMsgs[res.getStatusCode()] << " \n";
+        std::cout << "sending header\n";
+        if (res.getStatusCode() != 200){
+            res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], this->clientList[fd].getResponse().getStatusCode()));
+        }
+        else{
+            res.openFile(res.getPath());
+            std::cout << "open of 200 file " << res.getFilePath().is_open() << " \n";
+
+        }
+        // res.openfilePathError("./myWebsite/contact/contact.html");
+        // open in 200 
+
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);
+        std::cout << "header : " << content << std::endl;
         res.setIsHeaderSend(true);
     }
     else if (res.getLisDir()){
         std::cout << "list directory\n";
         content = res.getContent();
+        // std::cout << "list content : " << content << std::endl; 
         res.setLisDir(false);
+        res.setIsResponseSent(true);
     }else{
-        
         // if (!res.getFilePath().eof()){
-        //     std::cout << "lplplplpllp\n";
         //     content = readBufferFromFile(res.getFilePath());
         // }
-        if (!res.getFilePathError().eof())
+        // exit(0);
+        if (!res.getFilePath().eof() && res.getStatusCode() == 200)
         {
-            content = readBufferFromFile(res.getFilePathError());
+            content = readBufferFromFile(res.getFilePath());
+            std::cout << "reding the content of 200 file |" << content << "|\n";
+            if (res.getFilePath().eof())
+                res.setIsResponseSent(true);
         }
-    
-        // std::cout << "read buffer with content : "<< content<<" \n";
+        if (!res.getFilePathError().eof() && res.getStatusCode() != 200)
+        {
+            // std::cout << res.getFilePathError().is_open() << "`````````````````\n";
+            std::cout << "reding the content of non ***200 file |" << content << "|\n";
+            content = readBufferFromFile(res.getFilePathError());
+            if (res.getFilePathError().eof())
+                res.setIsResponseSent(true);
+        }
+        
+        std::cout << res.getFilePath().eof() << " " << res.getFilePathError().eof() << std::endl;
+        
+        // if(res.getFilePath().eof() || res.getFilePathError().eof())
+        //     res.setIsResponseSent(true);
     }
     this->clientList[fd].setResponse(res);
     
-    if (res.getFilePath().eof() || res.getFilePathError().eof())
-    {
-        close(fd);
-        return;
-    }
-    write(fd, content.c_str(), content.length());
+    // std::cout << "1*******************************\n";
+    // std::cout << "content : " << content << std::endl; 
+    // std::cout << "2*******************************\n";
 
+    write(fd, content.c_str(), content.length());
+    if (res.getIsResponseSent()){
+        std::cout << "()()()()()()()()\n";
+        close(fd);
+        res.getFilePath().close();
+        res.getFilePathError().close();
+    }
 }

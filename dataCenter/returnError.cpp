@@ -3,36 +3,36 @@
 
 /* implementing the exception class */
 
-std::string getErrorPath(server& s, int statusCode) {
-    std::string path;
-    std::map<int, std::string>::iterator it = s.get_error_pages().find(statusCode);
-    std::stringstream ss;
-    ss << statusCode;
+// std::string getErrorPath(server& s, int statusCode) {
+//     std::string path;
+//     std::map<int, std::string>::iterator it = s.get_error_pages().find(statusCode);
+//     std::stringstream ss;
+//     ss << statusCode;
 
-    std::string myString = ss.str();
-    if (it != s.get_error_pages().end())
-    {
-        std::ifstream obj(path.c_str());
-        if (obj.is_open())
-        {
-            path = it->second;
-            obj.close();
-        }
-        else
-        {
-            path = "./Errors/";
-            path += myString;
-            path += ".html";
-        }
-    }
-    else
-    {
-        path = "./Errors/";
-        path += myString;
-        path += ".html";
-    }
-    return path;
-}
+//     std::string myString = ss.str();
+//     if (it != s.get_error_pages().end())
+//     {
+//         std::ifstream obj(path.c_str());
+//         if (obj.is_open())
+//         {
+//             path = it->second;
+//             obj.close();
+//         }
+//         else
+//         {
+//             path = "./Errors/";
+//             path += myString;
+//             path += ".html";
+//         }
+//     }
+//     else
+//     {
+//         path = "./Errors/";
+//         path += myString;
+//         path += ".html";
+//     }
+//     return path;
+// }
 
 returnError::returnError() {}
 returnError::returnError(server& wes, int fd, int statusCode) {
@@ -52,13 +52,13 @@ returnError::returnError(server& wes, int fd, int statusCode) {
     this->statusCodeMsgs[411] = "Length Required";
 
 
+    (void)wes;
+    // std::string path = getErrorPath(wes, statusCode);
 
-    std::string path = getErrorPath(wes, statusCode);
-
-    std::cout << "path: " << path << std::endl;
+    // std::cout << "path: " << path << std::endl;
 
     std::string content;
-    content = getContentFile(path);
+    // content = getContentFile(path);
     std::ostringstream httpResponse;
 
 

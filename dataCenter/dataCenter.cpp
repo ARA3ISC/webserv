@@ -116,7 +116,6 @@ int dataCenter::setNonBlocking(int sckt) {
 size_t dataCenter::getServerIndex(std::vector<int> s, int fd) {
     std::vector<int>::iterator it = std::find(s.begin(), s.end(), fd);
     size_t indx = std::distance(s.begin(), it );
-//    std::cout << indx << "---------\n";
     return indx;
 }
 
@@ -133,16 +132,12 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
                   &ev) == -1) {
         perror("epoll_ctl: conn_sock");
     }
-//    std::cout << "****\n";
-//    std::cout << "client Socket: " << clientSocket << std::endl;
     size_t indx = this->getServerIndex(server_fds, fd);
     client c(indx, clientSocket);
     
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
-//    std::cout << clientSocket << " " << c.servIndx() << " " << this->clientList[clientSocket].servIndx() << std::endl;
-
 }
 
 void dataCenter::handlingRequests()
@@ -174,12 +169,13 @@ void dataCenter::handlingRequests()
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-                         std::cout << this->clientList[events[i].data.fd].getResponse().getStatusCode() << "&&&&&&&&&\n";
-                        std::cout << this->clientList[events[i].data.fd].getBody() << std::endl;
+                        //  std::cout << this->clientList[events[i].data.fd].getResponse().getStatusCode() << "&&&&&&&&&\n";
+                        // std::cout << this->clientList[events[i].data.fd].getBody() << std::endl;
                         // close(events[i].data.fd);
                     }
                 }
                 else if ((events[i].events & EPOLLOUT) && !this->clientList[events[i].data.fd].getResponse().getIsReading()) {
+                    // std::cout << "------------------> fd to write " << events[i].data.fd << std::endl;
                     this->sending(events[i].data.fd);
                 }
                 /* check if the response is ready to send */
@@ -213,6 +209,9 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     response += "</ul></body></html>";
     this->clientList[fd].getResponse().setAttributes(200, "text/html");
     this->clientList[fd].getResponse().setContent(response);
+    this->clientList[fd].getResponse().setLisDir(true);
+
+    std::cout << "-------------in list directory get " <<  this->clientList[fd].getResponse().getLisDir() << " \n";
     // sendResponse(fd, 200, "OK", response, "text/html");
     // this->
     // exit(0);

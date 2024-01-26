@@ -79,7 +79,7 @@ public:
         /* get method*/
     void get(client &clnt, int fd);
     void post(client clnt, int fd);
-    void cgi(int servIndx ,location loc,std::string path, int fd);
+    void cgi(client &clnt ,location loc,std::string path, int fd);
 //    const std::string& getErrorPath();
 
 

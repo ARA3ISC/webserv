@@ -9,7 +9,7 @@ private:
     bool isReading;
     bool lisDir;
     bool isHeaderSend;
-
+    bool isResponseSent;
     int statusCode;
 
     std::fstream filePath;
@@ -31,6 +31,7 @@ public:
     void setContent(std::string content);
     void setLisDir(bool lisDir);
     void setIsHeaderSend(bool isHeaderSend);
+    void setIsResponseSent(bool a);
     void openFile(std::string path);
     void openfilePathError(std::string path);
     
@@ -44,6 +45,7 @@ public:
     bool getLisDir();
     std::fstream &getFilePath();
     std::fstream &getFilePathError();
+    bool getIsResponseSent();
 
 
 };
