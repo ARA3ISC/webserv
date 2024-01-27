@@ -5,7 +5,7 @@ response::response(){
     this->lisDir = false;
     this->isResponseSent = false;
     this->isHeaderSend = false;
-    std::cout << "reading seted\n";
+    // std::cout << "reading seted\n";
 }
 
 response::response(const response &other){

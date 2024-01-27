@@ -150,6 +150,15 @@ void dataCenter::get(client &clnt, int fd){
     if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
         throw clnt.getResponse().setAttributes(405, "text/html");
     
+    // seting the querystring fromthe complite path of the request 
+    std::string tmp = srv.getLocations()[j].getRoot() + clnt.getStartLine().path;
+    std::size_t queryIndex = tmp.find_last_of("?");
+    
+    if (queryIndex != std::string::npos)
+        clnt.setQueryString(tmp.substr(queryIndex + 1));
+    else
+        clnt.setQueryString("");
+
     //the complite path of the directory or the file 
     std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
     
@@ -163,7 +172,7 @@ void dataCenter::get(client &clnt, int fd){
     {
         std::cout << "file " <<   "\n";
         cgi(clnt, srv.getLocations()[j], path, fd);
-        throw clnt.getResponse().setAttributes(500, "text/html");
+        throw 0;
     }
     else
     {
@@ -173,9 +182,11 @@ void dataCenter::get(client &clnt, int fd){
         if (srv.getLocations()[j].isAutoIndex()){
             std::string fileIndexed;
             // get the files indexed and put the content in variable content 
-            if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed))
-                throw clnt.getResponse().setAttributes(500, "text/html");
-                // cgi(clnt.servIndx(), srv.getLocations()[j], fileIndexed, fd);
+            if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed)){
+                // std::cout << "cgi of auto index\n";
+                cgi(clnt , srv.getLocations()[j], fileIndexed, fd);
+            }
+                // throw clnt.getResponse().setAttributes(500, "text/html");
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
                 throw clnt.getResponse().setAttributes(403, "text/html");
         }

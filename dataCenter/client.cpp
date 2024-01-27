@@ -112,3 +112,11 @@ response &client::getResponse(){
 void client::setResponse(response &res){
     this->_response = res;
 }
+
+std::string client::getQueryString(){
+    return this->_queryString;
+}
+
+void client::setQueryString(std::string queryString){
+    this->_queryString = queryString;
+}

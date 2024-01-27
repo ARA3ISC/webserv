@@ -41,7 +41,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
 
     if (checkHtmlfile(path))
     {
-        std::cout << "CGI file html\n";
+        // std::cout << "CGI file html\n";
         clnt.getResponse().setAttributes(200, "text/html");
         clnt.getResponse().setPath(path);
         throw 0;
@@ -50,7 +50,12 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
         throw clnt.getResponse().setAttributes(502, "text/html");
         // throw returnError(srv, fd, 502);
     }
-
+    // char* const envp[] = {
+    //     (char*)"REQUEST_METHOD=GET",
+    //     (char*)"QUERY_STRING=?key1=value1",
+        
+    //     };
+    // std::cout << getenv("QUERY_STRING") << std::endl;
     int status = 0;
     double timeoutSeconds = 0.0015;
     int pipefd[2];
@@ -62,7 +67,15 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
     if (id == 0){
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
-        char* const envp[] = {NULL};
+        std::string queryString = "QUERY_STRING=" + clnt.getQueryString();
+        std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
+
+        char* const envp[] = {
+            (char*)requestMethod.c_str(),
+            (char*)queryString.c_str(),
+            NULL
+        };
+
 
 
         close(pipefd[0]);
@@ -81,17 +94,21 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
             if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
                 kill(id, SIGKILL);
                 throw clnt.getResponse().setAttributes(504, "text/html");
-                // throw returnError(srv, fd, 504);
             }
             usleep(100000);
         }
     }
-    // cheking the exist status of child process 
     close(pipefd[1]);
+    // cheking the exist status of child process 
+    if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
+        // std::cout << "exit with status : " << WEXITSTATUS(status) << std::endl;
+        throw clnt.getResponse().setAttributes(500, "text/html");
+    }
 
-    // sendResponse(fd, 200, "OK", readFileToString(pipefd[0]), "text/html");
-    std::cout << "send res 200 from CGI\n";
+
+    
+    // std::cout << "send res 200 from CGI\n";
     clnt.getResponse().setAttributes(200, "text/html");
-    clnt.getResponse().setPath(path);
+    clnt.getResponse().setContent(readFileToString(pipefd[0]));
     throw 0;
 }

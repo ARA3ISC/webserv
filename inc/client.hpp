@@ -24,6 +24,7 @@ private:
     std::string _body;
     bool _headerareloaded;
     response _response;
+    std::string _queryString;
 
 public:
     client();
@@ -49,5 +50,6 @@ public:
     response &getResponse();
     int getFd() {return this->_fd;}
     void setResponse(response &res);
-
+    std::string getQueryString();
+    void setQueryString(std::string queryString);
 };

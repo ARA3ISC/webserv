@@ -211,7 +211,7 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     this->clientList[fd].getResponse().setContent(response);
     this->clientList[fd].getResponse().setLisDir(true);
 
-    std::cout << "-------------in list directory get " <<  this->clientList[fd].getResponse().getLisDir() << " \n";
+    // std::cout << "-------------in list directory get " <<  this->clientList[fd].getResponse().getLisDir() << " \n";
     // sendResponse(fd, 200, "OK", response, "text/html");
     // this->
     // exit(0);
