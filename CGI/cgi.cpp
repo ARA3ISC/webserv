@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+#include <fcntl.h>
 
 bool checkHtmlfile(std::string file){
     if (file.length() >= 5 && file.substr(file.length() - 5) == ".html")
@@ -41,47 +41,40 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
 
     if (checkHtmlfile(path))
     {
-        // std::cout << "CGI file html\n";
         clnt.getResponse().setAttributes(200, "text/html");
         clnt.getResponse().setPath(path);
         throw 0;
     }
     if (checkCgiPaths(loc.getCgiPath()[getExtention(path)])){
         throw clnt.getResponse().setAttributes(502, "text/html");
-        // throw returnError(srv, fd, 502);
     }
-    // char* const envp[] = {
-    //     (char*)"REQUEST_METHOD=GET",
-    //     (char*)"QUERY_STRING=?key1=value1",
-        
-    //     };
-    // std::cout << getenv("QUERY_STRING") << std::endl;
+    
     int status = 0;
     double timeoutSeconds = 0.0015;
-    int pipefd[2];
-    if(pipe(pipefd) == -1)
-        perror("pipe");
         
-    // clock_t start = clock();
+    std::ostringstream s;
+    s <<  std::time(0);
+
+    std::string FileName = "/tmp/randomFile" + s.str() + ".txt";
+    clnt.getResponse().setIsCGIFile(true);
+    
+    int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
+    
     int id = fork();
     if (id == 0){
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
         std::string queryString = "QUERY_STRING=" + clnt.getQueryString();
         std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
-
+        
         char* const envp[] = {
             (char*)requestMethod.c_str(),
             (char*)queryString.c_str(),
             NULL
         };
 
-
-
-        close(pipefd[0]);
-
-        dup2(pipefd[1], 1);
-        close(pipefd[1]);
+        dup2(fdFile, 1);
+        close(fdFile);
 
         execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
         exit(127);
@@ -98,17 +91,14 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
             usleep(100000);
         }
     }
-    close(pipefd[1]);
     // cheking the exist status of child process 
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
-        // std::cout << "exit with status : " << WEXITSTATUS(status) << std::endl;
         throw clnt.getResponse().setAttributes(500, "text/html");
     }
 
+    close(fdFile);
 
-    
-    // std::cout << "send res 200 from CGI\n";
     clnt.getResponse().setAttributes(200, "text/html");
-    clnt.getResponse().setContent(readFileToString(pipefd[0]));
+    clnt.getResponse().setPath(FileName);
     throw 0;
 }

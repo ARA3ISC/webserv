@@ -103,7 +103,6 @@ void dataCenter::sending(int fd){
         }
 
     }
-    this->clientList[fd].setResponse(res);
     
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
@@ -111,5 +110,11 @@ void dataCenter::sending(int fd){
         close(fd);
         res.getFilePath().close();
         res.getFilePathError().close();
+        if (res.getIsCGIFile()){
+            unlink(res.getPath().c_str());
+            res.setIsCGIFile(false);
+        }
     }
+
+    this->clientList[fd].setResponse(res);
 }

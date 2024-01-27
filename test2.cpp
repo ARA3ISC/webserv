@@ -1,58 +1,29 @@
 #include <iostream>
-#include <unistd.h>
+#include <fstream>
 
 int main() {
-    int pipefd[2]; // File descriptors for the pipe
+    const char* charFileName = "example_char.txt";
+    std::string stringFileName = "example_string.txt";
 
-    // Create the pipe
-    if (pipe(pipefd) == -1) {
-        std::cerr << "Pipe creation failed." << std::endl;
+    // Using const char*
+    std::fstream charFileStream(charFileName, std::ios::out);
+    if (!charFileStream.is_open()) {
+        std::cerr << "Failed to open the file: " << charFileName << std::endl;
         return 1;
     }
+    charFileStream << "Hello, World!\n";
+    charFileStream.close();
 
-    pid_t pid = fork(); // Fork a new process
-
-    if (pid == -1) {
-        std::cerr << "Fork failed." << std::endl;
+    // Using std::string
+    std::fstream stringFileStream(stringFileName, std::ios::out);
+    if (!stringFileStream.is_open()) {
+        std::cerr << "Failed to open the file: " << stringFileName << std::endl;
         return 1;
     }
+    stringFileStream << "This is a file with a string filename.\n";
+    stringFileStream.close();
 
-    if (pid == 0) {
-        // Child process
-
-        // Close the read end of the pipe in the child
-        close(pipefd[0]);
-
-        // Redirect stdout to the pipe
-        dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[1]);
-
-        // Replace the child process image with a new executable
-        const char* command = "/bin/usr/sh";
-        char* const argv[] = {(char*)command, (char*)"Hello from child process!", NULL};
-        char* const envp[] = {NULL};
-        execve(command, argv, envp);
-
-        // execve will only return if there's an error
-        std::cerr << "execve failed." << std::endl;
-        return 1;
-    } else {
-        // Parent process
-
-        // Close the write end of the pipe in the parent
-        close(pipefd[1]);
-
-        char buffer[100];
-        ssize_t bytesRead = read(pipefd[0], buffer, sizeof(buffer));
-        close(pipefd[0]); // Close the read end of the pipe in the parent
-
-        if (bytesRead == -1) {
-            std::cerr << "Read from pipe failed." << std::endl;
-            return 1;
-        }
-
-        std::cout << "Parent process received: " << buffer << std::endl;
-    }
+    std::cout << "Files created successfully." << std::endl;
 
     return 0;
 }

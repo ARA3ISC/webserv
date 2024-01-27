@@ -5,6 +5,7 @@ response::response(){
     this->lisDir = false;
     this->isResponseSent = false;
     this->isHeaderSend = false;
+    this->isCGIFile = false;
     // std::cout << "reading seted\n";
 }
 
@@ -19,6 +20,7 @@ response::response(const response &other){
     this->contentType = other.contentType;
     this->content = other.content;
     this->isResponseSent = other.isResponseSent;
+    this->isCGIFile = other.isCGIFile;
 
 }
 
@@ -34,6 +36,7 @@ response &response::operator=(const response &other){
         this->contentType = other.contentType;
         this->content = other.content;
         this->isResponseSent = other.isResponseSent;
+        this->isCGIFile = other.isCGIFile;
     }
     return *this;
 }
@@ -90,7 +93,7 @@ bool response::getLisDir(){
 
 void response::openFile(std::string path){
     this->filePath.open(path.c_str(), std::ios::in | std::ios::out | std::ios::binary);
-
+    // std::cout << "file to open : " << path << std::endl;
 }
 #include <unistd.h>
 #include <fcntl.h>
@@ -119,4 +122,11 @@ void response::setIsResponseSent(bool a){
 }
 bool response::getIsResponseSent(){
     return this->isResponseSent;
+}
+
+void response::setIsCGIFile(bool a){
+    this->isCGIFile = a;
+}
+bool response::getIsCGIFile(){
+    return this->isCGIFile;
 }

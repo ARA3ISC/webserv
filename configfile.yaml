@@ -44,7 +44,7 @@
     listen: 9999
     root: root2
     # baqi had lblan
-    error: 404 ./myWebsite/contact/contact.html
+    error: 404 ./CustomErrors/404.html
 
 
     - location /about:
@@ -61,7 +61,7 @@
         dir_listing: on
         allow_methods: POST GET
         auto_index: on
-        index: mcksamck.php
+        index: index.html
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php

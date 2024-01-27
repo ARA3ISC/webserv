@@ -10,6 +10,7 @@ private:
     bool lisDir;
     bool isHeaderSend;
     bool isResponseSent;
+    bool isCGIFile;
     int statusCode;
 
     std::fstream filePath;
@@ -34,6 +35,7 @@ public:
     void setIsResponseSent(bool a);
     void openFile(std::string path);
     void openfilePathError(std::string path);
+    void setIsCGIFile(bool a);
     
     std::string getPath();
     std::string getStatusMessage();
@@ -46,6 +48,7 @@ public:
     std::fstream &getFilePath();
     std::fstream &getFilePathError();
     bool getIsResponseSent();
+    bool getIsCGIFile();
 
 
 };
