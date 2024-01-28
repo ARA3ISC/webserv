@@ -53,6 +53,7 @@ std::string readBufferFromFile(std::fstream &filePath){
 void dataCenter::sending(int fd){
     std::map<int , std::string> statusCodeMsgs;
     statusCodeMsgs[200] = "OK";
+    statusCodeMsgs[301] = "Moved Permanently";
     statusCodeMsgs[400] = "Bad Request";
     statusCodeMsgs[404] = "Not Found";
     statusCodeMsgs[501] = "Not Implemented";
@@ -72,6 +73,13 @@ void dataCenter::sending(int fd){
     std::string content = "";
     
     if(!res.getIsHeaderSend()){
+        if (res.getStatusCode() == 301)
+        {
+            std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html";
+            write(fd, header.c_str(), header.length());
+            close(fd);
+            return ;
+        }
         if (res.getStatusCode() != 200)
             res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], this->clientList[fd].getResponse().getStatusCode()));
         else

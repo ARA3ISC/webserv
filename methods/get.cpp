@@ -102,7 +102,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
         std::ifstream input(nameFile.c_str());
         if (input.is_open())
         {
-            content = path + "/" + index[i];
+            content = index[i];
             input.close();
             return true;
         }
@@ -115,7 +115,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
         std::ifstream input(nameFile.c_str());
         if (input.is_open())
         {
-            content = path + "/" + index[i];
+            content = index[i];
             input.close();
             return true;
         }
@@ -183,10 +183,10 @@ void dataCenter::get(client &clnt, int fd){
             std::string fileIndexed;
             // get the files indexed and put the content in variable content 
             if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed)){
-                // std::cout << "cgi of auto index\n";
-                cgi(clnt , srv.getLocations()[j], fileIndexed, fd);
+                // it should redirect to new request with the previes request joined with the file indexed 
+                clnt.getResponse().setPath(directory + "/" + fileIndexed);
+                throw clnt.getResponse().setAttributes(301, "text/html");
             }
-                // throw clnt.getResponse().setAttributes(500, "text/html");
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
                 throw clnt.getResponse().setAttributes(403, "text/html");
         }
