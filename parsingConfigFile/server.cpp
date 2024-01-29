@@ -31,6 +31,15 @@ bool checkListen(std::string ipport)
 // class members
 server::server() {
     this->max_body_size = 2147483648;
+    this->_error_pages[400] = "Errors/400.html";
+    this->_error_pages[403] = "Errors/403.html";
+    this->_error_pages[404] = "Errors/404.html";
+    this->_error_pages[405] = "Errors/405.html";
+    this->_error_pages[414] = "Errors/414.html";
+    this->_error_pages[500] = "Errors/500.html";
+    this->_error_pages[501] = "Errors/501.html";
+    this->_error_pages[502] = "Errors/502.html";
+    this->_error_pages[504] = "Errors/504.html";
 }
 server::server(const server& rhs)
 {
@@ -41,7 +50,6 @@ server::server(const server& rhs)
     this->_locations = rhs._locations;
     this->_error_pages = rhs._error_pages;
     this->max_body_size = rhs.max_body_size;
-
 }
 
 server &server::operator=(const server &rhs) {
@@ -54,7 +62,6 @@ server &server::operator=(const server &rhs) {
         this->_error_pages = rhs._error_pages;
         this->_locations = rhs._locations;
         this->max_body_size = rhs.max_body_size;
-
     }
     return *this;
 }
@@ -137,13 +144,14 @@ void server::setErrorPages(std::string line, int nbln)
 //    std::cout << "****\n";
     if (!is_digit(splited[1]))
         throwError("Syntax error", nbln);
-    if (this->_error_pages.find(std::atoi(splited[1].c_str())) != this->_error_pages.end())
-    {
-        std::cout << "Duplicated key (line: " << nbln << ")";
-        throw std::runtime_error("");
-    }
 
-    this->_error_pages.insert(std::pair<int, std::string>(std::atoi(splited[1].c_str()), splited[2]));
+    std::ifstream obj(splited[2].c_str());
+    if (obj.is_open())
+    {
+        this->_error_pages[std::atoi(splited[1].c_str())] = splited[2];
+        std::cout << this->_error_pages[std::atoi(splited[1].c_str())] << "----\n";
+        obj.close();
+    }
 }
 
 void server::setMaxBodySize(std::string line, int nbln) {
