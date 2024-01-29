@@ -122,7 +122,7 @@ void location::setRoot(std::string line, int nbln)
     if (splited.size() != 2)
         throwError("Syntax error", nbln);
 //    if (this->_root.empty())
-        this->_root = splited[1];
+    this->_root = splited[1];
 //    else
 //    {
 //        std::cout << "Duplicated symbol (line: " << nbln << ")";

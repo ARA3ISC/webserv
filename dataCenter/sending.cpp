@@ -9,7 +9,7 @@ std::string getErrorPath(server& s, int statusCode) {
     std::string myString = ss.str();
     if (it != s.get_error_pages().end())
     {
-        std::ifstream obj(path.c_str());
+        std::ifstream obj(path.c_str(), std::ios::in);
         if (obj.is_open())
         {
             path = it->second;
@@ -71,7 +71,7 @@ void dataCenter::sending(int fd){
 
     response &res = this->clientList[fd].getResponse();
     std::string content = "";
-    
+ 
     if(!res.getIsHeaderSend()){
         if (res.getStatusCode() == 301)
         {
@@ -81,7 +81,7 @@ void dataCenter::sending(int fd){
             return ;
         }
         if (res.getStatusCode() != 200)
-            res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], this->clientList[fd].getResponse().getStatusCode()));
+            res.openfilePathError(this->getWebserv().getServers()[this->clientList[fd].servIndx()].get_error_pages()[res.getStatusCode()]);
         else
             res.openFile(res.getPath());
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);

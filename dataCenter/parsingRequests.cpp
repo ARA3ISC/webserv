@@ -68,7 +68,9 @@ void    dataCenter::reading(int fd)
         close(fd);
         // remove the fd from the map
     }
-    std::string rqline(buffer, sizeof(buffer));
+    
+    std::string rqline(buffer, a);
+    
     this->clientList[fd].setFullRequest(rqline);
 
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
@@ -87,11 +89,16 @@ void    dataCenter::reading(int fd)
         {
             get(this->clientList[fd], fd);
         }
-        // if (this->clientList[fd].getStartLine().method == "POST")
-        // {
-        //     // std::cout << this->clientList[fd].getFullRequest() << std::endl;
-        //     post(this->clientList[fd], fd);
-        // }
+        if (this->clientList[fd].getStartLine().method == "POST")
+        {
+            // std::cout << this->clientList[fd].getFullRequest() << std::endl;
+            // std::cout << "^^" << std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str()) << std::endl;
+            // std::cout << "^^" << this->clientList[fd].getBody().size() << std::endl;
+            // if (std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str()) == this->clientList[fd].get)
+            // std::cout << "post request\n";
+            if (this->clientList[fd].getBody().size() == static_cast<std::size_t>(std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str())))
+                post(this->clientList[fd], fd);
+        }
         // if (this->clientList[fd].getStartLine().method == "DELETE")
         // {
         //     deleteMethod(this->clientList[fd], fd);

@@ -149,7 +149,6 @@ void server::setErrorPages(std::string line, int nbln)
     if (obj.is_open())
     {
         this->_error_pages[std::atoi(splited[1].c_str())] = splited[2];
-        std::cout << this->_error_pages[std::atoi(splited[1].c_str())] << "----\n";
         obj.close();
     }
 }
@@ -169,7 +168,7 @@ void server::setMaxBodySize(std::string line, int nbln) {
     }
 
 //    std::string value = splited[1];
-    long  lastResult;
+    long  lastResult = 0;
     if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
         lastResult = getValue(splited[1].c_str()) * 1024 * 1024;
     else if (*(splited[1].end() - 1) == 'G' || *(splited[1].end() - 1) == 'g')
