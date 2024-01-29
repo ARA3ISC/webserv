@@ -55,7 +55,7 @@ void    location::setPath(std::string line, int nbl, server* s)
         throwError("Syntax error", nbl);
     }
     if (splited.size() == 2) {
-        this->_path = s->getRoot();
+        this->_path = "/";
     }
     else
     {
@@ -67,6 +67,7 @@ void    location::setPath(std::string line, int nbl, server* s)
         }
         checkSlash(this->_path);
     }
+    this->_root = s->getRoot();
 }
 
 void location::set_dir_listing(std::string line, int nbl)
@@ -123,13 +124,13 @@ void location::setRoot(std::string line, int nbln)
     splited = splitBySpace(line);
     if (splited.size() != 2)
         throwError("Syntax error", nbln);
-    if (this->_root.empty())
+//    if (this->_root.empty())
         this->_root = splited[1];
-    else
-    {
-        std::cout << "Duplicated symbol (line: " << nbln << ")";
-        throw std::runtime_error("");
-    }
+//    else
+//    {
+//        std::cout << "Duplicated symbol (line: " << nbln << ")";
+//        throw std::runtime_error("");
+//    }
 }
 
 void location::setIndexes(std::string line, int nbln) {

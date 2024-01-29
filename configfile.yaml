@@ -46,16 +46,25 @@
     # baqi had lblan
     error: 404 ./CustomErrors/404.html
 
+    - location:
+        dir_listing: off
+        index: index.html
+        allow_methods: POST GET
+        auto_index: on
+        root: ./myWebsite
+
 
     - location /about:
         dir_listing: on
         index: index.html
         allow_methods: POST GET
-        auto_index: off
+        auto_index: on
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
+
+
 
     - location /home:
         dir_listing: on
@@ -85,16 +94,6 @@
         allow_methods: GET POST
         root: ./myWebsite
         index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /Users/maneddam/.local/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: on
-        upload: ./upload
-
-    - location /:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
