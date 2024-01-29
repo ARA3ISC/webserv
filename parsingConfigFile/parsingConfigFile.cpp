@@ -41,8 +41,6 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             l.setCgiPath(line, nbline);
         else if (getFirstWord(line) == "upload:")
             l.setUpload(line, nbline);
-        else if (getFirstWord(line) == "max_body_size:")
-            l.setMaxBodySize(line, nbline);
         else if (getFirstWord(line) == "return:")
         {
             l.setReturn(line, nbline);
@@ -89,11 +87,14 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             s.setRoot(line, nbline);
         else if (getFirstWord(line) == "error:")
             s.setErrorPages(line, nbline);
+        else if (getFirstWord(line) == "max_body_size:")
+            s.setMaxBodySize(line, nbline);
         else if (trimStr(line).find("- location") != std::string::npos)
         {
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, &s);
         }
+
         else if (invalid_directive(trimStr(line), 0))
              throwError("Invalid direction error", nbline);
         if (rtrim(line).find("- server:") != std::string::npos)

@@ -8,7 +8,6 @@ location::location(): _dir_listing(false), _auto_index(false)
 {
     this->_index.push_back("index.html");
     this->_index.push_back("index.htm");
-    this->max_body_size = 2000;
 }
 location::location(const location &rhs) {
 
@@ -20,7 +19,6 @@ location::location(const location &rhs) {
     this->_cgi_path = rhs._cgi_path;
     this->_auto_index = rhs._auto_index;
     this->_upload = rhs._upload;
-    this->max_body_size = rhs.max_body_size;
     this->_return = rhs._return;
 
 }
@@ -36,7 +34,6 @@ location &location::operator=(const location &rhs) {
         this->_cgi_path = rhs._cgi_path;
         this->_auto_index = rhs._auto_index;
         this->_upload = rhs._upload;
-        this->max_body_size = rhs.max_body_size;
         this->_return = rhs._return;
 
     }
@@ -207,32 +204,6 @@ void    location::setUpload(std::string line, int nbln)
         throwError("Syntax error", nbln);
     }
     this->_upload = splited[1];
-}
-
-void location::setMaxBodySize(std::string line, int nbln) {
-//    checkIndentation(line, 4, nbln, s, false);
-    std::vector<std::string> splited;
-
-    splited = splitBySpace(line);
-    removeComment(splited);
-
-
-    if (splited.size() != 2 || checkMaxBodySize(splited[1]))
-    {
-        std::cout << splited.size() << "\n";
-        throwError("Syntax error", nbln);
-    }
-
-//    std::string value = splited[1];
-    long  lastResult;
-    if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
-        lastResult = getValue(splited[1].c_str()) * 1024 * 1024;
-    else if (*(splited[1].end() - 1) == 'G' || *(splited[1].end() - 1) == 'g')
-        lastResult = getValue(splited[1].c_str()) * 1024 * 1024 * 1024;
-    else
-        lastResult = getValue(splited[1].c_str()) * 1024;
-
-    this->max_body_size = lastResult;
 }
 
 void location::setReturn(std::string line, int nbln) {

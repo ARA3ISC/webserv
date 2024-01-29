@@ -15,6 +15,7 @@ bool invalid_directive(std::string line, int c)
     serverAttr.push_back("listen:");
     serverAttr.push_back("root:");
     serverAttr.push_back("error:");
+    serverAttr.push_back("max_body_size:");
 
 
     std::vector<std::string> locationAttr;
@@ -23,7 +24,7 @@ bool invalid_directive(std::string line, int c)
     locationAttr.push_back("cgi_path:");
     locationAttr.push_back("root:");
     locationAttr.push_back("auto_index:");
-    locationAttr.push_back("max_body_size:");
+
     locationAttr.push_back("index:");
     locationAttr.push_back("upload:");
     locationAttr.push_back("return:");

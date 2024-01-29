@@ -10,6 +10,7 @@ dataCenter::dataCenter(webserv& webs) {
     this->createServerSockets();
     this->createEpoll();
     this->handlingRequests();
+
 }
 dataCenter::dataCenter(const dataCenter &rhs) {
     this->wes = rhs.wes;
@@ -177,6 +178,8 @@ void dataCenter::handlingRequests()
                 else if ((events[i].events & EPOLLOUT) && !this->clientList[events[i].data.fd].getResponse().getIsReading()) {
                     // std::cout << "------------------> fd to write " << events[i].data.fd << std::endl;
                     this->sending(events[i].data.fd);
+                    std::cout << "server max body size : " << this->wes.getServers()[1].getMaxBodySize() << '\n';
+
                 }
                 /* check if the response is ready to send */
             }

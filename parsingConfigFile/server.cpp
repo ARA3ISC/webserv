@@ -30,7 +30,7 @@ bool checkListen(std::string ipport)
 
 // class members
 server::server() {
-
+    this->max_body_size = 2147483648;
 }
 server::server(const server& rhs)
 {
@@ -40,6 +40,8 @@ server::server(const server& rhs)
     this->_root = rhs._root;
     this->_locations = rhs._locations;
     this->_error_pages = rhs._error_pages;
+    this->max_body_size = rhs.max_body_size;
+
 }
 
 server &server::operator=(const server &rhs) {
@@ -51,6 +53,8 @@ server &server::operator=(const server &rhs) {
         this->_root = rhs._root;
         this->_error_pages = rhs._error_pages;
         this->_locations = rhs._locations;
+        this->max_body_size = rhs.max_body_size;
+
     }
     return *this;
 }
@@ -140,6 +144,33 @@ void server::setErrorPages(std::string line, int nbln)
     }
 
     this->_error_pages.insert(std::pair<int, std::string>(std::atoi(splited[1].c_str()), splited[2]));
+}
+
+void server::setMaxBodySize(std::string line, int nbln) {
+//    checkIndentation(line, 4, nbln, s, false);
+    std::vector<std::string> splited;
+
+    splited = splitBySpace(line);
+    removeComment(splited);
+
+
+    if (splited.size() != 2 || checkMaxBodySize(splited[1]))
+    {
+        std::cout << splited.size() << "\n";
+        throwError("Syntax error", nbln);
+    }
+
+//    std::string value = splited[1];
+    long  lastResult;
+    if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
+        lastResult = getValue(splited[1].c_str()) * 1024 * 1024;
+    else if (*(splited[1].end() - 1) == 'G' || *(splited[1].end() - 1) == 'g')
+        lastResult = getValue(splited[1].c_str()) * 1024 * 1024 * 1024;
+    else if (*(splited[1].end() - 1) == 'K' || *(splited[1].end() - 1) == 'k')
+        lastResult = getValue(splited[1].c_str()) * 1024;
+    else
+        throwError("Invalid unit", nbln);
+    this->max_body_size = lastResult;
 }
 
 location* server::createLocation()

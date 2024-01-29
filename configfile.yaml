@@ -42,16 +42,17 @@
 - server:
     server_name: server2 kkkk2
     listen: 9999
-    root: root2
+    root: myWebsite
     # baqi had lblan
     error: 404 ./CustomErrors/404.html
+    max_body_size: 25M
 
-    - location:
-        dir_listing: off
+    - location /:
+        dir_listing: on
         index: index.html
         allow_methods: POST GET
         auto_index: on
-        root: ./myWebsite
+        root: ./myWebsite/
 
 
     - location /about:

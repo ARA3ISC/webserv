@@ -21,7 +21,6 @@ private:
     std::vector<std::string> _index;
     bool _auto_index;
     std::string _upload;
-    long max_body_size;
     std::string _return;
 public:
     location();
@@ -38,7 +37,6 @@ public:
     void setAutoIndex(std::string line, int nbln);
     void setCgiPath(std::string& line, int nbln);
     void setUpload(std::string line, int nbln);
-    void setMaxBodySize(std::string line, int nbln);
     void setReturn(std::string line, int nbln);
 
 
@@ -64,7 +62,6 @@ public:
     bool isAutoIndex();
     std::map<std::string, std::string>& getCgiPath() ;
     std::string getUpload() ;
-    int getMaxBodySize() {return this->max_body_size;}
     std::string getReturn();
 
 };

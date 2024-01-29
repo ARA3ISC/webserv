@@ -18,7 +18,9 @@ private:
 	std::vector<std::string> _listen;
 	std::string _root;
     std::map<int, std::string> _error_pages;
-	std::vector<location> _locations;
+    long max_body_size;
+    std::vector<location> _locations;
+
 public:
 	server();
 	server(int locations_count);
@@ -31,9 +33,11 @@ public:
 	void setRoot(std::string line, int nbln);
     void setMaxBodySize(std::string line, int nbln, server *s);
     void setErrorPages(std::string line, int nbln);
+    void setMaxBodySize(std::string line, int nbln);
 
 
-	std::vector<std::string>& getServer_names()
+
+    std::vector<std::string>& getServer_names()
 	{
 		return this->_server_name;
 	}
@@ -46,8 +50,9 @@ public:
     {
         return this->_error_pages;
     }
+    long getMaxBodySize() {return this->max_body_size;}
 
-	location* createLocation();
+    location* createLocation();
 	std::vector<location>& getLocations();
 	void   addLocation(location &newloc);
 };
