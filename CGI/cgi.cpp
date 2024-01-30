@@ -61,7 +61,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
     // clnt.getResponse().setIsCGIFile(true);
     
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
-    
+
     if (fdFile == -1)
         throw clnt.getResponse().setAttributes(500, "text/html");
 
