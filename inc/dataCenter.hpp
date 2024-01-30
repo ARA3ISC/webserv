@@ -18,6 +18,8 @@
 #include "returnError.hpp"
 #include "utils3.hpp"
 #include <ctime>
+#include <cstring>
+
 //enum statusCodes {
 //    BadRequest = 400,
 //    NotFound = 404,
@@ -73,7 +75,7 @@ public:
     std::string cleanPath(std::string path);
     std::string getCleanPath(std::string path);
     void splitPath(std::string fullPath, std::string& directory, std::string& file);
-    int getLocationRequested(std::vector<location> loc, std::string path);
+    int getLocationRequested(std::vector<location> loc, client &clnt, std::string path);
     bool pathExists(const std::string& path);
 
         /* get method*/
@@ -87,6 +89,8 @@ public:
 
     void deleteMethod(client clnt, int fd);
     void listDirectory(std::string path, std::string directory, int fd);
+    void checkErrors(client &clnt, server serv); 
+
 };
 
 

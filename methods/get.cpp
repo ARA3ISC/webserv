@@ -9,17 +9,7 @@ bool dataCenter::pathExists(const std::string& path) {
     struct stat buffer;
     return (stat(path.c_str(), &buffer) == 0);
 }
-bool isDirectory(const char* path) {
-    struct stat fileStat;
 
-    if (stat(path, &fileStat) != 0) {
-        // Error handling: unable to retrieve file status
-        std::cerr << "Error getting file status for " << path << std::endl;
-        return false;
-    }
-
-    return S_ISDIR(fileStat.st_mode);
-}
 std::string dataCenter::cleanPath(std::string path) {
     std::string result;
 
@@ -52,13 +42,12 @@ std::string dataCenter::getCleanPath(std::string path){
     return path;
 }
 
-int dataCenter::getLocationRequested(std::vector<location> loc, std::string path){
+int dataCenter::getLocationRequested(std::vector<location> loc, client &clnt, std::string path){
 
     for (size_t i = 0; i < loc.size(); i++)
         if (loc[i].getPath() == path)
             return i;
-
-    return -1;
+    throw clnt.getResponse().setAttributes(404, "text/html");
 }
 
 void dataCenter::splitPath(std::string fullPath, std::string& directory, std::string& file) {
@@ -132,6 +121,17 @@ bool dataCenter::isMethodAllowed(std::vector<std::string> methods, std::string m
     return true;
 }
 
+void getQueryStringFromPath(client &clnt, server srv, int locationIndex){
+    std::string tmp = srv.getLocations()[locationIndex].getRoot() + clnt.getStartLine().path;
+    
+    std::size_t queryIndex = tmp.find_last_of("?");
+    
+    if (queryIndex != std::string::npos)
+        clnt.setQueryString(tmp.substr(queryIndex + 1));
+    else
+        clnt.setQueryString("");
+}
+
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
     
@@ -141,31 +141,13 @@ void dataCenter::get(client &clnt, int fd){
     splitPath(clnt.getStartLine().path, directory, file); 
     
     //get the index of the location 
-    int j = getLocationRequested(srv.getLocations(), directory);
+    int j = getLocationRequested(srv.getLocations(), clnt, directory);
 
-    if (j == -1)
-         throw clnt.getResponse().setAttributes(404, "text/html");
-
-    //is method allowed in config file
-    if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
-        throw clnt.getResponse().setAttributes(405, "text/html");
-    
-    // seting the querystring fromthe complite path of the request 
-    std::string tmp = srv.getLocations()[j].getRoot() + clnt.getStartLine().path;
-    std::size_t queryIndex = tmp.find_last_of("?");
-    
-    if (queryIndex != std::string::npos)
-        clnt.setQueryString(tmp.substr(queryIndex + 1));
-    else
-        clnt.setQueryString("");
+    // seting the querystring from the complite path of the request 
+    getQueryStringFromPath(clnt, srv, j);
 
     //the complite path of the directory or the file 
     std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
-    
-    //cheking existing of the file on the server
-    
-    if (!pathExists(path))
-        throw clnt.getResponse().setAttributes(404, "text/html");
 
     // file or directory requested
     if (!file.empty() && file.find('.') != std::string::npos)
@@ -184,6 +166,7 @@ void dataCenter::get(client &clnt, int fd){
             // get the files indexed and put the content in variable content 
             if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed)){
                 // it should redirect to new request with the previes request joined with the file indexed 
+                std::cout << "index : " << directory << "/" << fileIndexed << std::endl;
                 clnt.getResponse().setPath(directory + "/" + fileIndexed);
                 throw clnt.getResponse().setAttributes(301, "text/html");
             }

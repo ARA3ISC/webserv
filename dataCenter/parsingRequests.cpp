@@ -55,10 +55,29 @@ void    dataCenter::loadHeaders(int fd)
     }
 
 }
-#include <cstring>
+void dataCenter::checkErrors(client &clnt, server srv){
+    std::string directory, file;
+
+    splitPath(clnt.getStartLine().path, directory, file);
+
+    int j = getLocationRequested(srv.getLocations(), clnt, directory);
+
+    if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
+        throw clnt.getResponse().setAttributes(405, "text/html");
+
+    std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
+    if (!pathExists(path))
+        throw clnt.getResponse().setAttributes(404, "text/html");
+    
+    if (clnt.getStartLine().method == "POST" && srv.getLocations()[j].getUpload().empty()){
+        std::cout << "upload not found\n";
+        throw clnt.getResponse().setAttributes(500, "tex/html");
+    }
+}
 
 void    dataCenter::reading(int fd)
 {
+    std::string directory, file;
 
     char buffer[BUFFER_SIZE] = {0};
     int a = read(fd, buffer, BUFFER_SIZE - 1);
@@ -85,17 +104,14 @@ void    dataCenter::reading(int fd)
         }
         // checking body size with content-length
         
+        //checking erorrs of methods
+        checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
+
         if (this->clientList[fd].getStartLine().method == "GET")
-        {
             get(this->clientList[fd], fd);
-        }
+        
         if (this->clientList[fd].getStartLine().method == "POST")
         {
-            // std::cout << this->clientList[fd].getFullRequest() << std::endl;
-            // std::cout << "^^" << std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str()) << std::endl;
-            // std::cout << "^^" << this->clientList[fd].getBody().size() << std::endl;
-            // if (std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str()) == this->clientList[fd].get)
-            // std::cout << "post request\n";
             if (this->clientList[fd].getBody().size() == static_cast<std::size_t>(std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str())))
                 post(this->clientList[fd], fd);
         }
