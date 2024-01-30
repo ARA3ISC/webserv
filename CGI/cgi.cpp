@@ -29,37 +29,42 @@ std::string readFileToString(int fd) {
     return content;
 }
 
-bool checkCgiPaths(std::string path){
-    if (access(path.c_str(), F_OK) != 0)
-        return true;
-    return false;
+bool checkCgiPaths(location loc, std::string path){
+    std::map<std::string, std::string>::iterator it = loc.getCgiPath().find(getExtention(path));
+
+    if (it != loc.getCgiPath().end())
+        return false;
+    
+    // if (access(path.c_str(), F_OK) != 0)
+    //     return true;
+    return true;
 }
 
 void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
     (void)fd;
-    server srv = getWebserv().getServers()[clnt.servIndx()];
 
-    if (checkHtmlfile(path))
+    if (checkCgiPaths(loc, path))
     {
-        clnt.getResponse().setAttributes(200, "text/html");
+        clnt.getResponse().setAttributes(200,  getExtention(path));
         clnt.getResponse().setPath(path);
         throw 0;
-    }
-    if (checkCgiPaths(loc.getCgiPath()[getExtention(path)])){
-        throw clnt.getResponse().setAttributes(502, "text/html");
     }
     
     int status = 0;
     double timeoutSeconds = 0.0015;
         
     std::ostringstream s;
-    s <<  std::time(0);
+    s << std::time(0);
 
     std::string FileName = "/tmp/randomFile" + s.str() + ".txt";
-    clnt.getResponse().setIsCGIFile(true);
+    
+    // clnt.getResponse().setIsCGIFile(true);
     
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
     
+    if (fdFile == -1)
+        throw clnt.getResponse().setAttributes(500, "text/html");
+
     int id = fork();
     if (id == 0){
         const char* programPath = path.c_str();
@@ -91,7 +96,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
             usleep(100000);
         }
     }
-    // cheking the exist status of child process 
+
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
         throw clnt.getResponse().setAttributes(500, "text/html");
     }

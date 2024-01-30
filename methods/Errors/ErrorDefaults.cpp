@@ -6,8 +6,11 @@ std::string getContentFile(std::string path){
     std::ifstream input(path.c_str());
 
     if (input.is_open()){
-        while (std::getline(input, line)) {
-            fileContent += line;
+        while (!input.eof()) {
+            char buffer[1024] = {0};
+            input.read(buffer, 1023);
+            std::string tmp(buffer, input.gcount());
+            fileContent += tmp;
         }
         input.close();
     }

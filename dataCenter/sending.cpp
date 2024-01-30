@@ -35,22 +35,20 @@ std::string getHeaderResponse(response res, std::string errorMsg){
     std::ostringstream httpResponse;
 
     httpResponse << "HTTP/1.1 " << res.getStatusCode() << " " << errorMsg << "\r\n";
-    httpResponse << "Content-Type: " << "text/html" << "\r\n";
-    // httpResponse << "Content-Length: " << content.length() << "\r\n";
+    httpResponse << "Content-Type: " << res.getContentType() << "\r\n";
     httpResponse << "\r\n";
-    // httpResponse << content;
     return httpResponse.str();
 }
 
 std::string readBufferFromFile(std::fstream &filePath){
     char buffer[1024] = {0};
-    std::string content;
     filePath.read(buffer, 1023);
-    content = buffer;
+    std::string content(buffer, filePath.gcount());
     return content;
 }
 
 void dataCenter::sending(int fd){
+
     std::map<int , std::string> statusCodeMsgs;
     statusCodeMsgs[200] = "OK";
     statusCodeMsgs[301] = "Moved Permanently";
@@ -94,14 +92,9 @@ void dataCenter::sending(int fd){
     }else{
         if (!res.getFilePath().eof() && res.getStatusCode() == 200)
         {
-            if (!res.getContent().empty()){
-                content = res.getContent();
+            content = readBufferFromFile(res.getFilePath());
+            if (res.getFilePath().eof())
                 res.setIsResponseSent(true);
-            }else{
-                content = readBufferFromFile(res.getFilePath());
-                if (res.getFilePath().eof())
-                    res.setIsResponseSent(true);
-            }
         }
         if (!res.getFilePathError().eof() && res.getStatusCode() != 200)
         {
