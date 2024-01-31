@@ -2,6 +2,7 @@
 
 client::client() {
     this->_headerareloaded = false;
+    this->isUploadfileOpen = false;
 }
 
 client::client(int serverIndex, int clientFd) {
@@ -19,6 +20,8 @@ client::client(const client &rhs) {
     this->_serverIndex = rhs._serverIndex;
     this->_fullRequest = rhs._fullRequest;
     this->_response = rhs._response;
+    this->isUploadfileOpen = rhs.isUploadfileOpen;
+    this->bufferBody = rhs.bufferBody;
 }
 
 client& client::operator=(const client &rhs) {
@@ -33,6 +36,8 @@ client& client::operator=(const client &rhs) {
         this->_serverIndex = rhs._serverIndex;
         this->_fullRequest = rhs._fullRequest;
         this->_response = rhs._response;
+        this->isUploadfileOpen = rhs.isUploadfileOpen;
+        this->bufferBody = rhs.bufferBody;
     }
     return *this;
 }
@@ -73,6 +78,10 @@ void client::setHeaders(std::string line) {
 void    client::setBody(std::string line) {
     std::string body = trimFromBeginning(line, "\r\n\r\n");
     this->_body = body;
+    // this->setbufferBody(body);
+
+    // std::cout << "size reded " << body.size() << std::endl;
+
 }
 
 void    client::headersLoaded(bool r) {
@@ -119,4 +128,29 @@ std::string client::getQueryString(){
 
 void client::setQueryString(std::string queryString){
     this->_queryString = queryString;
+}
+void client::setIsUploadfileOpen(bool a){
+    this->isUploadfileOpen = a;
+}
+bool client::getIsUploadfileOpen(){
+    return this->isUploadfileOpen;
+}
+void client::openFileUpload(std::string path){
+    this->fileUpload.open(path.c_str(), std::ios::out | std::ios::binary);
+}
+std::fstream &client::getFileUpload(){
+    return this->fileUpload;
+}
+std::string client::getbufferBody(){
+    return this->bufferBody;
+}
+void client::setbufferBody(std::string a){
+    this->bufferBody = a;
+}
+
+size_t client::getbufferLen(){
+    return this->bufferLen;
+}
+void client::setbufferLen(size_t a){
+    this->bufferLen = a;
 }

@@ -25,7 +25,11 @@ private:
     bool _headerareloaded;
     response _response;
     std::string _queryString;
-
+    bool isUploadfileOpen;
+    std::fstream fileUpload;
+    std::string bufferBody;
+    size_t bufferLen;
+    
 public:
     client();
     client(int serverIndex, int clientFd);
@@ -52,4 +56,16 @@ public:
     void setResponse(response &res);
     std::string getQueryString();
     void setQueryString(std::string queryString);
+    void setIsUploadfileOpen(bool a);
+  
+    bool getIsUploadfileOpen();
+  
+    void openFileUpload(std::string path);
+    std::fstream &getFileUpload();
+
+    std::string getbufferBody();
+    void setbufferBody(std::string a);
+
+    size_t getbufferLen();
+    void setbufferLen(size_t a);
 };

@@ -51,6 +51,7 @@ void dataCenter::sending(int fd){
 
     std::map<int , std::string> statusCodeMsgs;
     statusCodeMsgs[200] = "OK";
+    statusCodeMsgs[201] = "Created";
     statusCodeMsgs[301] = "Moved Permanently";
     statusCodeMsgs[400] = "Bad Request";
     statusCodeMsgs[404] = "Not Found";
@@ -74,6 +75,13 @@ void dataCenter::sending(int fd){
         if (res.getStatusCode() == 301)
         {
             std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html";
+            write(fd, header.c_str(), header.length());
+            close(fd);
+            return ;
+        }
+        if (res.getStatusCode() == 201)
+        {
+            std::string header = "HTTP/1.1 201 Created\r\nContent-Type: text/html";
             write(fd, header.c_str(), header.length());
             close(fd);
             return ;

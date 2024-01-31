@@ -18,8 +18,8 @@ std::string dataCenter::cleanPath(std::string path) {
     if (startPos != std::string::npos) {
         result = path.substr(startPos);
     }
-
-    // Remove trailing slashes
+    
+    // Remove last slashes
     size_t endPos = result.find_last_not_of('/');
     if (endPos != std::string::npos) {
         result = result.substr(0, endPos + 1);
@@ -64,7 +64,7 @@ void dataCenter::splitPath(std::string fullPath, std::string& directory, std::st
                 directory = "/";
             file = fullPath.substr(last + 1);
         }
-        else
+        else// /home/iindex.html?key1=valu1
         {
             directory = fullPath;
             file = "";

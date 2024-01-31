@@ -1,56 +1,104 @@
 #include "../inc/dataCenter.hpp"
+std::string getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention){
+    std::stringstream a;
+    a << root;
+    a << directory ;
+    a << pathUpload;
+    a << "/output";
+    a << time(0);
+    a << ".";
+    a << extention;
+    return a.str();
+}
+// 5\r\n
+// content\r\n
+// 9\r\n
+// lplplplplp\r\n
+// 0\r\n
+int hexToDecimal(const std::string& hexString) {
+    std::istringstream iss(hexString);
+    int decimalValue;
+    iss >> std::hex >> decimalValue;
+    return decimalValue;
+}
 
-void dataCenter::post(client clnt, int fd){
+int getSizeChunck(std::string buffer){
+    size_t last = buffer.find_first_of("\r\n");
+    if (last != std::string::npos){
+        // std::cout << "nof found************************\n";
+        // std::cout << buffer.substr(0, last) << " ";
+        int res = hexToDecimal(buffer.substr(0, last));
+        return res;
+    }
+    return -1;
+}
+
+void dataCenter::post(client &clnt, int fd){
     (void)fd;
     (void)clnt;
-// //----> code from GET
-//     std::string directory, file;
-    
-//     server srv = getWebserv().getServers()[clnt.servIndx()];    
+    std::string directory, file;
+    int size = 0;
+    // std::cout << clnt.getHeaders()["Transfer-Encoding"] << std::endl;
+    static bool isSizeSeted = false;
+    if (clnt.getHeaders()["Transfer-Encoding"] == "chunked"){
+        if (!isSizeSeted){
+            size = getSizeChunck(clnt.getbufferBody());
+            clnt.setbufferBody(clnt.getbufferBody().substr(size));
+            isSizeSeted = true;
+            // std::cout << "size is : " << size << " " << clnt.getHeaders()["Content-Length"] << std::endl;
+            std::cout << "new body |" << clnt.getbufferBody() << "| with size : " << size << std::endl;  
+        }
+        else{
+            if (clnt.getbufferBody().find("\r\n") != std::string::npos){
+                isSizeSeted = false;
+                std::cout << "end of chunked\n";
+            }
+        }
+        // if ()
+        // //appendBufferChunk(); // 50000
+        // if (size >= 1)
+        return ; 
+    }
+    if (!clnt.getIsUploadfileOpen()){
+        splitPath(clnt.getStartLine().path, directory, file); 
+        server srv = getWebserv().getServers()[clnt.servIndx()];    
 
-//     //split the directory and file fron the client request
-//     splitPath(clnt.getStartLine().path, directory, file); 
-    
-//     //get the index of the location 
-//     int j = getLocationRequested(srv.getLocations(), clnt, directory);
+        int j = getLocationRequested(srv.getLocations(), clnt, directory);
 
-//     if (j == -1)
-//          throw clnt.getResponse().setAttributes(404, "text/html");
+        std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
 
-//     //is method allowed in config file
-//     if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
-//         throw clnt.getResponse().setAttributes(405, "text/html");
+        std::string fileName  = getFileName(srv.getLocations()[j].getRoot(), srv.getLocations()[j].getUpload(), directory, clnt.getHeaders()["Content-Type"].substr(lastExtention + 1));
+
+        
+        clnt.openFileUpload(fileName);
+        // std::cout << "file : " << a.str() << " " << clnt.getFileUpload().is_open() << std::endl;
+        clnt.setIsUploadfileOpen(true);
+    }
+
+    if (!clnt.getFileUpload().is_open()) {
+        std::cout << "error opening opload file\n";
+        throw clnt.getResponse().setAttributes(500, "text/html");
+    }
+
+    if (clnt.getBody().size() <= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
+
+        clnt.getFileUpload().write(clnt.getbufferBody().c_str() , clnt.getbufferBody().size());
+
+    }
     
-//     // seting the querystring fromthe complite path of the request 
-//     std::string tmp = srv.getLocations()[j].getRoot() + clnt.getStartLine().path;
-//     std::size_t queryIndex = tmp.find_last_of("?");
-    
-//     if (queryIndex != std::string::npos)
-//         clnt.setQueryString(tmp.substr(queryIndex + 1));
-//     else
-//         clnt.setQueryString("");
-//----> end code from GET
+    if (clnt.getBody().size() >= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
+        
+        std::cout << clnt.getBody().size() << "pppppppppp\n" << clnt.getHeaders()["Content-Length"].size();
+        clnt.getFileUpload().close();
+
+        throw clnt.getResponse().setAttributes(201, "text/html");
+    }
+
+
+    // if (clnt.getBody().size() >= static_cast<std::size_t>(std::atoi(clnt.getHeaders()["Content-Length"].c_str()))){
+    // }
     // if transfer-encoder == chuncked
 
     // if transfer-encoder not found !
-    
-}
-    // std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
-    // std::stringstream a;
-    // a << "output";
-    // a << time(0);
-    // a << ".";
-    // a <<  clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
-    
-    // std::cout << "file : " << a.str() << std::endl; 
-    // std::ofstream outputFile(a.str().c_str(), std::ios::binary);
 
-    // if (outputFile.is_open()) {
-    //     outputFile.write(clnt.getBody().c_str(), clnt.getBody().size());
-    //     outputFile.close();
-    // } else {
-    //     std::cerr << "Error opening the output file." << std::endl;
-    // }
-    
-    // std::cout << "format file : " << clnt.getHeaders()["Content-Type"] << std::endl;
-    // std::cout << "***"<<  clnt.getBody().size() << "*************" << clnt.getHeaders()["Content-Length"] << "*****" << std::endl;
+}

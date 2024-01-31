@@ -1,5 +1,6 @@
 #include "../inc/dataCenter.hpp"
-
+#include "../inc/utils2.hpp"
+#include "../inc/utils.hpp"
 void    dataCenter::requestSyntaxError(client& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
@@ -43,6 +44,7 @@ void    dataCenter::loadHeaders(int fd)
             this->clientList[fd].setHeaders(line);
 //        std::cout << this->clientList[fd].getHeaders().begin()->first << std::endl;
         }
+        this->clientList[fd].setbufferBody(trimFromBeginning(this->clientList[fd].getFullRequest(), "\r\n\r\n"));
         this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
         requestSyntaxError(this->clientList[fd]);
         this->clientList[fd].headersLoaded(true);
@@ -57,7 +59,6 @@ void    dataCenter::loadHeaders(int fd)
 }
 void dataCenter::checkErrors(client &clnt, server srv){
     std::string directory, file;
-
     splitPath(clnt.getStartLine().path, directory, file);
 
     int j = getLocationRequested(srv.getLocations(), clnt, directory);
@@ -81,6 +82,7 @@ void    dataCenter::reading(int fd)
 
     char buffer[BUFFER_SIZE] = {0};
     int a = read(fd, buffer, BUFFER_SIZE - 1);
+    
     if (a == 0)
     {
         this->clientList.erase(fd);
@@ -100,7 +102,11 @@ void    dataCenter::reading(int fd)
             loadHeaders(fd);
         }
         else {
+            std::string tmp(buffer, a);
+            this->clientList[fd].setbufferBody(tmp);
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
+            // std::cout << tmp.size() << " | " << this->clientList[fd].getBody().size() << " | " <<  this->clientList[fd].getHeaders()["Content-Length"]<< std::endl;
+            // std::cout << this->clientList[fd].getBody().size() / 1000000 << "/" << this->clientList[fd].getHeaders()["Content-Length"] << '\n';
         }
         // checking body size with content-length
         
@@ -109,11 +115,11 @@ void    dataCenter::reading(int fd)
 
         if (this->clientList[fd].getStartLine().method == "GET")
             get(this->clientList[fd], fd);
-        
+
         if (this->clientList[fd].getStartLine().method == "POST")
         {
-            if (this->clientList[fd].getBody().size() == static_cast<std::size_t>(std::atoi(this->clientList[fd].getHeaders()["Content-Length"].c_str())))
-                post(this->clientList[fd], fd);
+            post(this->clientList[fd], fd);
+            // std::cout << this->clientList[fd].getBody().size() << std::endl;
         }
         // if (this->clientList[fd].getStartLine().method == "DELETE")
         // {

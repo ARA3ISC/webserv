@@ -12,7 +12,7 @@
 # define MAX_EVENTS 10
 # include "webserv.hpp"
 # include "client.hpp"
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 2048
 #include <dirent.h>
 #include <sys/stat.h>
 #include "returnError.hpp"
@@ -42,7 +42,6 @@ private:
     int epollfd;
     std::vector<int> serv_fds;
     std::map<int, client> clientList;
-
 
 
     /* private member functions */
@@ -80,7 +79,7 @@ public:
 
         /* get method*/
     void get(client &clnt, int fd);
-    void post(client clnt, int fd);
+    void post(client &clnt, int fd);
     void cgi(client &clnt ,location loc,std::string path, int fd);
 //    const std::string& getErrorPath();
 
