@@ -28,6 +28,7 @@ private:
     bool isUploadfileOpen;
     std::fstream fileUpload;
     std::string bufferBody;
+    std::string tempBuffer;
     size_t bufferLen;
     
 public:
@@ -68,4 +69,7 @@ public:
 
     size_t getbufferLen();
     void setbufferLen(size_t a);
+    std::string getTempBuffer();
+    void setTempBuffer(std::string a);
+
 };

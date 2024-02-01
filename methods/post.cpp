@@ -7,14 +7,12 @@ std::string getFileName(std::string root, std::string pathUpload, std::string di
     a << "/output";
     a << time(0);
     a << ".";
+    // (void)extention;
     a << extention;
     return a.str();
 }
-// 5\r\n
-// content\r\n
-// 9\r\n
-// lplplplplp\r\n
-// 0\r\n
+
+
 int hexToDecimal(const std::string& hexString) {
     std::istringstream iss(hexString);
     int decimalValue;
@@ -22,43 +20,126 @@ int hexToDecimal(const std::string& hexString) {
     return decimalValue;
 }
 
-int getSizeChunck(std::string buffer){
-    size_t last = buffer.find_first_of("\r\n");
-    if (last != std::string::npos){
-        // std::cout << "nof found************************\n";
-        // std::cout << buffer.substr(0, last) << " ";
-        int res = hexToDecimal(buffer.substr(0, last));
-        return res;
+void parseBuffer(const std::string& buffer) {
+    std::istringstream stream(buffer);
+    std::string line;
+
+    while (std::getline(stream, line)) {
+        // Read chunk size
+        int chunkSize;
+        std::istringstream(line) >> std::hex >> chunkSize;
+
+        // Move to the next line (chunk data)
+        std::getline(stream, line);
+
+        // Check for the end of the chunks
+        if (chunkSize == 0) {
+            break;
+        }
+
+        // Extract chunk data
+        std::string chunkData(line, 0, chunkSize);
+
+        // Process the chunk (you can do something with chunkSize and chunkData here)
+        std::cout << "Chunk Size: " << chunkSize << ", Chunk Data: " << chunkData << std::endl;
     }
-    return -1;
+}
+// 5s\r\n
+// content
+// content
+// content
+// content
+// content
+// content\r\n
+// 9\r\n
+// lplplplplp\r\n
+// 0\r\n
+int getSizeChunck(std::string &buffer){
+    int i = 0;
+    std::string hexa;
+    while((size_t)i < buffer.size() && buffer[i] != '\r'){
+        hexa += buffer[i];
+        i++;
+    }
+    std::cout << "size of hex " << i << " {" << hexToDecimal(hexa) << "}\n";
+    if ((size_t)(i + 2) <= buffer.size())
+        buffer = buffer.substr(i + 2);
+    return hexToDecimal(hexa);
+}
+
+std::string readBufferChunck(client &clnt, std::string buffer){
+    std::string tmp;
+    std::stringstream iss;
+    iss << buffer;
+    size_t i = 0;
+
+
+    std::stringstream res;
+    if (!clnt.getbufferLen()){
+        // std::cout << "geting to read the new size chunk\n";
+        clnt.setbufferLen(getSizeChunck(buffer));    
+        
+        if (clnt.getbufferLen() <= 0){
+            return "";
+        }
+        // std::cout << "size : "<< clnt.getbufferLen() << std::endl;
+    }
+
+    while(i < buffer.size() && clnt.getbufferLen()){
+        res << buffer[i];
+        i++;
+        clnt.setbufferLen(clnt.getbufferLen() - 1);
+    }
+    if (i == buffer.size()){
+        // std::cout << "i == size buffer\n";
+        clnt.setbufferLen(clnt.getbufferLen() - i);
+        if (!clnt.getTempBuffer().empty()){
+            std::string tmp = clnt.getTempBuffer() + res.str();
+            clnt.setTempBuffer("");
+            return tmp;
+        }
+        return res.str();
+    }
+    if (buffer[i] == '\r')
+    {
+        // std::cout << " bufferlen to r \n";
+        clnt.setbufferLen(0);
+        if (res.str().size()){
+            clnt.setTempBuffer(buffer.substr(0, i));
+        }
+        readBufferChunck(clnt, buffer.substr(i + 2));
+    }
+    
+    return res.str();
 }
 
 void dataCenter::post(client &clnt, int fd){
     (void)fd;
     (void)clnt;
-    std::string directory, file;
-    int size = 0;
-    // std::cout << clnt.getHeaders()["Transfer-Encoding"] << std::endl;
-    static bool isSizeSeted = false;
+    
+    std::string directory, file, res;
+    
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked"){
-        if (!isSizeSeted){
-            size = getSizeChunck(clnt.getbufferBody());
-            clnt.setbufferBody(clnt.getbufferBody().substr(size));
-            isSizeSeted = true;
-            // std::cout << "size is : " << size << " " << clnt.getHeaders()["Content-Length"] << std::endl;
-            std::cout << "new body |" << clnt.getbufferBody() << "| with size : " << size << std::endl;  
-        }
-        else{
-            if (clnt.getbufferBody().find("\r\n") != std::string::npos){
-                isSizeSeted = false;
-                std::cout << "end of chunked\n";
-            }
-        }
-        // if ()
-        // //appendBufferChunk(); // 50000
-        // if (size >= 1)
-        return ; 
+        // std::cout << "body : " << clnt.getbufferBody() << std::endl;
+        // static int size = 0;
+        res = readBufferChunck(clnt,clnt.getbufferBody());
+        clnt.setbufferBody(res);
+        std::cout << "|" << res.size() << "|\n";
+        // std::cout << res.size() << " buffer read\n";
+        //     std::cout << "m\n";  \n
+        // std::cout << "size after : " << size << std::endl;
+        // return ;
     }
+
+
+
+
+
+
+
+
+
+
     if (!clnt.getIsUploadfileOpen()){
         splitPath(clnt.getStartLine().path, directory, file); 
         server srv = getWebserv().getServers()[clnt.servIndx()];    
@@ -73,12 +154,12 @@ void dataCenter::post(client &clnt, int fd){
         clnt.openFileUpload(fileName);
         // std::cout << "file : " << a.str() << " " << clnt.getFileUpload().is_open() << std::endl;
         clnt.setIsUploadfileOpen(true);
+        if (!clnt.getFileUpload().is_open()) {
+            std::cout << "error opening opload file\n";
+            throw clnt.getResponse().setAttributes(500, "text/html");
+        }
     }
-
-    if (!clnt.getFileUpload().is_open()) {
-        std::cout << "error opening opload file\n";
-        throw clnt.getResponse().setAttributes(500, "text/html");
-    }
+// 4,451,143
 
     if (clnt.getBody().size() <= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
 

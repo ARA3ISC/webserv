@@ -9,6 +9,7 @@ client::client(int serverIndex, int clientFd) {
     this->_headerareloaded = false;
     this->_serverIndex = serverIndex;
     this->_fd = clientFd;
+    this->bufferLen = 0;
 }
 
 client::client(const client &rhs) {
@@ -22,6 +23,8 @@ client::client(const client &rhs) {
     this->_response = rhs._response;
     this->isUploadfileOpen = rhs.isUploadfileOpen;
     this->bufferBody = rhs.bufferBody;
+    this->tempBuffer = rhs.tempBuffer;
+    this->bufferLen = rhs.bufferLen;
 }
 
 client& client::operator=(const client &rhs) {
@@ -38,6 +41,8 @@ client& client::operator=(const client &rhs) {
         this->_response = rhs._response;
         this->isUploadfileOpen = rhs.isUploadfileOpen;
         this->bufferBody = rhs.bufferBody;
+        this->tempBuffer = rhs.tempBuffer;
+        this->bufferLen = rhs.bufferLen;
     }
     return *this;
 }
@@ -153,4 +158,10 @@ size_t client::getbufferLen(){
 }
 void client::setbufferLen(size_t a){
     this->bufferLen = a;
+}
+std::string client::getTempBuffer(){
+    return this->tempBuffer;
+}
+void client::setTempBuffer(std::string a){
+    this->tempBuffer = a;
 }
