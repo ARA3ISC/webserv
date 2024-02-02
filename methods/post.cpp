@@ -20,7 +20,7 @@ int hexToDecimal(const std::string& hexString) {
         return 0;
     return decimalValue;
 }
-
+ 
 int getSizeChunck(std::string &buffer){
     int i = 0;
     std::string hexa;
