@@ -41,7 +41,7 @@
 
 - server:
     server_name: server2 kkkk2
-    listen: 9999
+    listen: 127.0.0.2:9999
     root: myWebsite
     # baqi had lblan
     error: 404 ./CustomErrors/404.html

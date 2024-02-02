@@ -88,15 +88,15 @@ bool isLastChunk(std::string chunk) {
 
 bool a = false;
 int ll = 0;
+
+
+
+
 std::string readBufferChunck(client &clnt, std::string buffer){
 
     size_t i = 0;
-    size_t j = 0;
-    if (a){
-        while(j < buffer.size() && buffer[j] != 13)
-            j++;
-        std::cout << j << " :j " << (int)buffer[j + 1] << " "  << (int)buffer[j + 2] << " \n";
-    }
+    // size_t j = 0;
+
     buffer = clnt.getTempBuffer() + buffer ;
 
     std::stringstream res;
@@ -131,10 +131,6 @@ std::string readBufferChunck(client &clnt, std::string buffer){
 
     if (!clnt.getbufferLen()){
 
-        if (buffer[i] != 13 && buffer[i + 1] != 10){
-            clnt.setbufferBody("");
-            return res.str();
-        }
         if (buffer[i] == 13 && buffer[i + 1] == 10){
             std::cout << "ignore 2\n";
             i += 2;
@@ -146,7 +142,6 @@ std::string readBufferChunck(client &clnt, std::string buffer){
             iss << buffer[i];
             i++;
         }
-
         std::cout << " }\n";
 
         clnt.setTempBuffer(iss.str());
@@ -157,14 +152,9 @@ std::string readBufferChunck(client &clnt, std::string buffer){
     }
     else{// eof buffer 1024
         std::cout << "eof buffer\n";
-        clnt.setbufferBody("");
-
+        clnt.setTempBuffer("");
         return res.str();
     }
-
-
-    // std::cout << "res : " << buffer.size() << " ---> " << isLastChunk(buffer) << std::endl;
-    // std::cout << buffer.size() << "--" << (buffer.find("0\r\n\r\n") != std::string::npos) << std::endl;
 
     std::cout << "return \n";
     return res.str();
