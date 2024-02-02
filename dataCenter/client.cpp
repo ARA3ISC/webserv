@@ -25,6 +25,8 @@ client::client(const client &rhs) {
     this->bufferBody = rhs.bufferBody;
     this->tempBuffer = rhs.tempBuffer;
     this->bufferLen = rhs.bufferLen;
+    this->chunk = rhs.chunk;
+    this->chunkSize = rhs.chunkSize;
 }
 
 client& client::operator=(const client &rhs) {
@@ -43,6 +45,8 @@ client& client::operator=(const client &rhs) {
         this->bufferBody = rhs.bufferBody;
         this->tempBuffer = rhs.tempBuffer;
         this->bufferLen = rhs.bufferLen;
+        this->chunk = rhs.chunk;
+        this->chunkSize = rhs.chunkSize;
     }
     return *this;
 }
@@ -164,4 +168,16 @@ std::string client::getTempBuffer(){
 }
 void client::setTempBuffer(std::string a){
     this->tempBuffer = a;
+}
+std::string client::getChunk(){
+    return this->chunk;
+}
+void client::setChunk(std::string a){
+    this->chunk = a;
+}
+size_t client::getChunkSize(){
+    return this->chunkSize;
+}
+void client::setChunkSize(size_t a){
+    this->chunkSize = a;
 }

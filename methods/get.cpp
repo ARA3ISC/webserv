@@ -47,7 +47,7 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client &clnt, st
     for (size_t i = 0; i < loc.size(); i++)
         if (loc[i].getPath() == path)
             return i;
-    throw clnt.getResponse().setAttributes(404, "text/html");
+    throw clnt.getResponse().setAttributes(404, "html");
 }
 
 void dataCenter::splitPath(std::string fullPath, std::string& directory, std::string& file) {
@@ -168,15 +168,15 @@ void dataCenter::get(client &clnt, int fd){
                 // it should redirect to new request with the previes request joined with the file indexed 
                 std::cout << "index : " << directory << "/" << fileIndexed << std::endl;
                 clnt.getResponse().setPath(directory + "/" + fileIndexed);
-                throw clnt.getResponse().setAttributes(301, "text/html");
+                throw clnt.getResponse().setAttributes(301, "html");
             }
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
-                throw clnt.getResponse().setAttributes(403, "text/html");
+                throw clnt.getResponse().setAttributes(403, "html");
         }
 
         //cheking dir listing 
         if (!srv.getLocations()[j].get_dir_listing())
-            throw clnt.getResponse().setAttributes(403, "text/html");
+            throw clnt.getResponse().setAttributes(403, "html");
         else // if auto index is false or none of the indexed file exist but dir_listing is true
             listDirectory(srv.getLocations()[j].getRoot() + directory , directory, fd);
     }

@@ -30,7 +30,8 @@ private:
     std::string bufferBody;
     std::string tempBuffer;
     size_t bufferLen;
-    
+    std::string chunk;
+    size_t chunkSize;
 public:
     client();
     client(int serverIndex, int clientFd);
@@ -71,5 +72,8 @@ public:
     void setbufferLen(size_t a);
     std::string getTempBuffer();
     void setTempBuffer(std::string a);
-
+    std::string getChunk();
+    void setChunk(std::string a);
+    size_t getChunkSize();
+    void setChunkSize(size_t a);
 };

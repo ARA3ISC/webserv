@@ -63,7 +63,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
 
     if (fdFile == -1)
-        throw clnt.getResponse().setAttributes(500, "text/html");
+        throw clnt.getResponse().setAttributes(500, "html");
 
     int id = fork();
     if (id == 0){
@@ -91,19 +91,19 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
             
             if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
                 kill(id, SIGKILL);
-                throw clnt.getResponse().setAttributes(504, "text/html");
+                throw clnt.getResponse().setAttributes(504, "html");
             }
             usleep(100000);
         }
     }
 
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
-        throw clnt.getResponse().setAttributes(500, "text/html");
+        throw clnt.getResponse().setAttributes(500, "html");
     }
 
     close(fdFile);
 
-    clnt.getResponse().setAttributes(200, "text/html");
+    clnt.getResponse().setAttributes(200, "html");
     clnt.getResponse().setPath(FileName);
     throw 0;
 }

@@ -1,5 +1,5 @@
 #include "../inc/dataCenter.hpp"
-
+#include <signal.h>
 std::string getErrorPath(server& s, int statusCode) {
     std::string path;
     std::map<int, std::string>::iterator it = s.get_error_pages().find(statusCode);
@@ -31,24 +31,55 @@ std::string getErrorPath(server& s, int statusCode) {
     return path;
 }
 
+std::string getContentTypeFromExtention(std::string ext){
+    std::map<std::string, std::string>extention;
+    extention["html"] = "text/html";
+    extention["htm"] = "text/htm";
+    extention["css"] = "text/css";
+    extention["xml"] = "text/xml";
+    extention["mml"] = "text/mml";
+    extention["txt"] = "text/txt";
+
+    extention["gif"] = "image/gif";
+    extention["jpeg"] = "image/jpeg";
+    extention["png"] = "image/png";
+    extention["svg"] = "image/svg+xml";
+    extention["x-icon"] = "image/ico";
+
+    extention["json"] = "application/json";
+    extention["doc"] = "application/msword";
+    extention["pdf"] = "application/pdf";
+
+    extention["mp3"] = "audio/mpeg";
+    extention["ogg"] = "audio/ogg";
+    extention["x-m4a"] = "audio/m4a";
+
+    extention["mp4"] = "video/mp4";
+    extention["mov"] = "video/quicktime";
+    extention["webm"] = "video/webm";
+
+    return extention[ext];
+}
+
 std::string getHeaderResponse(response res, std::string errorMsg){
     std::ostringstream httpResponse;
 
     httpResponse << "HTTP/1.1 " << res.getStatusCode() << " " << errorMsg << "\r\n";
-    httpResponse << "Content-Type: " << res.getContentType() << "\r\n";
+    httpResponse << "Content-Type: " << getContentTypeFromExtention(res.getContentType()) << "\r\n";
+    // httpResponse << "Transfer-Encoding: chunked\r\n";
     httpResponse << "\r\n";
     return httpResponse.str();
 }
 
 std::string readBufferFromFile(std::fstream &filePath){
-    char buffer[1024] = {0};
-    filePath.read(buffer, 1023);
+    char buffer[BUFFER_SIZE] = {0};
+    filePath.read(buffer, BUFFER_SIZE - 1);
     std::string content(buffer, filePath.gcount());
     return content;
 }
 
 void dataCenter::sending(int fd){
-
+    signal(SIGPIPE, SIG_IGN);
     std::map<int , std::string> statusCodeMsgs;
     statusCodeMsgs[200] = "OK";
     statusCodeMsgs[201] = "Created";
@@ -74,14 +105,14 @@ void dataCenter::sending(int fd){
     if(!res.getIsHeaderSend()){
         if (res.getStatusCode() == 301)
         {
-            std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html";
+            std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html\r\n\r\n";
             write(fd, header.c_str(), header.length());
             close(fd);
             return ;
         }
         if (res.getStatusCode() == 201)
         {
-            std::string header = "HTTP/1.1 201 Created\r\nContent-Type: text/html";
+            std::string header = "HTTP/1.1 201 Created\r\nLocation: " + res.getPath() + "Content-Type: text/html\r\n\r\n";
             write(fd, header.c_str(), header.length());
             close(fd);
             return ;
@@ -112,7 +143,7 @@ void dataCenter::sending(int fd){
         }
 
     }
-    
+    // std::cout << content.size() << std::endl;
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
         std::cout << "()()()()()()()()\n";

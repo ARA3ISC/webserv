@@ -51,7 +51,7 @@ void    dataCenter::loadHeaders(int fd)
     }
     catch (int e)
     {
-        this->clientList[fd].getResponse().setAttributes(e, "text/html");
+        this->clientList[fd].getResponse().setAttributes(e, "html");
         throw 0;
         // throw returnError(wes.getServers()[this->clientList[fd].servIndx()], fd, e);
     }
@@ -64,15 +64,15 @@ void dataCenter::checkErrors(client &clnt, server srv){
     int j = getLocationRequested(srv.getLocations(), clnt, directory);
 
     if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
-        throw clnt.getResponse().setAttributes(405, "text/html");
+        throw clnt.getResponse().setAttributes(405, "html");
 
     std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
     if (!pathExists(path))
-        throw clnt.getResponse().setAttributes(404, "text/html");
+        throw clnt.getResponse().setAttributes(404, "html");
     
     if (clnt.getStartLine().method == "POST" && srv.getLocations()[j].getUpload().empty()){
         std::cout << "upload not found\n";
-        throw clnt.getResponse().setAttributes(500, "tex/html");
+        throw clnt.getResponse().setAttributes(500, "html");
     }
 }
 
@@ -81,8 +81,8 @@ void    dataCenter::reading(int fd)
     std::string directory, file;
 
     char buffer[BUFFER_SIZE] = {0};
-    int a = read(fd, buffer, BUFFER_SIZE - 1);
-    
+    // int a = read(fd, buffer, BUFFER_SIZE - 1);
+    int a = recv(fd, buffer, BUFFER_SIZE - 1, 0);
     if (a == 0)
     {
         this->clientList.erase(fd);
@@ -105,8 +105,6 @@ void    dataCenter::reading(int fd)
             std::string tmp(buffer, a);
             this->clientList[fd].setbufferBody(tmp);
             this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
-            // std::cout << tmp.size() << " | " << this->clientList[fd].getBody().size() << " | " <<  this->clientList[fd].getHeaders()["Content-Length"]<< std::endl;
-            // std::cout << this->clientList[fd].getBody().size() / 1000000 << "/" << this->clientList[fd].getHeaders()["Content-Length"] << '\n';
         }
         // checking body size with content-length
         
@@ -119,7 +117,6 @@ void    dataCenter::reading(int fd)
         if (this->clientList[fd].getStartLine().method == "POST")
         {
             post(this->clientList[fd], fd);
-            // std::cout << this->clientList[fd].getBody().size() << std::endl;
         }
         // if (this->clientList[fd].getStartLine().method == "DELETE")
         // {

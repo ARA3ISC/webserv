@@ -208,7 +208,7 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
         closedir(dir);
     }
     response += "</ul></body></html>";
-    this->clientList[fd].getResponse().setAttributes(200, "text/html");
+    this->clientList[fd].getResponse().setAttributes(200, "html");
     this->clientList[fd].getResponse().setContent(response);
     this->clientList[fd].getResponse().setLisDir(true);
 
