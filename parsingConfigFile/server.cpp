@@ -126,7 +126,7 @@ void    server::setRoot(std::string line, int nbln){
     removeComment(splited);
 
 
-    if (splited.size() != 2)
+    if (splited.size() != 2  || splited[1].at(0) != '.' || splited[1].at(1) != '/')
         throwError("Syntax error", nbln);
 
     this->_root = splited[1];

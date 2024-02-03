@@ -1,10 +1,10 @@
 - server:
     server_name: server1 kkkk1
     listen: 127.0.0.1:9090
-    root: /
+    root: ./
     error: 404 /path/to/404.html
 
-    - location myWebsite:
+    - location /myWebsite:
         dir_listing: on
         allow_methods: GET
         root: ./myWebsite
@@ -13,7 +13,7 @@
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: off
-        upload: ./upload
+        upload: /upload
 
 
     - location /about:
@@ -25,7 +25,7 @@
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: off
-        upload: ./upload
+        upload: /upload
 
     - location /test:
         dir_listing: off
@@ -42,7 +42,7 @@
 - server:
     server_name: server2 kkkk2
     listen: 9999
-    root: myWebsite
+    root: ./myWebsite
     # baqi had lblan
    # error: 404 ./CustomErrors/404.html
     max_body_size: 25M
@@ -53,7 +53,7 @@
         allow_methods: POST 
         auto_index: off
         root: ./myWebsite/
-        upload: ./uploads
+        upload: /uploads
 
     - location /about:
         dir_listing: on
@@ -111,11 +111,11 @@
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: on
-        upload: ./upload
+        upload: /upload
 
 - server:
     listen: 2222
-    root: root3
+    root: ./root3
     server_name: server3 kkkk3
     error: 404 ./error_pages/404.html
     error: 302 ./error_pages/404.html

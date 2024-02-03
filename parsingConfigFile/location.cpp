@@ -54,10 +54,9 @@ void    location::setPath(std::string line, int nbl, server* s)
         this->_path = "/";
     }
     else
-    {
-            
+    {  
         this->_path = removeLastColon(splited[2]);
-        if (this->_path.empty())
+        if (this->_path.empty() || this->_path.at(0) != '/')
             throwError("Syntax error", nbl);
         
         if (s->isLocationAlreadyExist(this->_path))
@@ -120,15 +119,10 @@ void location::setRoot(std::string line, int nbln)
 {
     std::vector<std::string> splited;
     splited = splitBySpace(line);
-    if (splited.size() != 2)
+    if (splited.size() != 2 || splited[1].at(0) != '.' || splited[1].at(1) != '/')
         throwError("Syntax error", nbln);
-//    if (this->_root.empty())
     this->_root = splited[1];
-//    else
-//    {
-//        std::cout << "Duplicated symbol (line: " << nbln << ")";
-//        throw std::runtime_error("");
-//    }
+
 }
 
 void location::setIndexes(std::string line, int nbln) {
@@ -199,9 +193,8 @@ void    location::setUpload(std::string line, int nbln)
     removeComment(splited);
 
 
-    if (splited.size() != 2)
+    if (splited.size() != 2 || splited[1].at(0) != '/')
     {
-//        delete this;
         throwError("Syntax error", nbln);
     }
     this->_upload = splited[1];
