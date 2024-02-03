@@ -72,18 +72,18 @@ void dataCenter::checkErrors(client &clnt, server srv){
         throw clnt.getResponse().setAttributes(404, "html");
     
     if (clnt.getStartLine().method == "POST" && srv.getLocations()[j].getUpload().empty()){
-        std::cout << "upload not found\n";
-        throw clnt.getResponse().setAttributes(500, "html");
+        throw clnt.getResponse().setAttributes(404, "html");
     }
 }
-
+int ll = 0;
 void    dataCenter::reading(int fd)
 {
     std::string directory, file;
 
     char buffer[BUFFER_SIZE] = {0};
-    // int a = read(fd, buffer, BUFFER_SIZE - 1);
+    // int a = read(fd, buffer, BUFFER_SIZE);
     int a = recv(fd, buffer, BUFFER_SIZE - 1, 0);
+    // std::cout << a << std::endl;
     if (a == 0)
     {
         this->clientList.erase(fd);
@@ -91,16 +91,20 @@ void    dataCenter::reading(int fd)
         // remove the fd from the map
     }
     
-    std::string rqline(buffer, a);
-
-    this->clientList[fd].setFullRequest(rqline);
+    // if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) == std::string::npos){
+    if (!this->clientList[fd].isHeadersLoaded()){
+        std::cout << "koko\n";
+        std::string rqline(buffer, a);
+        this->clientList[fd].setFullRequest(rqline);
+    }
+    // }
 
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
     {
-
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
+            checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
         }
         else {
             std::string tmp(buffer, a);
@@ -112,7 +116,6 @@ void    dataCenter::reading(int fd)
         // checking body size with content-length
         
         //checking erorrs of methods
-        checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
 
         if (this->clientList[fd].getStartLine().method == "GET")
             get(this->clientList[fd], fd);

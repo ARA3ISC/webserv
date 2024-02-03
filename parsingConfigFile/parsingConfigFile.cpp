@@ -234,9 +234,8 @@ void startParsing(std::string filename)
 //        exit(0);
 //        std::cout << webs.getServers().size() << std::endl;
         
-        std::cout << webs.getServers()[2].getLocations().size() << '\n';
-        // printEntryMsg();
-        // dataCenter ds(webs);
+        printEntryMsg();
+        dataCenter ds(webs);
 
         obj.close();
     }

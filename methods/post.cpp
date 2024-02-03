@@ -113,7 +113,7 @@ void dataCenter::post(client &clnt, int fd){
 
         res = readBufferChunck(clnt, clnt.getbufferBody());
         if (clnt.getChunk().size() >= clnt.getChunkSize()){
-            std::cout << ":: " << pp++ << std::endl;
+            // std::cout << ":: " << pp++ << std::endl;
             clnt.setbufferBody(clnt.getChunk());
             clnt.setChunk("");
             clnt.setChunkSize(0);
@@ -144,16 +144,15 @@ void dataCenter::post(client &clnt, int fd){
         //     std::cout << "error opening opload file\n";
         //     throw clnt.getResponse().setAttributes(500, "html");
         // }
+        std::cout << "***********************\n";
         if (!clnt.getFileNewUpload()) {
-            std::cout << "error opening opload file\n";
-            throw clnt.getResponse().setAttributes(500, "html");
+            throw clnt.getResponse().setAttributes(404, "html");
         }
     }
     if (!clnt.getbufferBody().empty()){
-        std::cout << ":: " << mm++ << std::endl;
-        
+        // std::cout << ":: " << mm++ << std::endl;
         fwrite(clnt.getbufferBody().c_str(), sizeof(char), clnt.getbufferBody().size(), clnt.getFileNewUpload());
-        std::cout << clnt.getbufferBody().size() << std::endl;
+        // std::cout << clnt.getbufferBody().size() << std::endl;
         // write(fileno(clnt.getFileNewUpload()), clnt.getbufferBody().c_str(), clnt.getbufferBody().size());
     }
     
@@ -162,6 +161,7 @@ void dataCenter::post(client &clnt, int fd){
         std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         // clnt.getFileUpload().close();
         fclose(clnt.getFileNewUpload());
+        // close(fileno(clnt.getFileNewUpload()));
         throw clnt.getResponse().setAttributes(201, "html");
     }
 
