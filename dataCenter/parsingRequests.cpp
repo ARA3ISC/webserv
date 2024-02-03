@@ -45,7 +45,8 @@ void    dataCenter::loadHeaders(int fd)
 //        std::cout << this->clientList[fd].getHeaders().begin()->first << std::endl;
         }
         this->clientList[fd].setbufferBody(trimFromBeginning(this->clientList[fd].getFullRequest(), "\r\n\r\n"));
-        this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
+        
+        // this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
         requestSyntaxError(this->clientList[fd]);
         this->clientList[fd].headersLoaded(true);
     }
@@ -91,7 +92,7 @@ void    dataCenter::reading(int fd)
     }
     
     std::string rqline(buffer, a);
-    
+
     this->clientList[fd].setFullRequest(rqline);
 
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
@@ -103,8 +104,10 @@ void    dataCenter::reading(int fd)
         }
         else {
             std::string tmp(buffer, a);
+            // std::istringstream iss(buffer);
+            // this->clientList[fd].setbufferBody(iss);
             this->clientList[fd].setbufferBody(tmp);
-            this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
+            // this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
         }
         // checking body size with content-length
         

@@ -66,7 +66,6 @@ std::string getHeaderResponse(response res, std::string errorMsg){
 
     httpResponse << "HTTP/1.1 " << res.getStatusCode() << " " << errorMsg << "\r\n";
     httpResponse << "Content-Type: " << getContentTypeFromExtention(res.getContentType()) << "\r\n";
-    // httpResponse << "Transfer-Encoding: chunked\r\n";
     httpResponse << "\r\n";
     return httpResponse.str();
 }
@@ -146,7 +145,7 @@ void dataCenter::sending(int fd){
     // std::cout << content.size() << std::endl;
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
-        std::cout << "()()()()()()()()\n";
+        std::cout << fd << "()()()()()()()()\n";
         close(fd);
         res.getFilePath().close();
         res.getFilePathError().close();

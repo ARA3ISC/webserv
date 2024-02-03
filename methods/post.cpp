@@ -1,11 +1,13 @@
 #include "../inc/dataCenter.hpp"
-std::string getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention){
+
+std::string dataCenter::getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention){
     std::stringstream a;
     a << root;
     a << directory ;
     a << pathUpload;
     a << "/output";
     a << time(0);
+    a << this->getFilePrefix();
     a << ".";
     a << extention;
     return a.str();
@@ -99,6 +101,8 @@ std::string readBufferChunck(client &clnt, std::string buffer){
     clnt.setChunk(clnt.getChunk() + res.str());
     return res.str();
 }
+int pp = 0;
+int mm = 0;
 void dataCenter::post(client &clnt, int fd){
     (void)fd;
     (void)clnt;
@@ -106,20 +110,16 @@ void dataCenter::post(client &clnt, int fd){
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked"){
 
         res = readBufferChunck(clnt, clnt.getbufferBody());
-        // clnt.setChunk(clnt.getChunk() + res);
-        // clnt.setbufferBody(res);
         if (clnt.getChunk().size() >= clnt.getChunkSize()){
+            std::cout << ":: " << pp++ << std::endl;
             clnt.setbufferBody(clnt.getChunk());
             clnt.setChunk("");
             clnt.setChunkSize(0);
-            // std::cout << "**************************\n";
+            // std::cout << "reset\n";
         }else{
+            // std::cout << "join\n";
             return;
         }
-        // std::cout << clnt.getChunk().size() << " " << clnt.getChunkSize() << std::endl; 
-        // if (clnt.getChunk().size() == clnt.getChunkSize()){
-        //     std::cout << "chunk\n"; 
-        // }
     }
 
     if (!clnt.getIsUploadfileOpen()){
@@ -133,28 +133,36 @@ void dataCenter::post(client &clnt, int fd){
         std::string fileName  = getFileName(srv.getLocations()[j].getRoot(), srv.getLocations()[j].getUpload(), directory, clnt.getHeaders()["Content-Type"].substr(lastExtention + 1));
 
         
-        clnt.openFileUpload(fileName);
+        // clnt.openFileUpload(fileName);
         
+        clnt.openFileNewUpload(fileName);
+
         clnt.setIsUploadfileOpen(true);
-        if (!clnt.getFileUpload().is_open()) {
+        // if (!clnt.getFileUpload().is_open()) {
+        //     std::cout << "error opening opload file\n";
+        //     throw clnt.getResponse().setAttributes(500, "html");
+        // }
+        if (!clnt.getFileNewUpload()) {
             std::cout << "error opening opload file\n";
             throw clnt.getResponse().setAttributes(500, "html");
         }
     }
     if (!clnt.getbufferBody().empty()){
-        // std::cout << "writing : " << clnt.getbufferBody().size() << std::endl;
-        clnt.getFileUpload().write(clnt.getbufferBody().c_str() , clnt.getbufferBody().size());
+        std::cout << ":: " << mm++ << std::endl;
+        
+        fwrite(clnt.getbufferBody().c_str(), sizeof(char), clnt.getbufferBody().size(), clnt.getFileNewUpload());
+        std::cout << clnt.getbufferBody().size() << std::endl;
+        // write(fileno(clnt.getFileNewUpload()), clnt.getbufferBody().c_str(), clnt.getbufferBody().size());
     }
     
-    if (clnt.getBody().size() >= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
+    if (clnt.getFullSize() >= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
         
-        std::cout << clnt.getBody().size() << "pppppppppp" << clnt.getHeaders()["Content-Length"] << std::endl;
-        clnt.getFileUpload().close();
-
+        std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
+        // clnt.getFileUpload().close();
+        fclose(clnt.getFileNewUpload());
         throw clnt.getResponse().setAttributes(201, "html");
     }
 
 
-// output1706912528.mp4
 }
         

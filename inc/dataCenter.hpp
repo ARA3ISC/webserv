@@ -42,6 +42,7 @@ private:
     int epollfd;
     std::vector<int> serv_fds;
     std::map<int, client> clientList;
+    int filePrefix;
 
 
     /* private member functions */
@@ -89,7 +90,8 @@ public:
     void deleteMethod(client clnt, int fd);
     void listDirectory(std::string path, std::string directory, int fd);
     void checkErrors(client &clnt, server serv); 
-
+    std::string getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention);
+    int getFilePrefix();
 };
 
 

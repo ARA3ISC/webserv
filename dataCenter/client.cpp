@@ -10,6 +10,7 @@ client::client(int serverIndex, int clientFd) {
     this->_serverIndex = serverIndex;
     this->_fd = clientFd;
     this->bufferLen = 0;
+    this->fullSize = 0;
 }
 
 client::client(const client &rhs) {
@@ -27,6 +28,8 @@ client::client(const client &rhs) {
     this->bufferLen = rhs.bufferLen;
     this->chunk = rhs.chunk;
     this->chunkSize = rhs.chunkSize;
+    this->fileNewUpload = rhs.fileNewUpload;
+    this->fullSize = rhs.fullSize;
 }
 
 client& client::operator=(const client &rhs) {
@@ -47,6 +50,8 @@ client& client::operator=(const client &rhs) {
         this->bufferLen = rhs.bufferLen;
         this->chunk = rhs.chunk;
         this->chunkSize = rhs.chunkSize;
+        this->fileNewUpload = rhs.fileNewUpload;
+        this->fullSize = rhs.fullSize;
     }
     return *this;
 }
@@ -155,6 +160,11 @@ std::string client::getbufferBody(){
 }
 void client::setbufferBody(std::string a){
     this->bufferBody = a;
+    this->fullSize += a.size();
+}
+
+void client::setbufferBody(std::istringstream &a){
+    this->bufferBody = a.str();
 }
 
 size_t client::getbufferLen(){
@@ -180,4 +190,18 @@ size_t client::getChunkSize(){
 }
 void client::setChunkSize(size_t a){
     this->chunkSize = a;
+}
+void client::openFileNewUpload(std::string path){
+    this->fileNewUpload = fopen(path.c_str() , "wb");
+    if (this->fileNewUpload)
+        std::cout << "file created\n";
+    else
+        std::cout << "file error\n"; 
+}
+FILE* client::getFileNewUpload(){
+    return this->fileNewUpload;
+}
+
+size_t client::getFullSize(){
+    return this->fullSize;
 }

@@ -55,8 +55,8 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
         
     std::ostringstream s;
     s << std::time(0);
-
-    std::string FileName = "/tmp/randomFile" + s.str() + ".txt";
+    s << this->getFilePrefix();
+    std::string FileName = "/tmp/randomFile" + s.str() + +".txt";
     
     // clnt.getResponse().setIsCGIFile(true);
     

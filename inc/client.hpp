@@ -5,7 +5,7 @@
 #include "../inc/webserv.hpp"
 #include "../inc/utils2.hpp"
 #include "../inc/response.hpp"
-
+#include <stdio.h>
 typedef struct startLine_s
 {
     std::string method;
@@ -27,11 +27,14 @@ private:
     std::string _queryString;
     bool isUploadfileOpen;
     std::fstream fileUpload;
+    FILE* fileNewUpload;
     std::string bufferBody;
     std::string tempBuffer;
     size_t bufferLen;
     std::string chunk;
     size_t chunkSize;
+    size_t fullSize;
+    // std:: iStringBufferBody;
 public:
     client();
     client(int serverIndex, int clientFd);
@@ -65,6 +68,9 @@ public:
     void openFileUpload(std::string path);
     std::fstream &getFileUpload();
 
+    void openFileNewUpload(std::string path);
+    FILE* getFileNewUpload();
+
     std::string getbufferBody();
     void setbufferBody(std::string a);
 
@@ -76,4 +82,8 @@ public:
     void setChunk(std::string a);
     size_t getChunkSize();
     void setChunkSize(size_t a);
+    void setbufferBody(std::istringstream &a);
+
+    size_t getFullSize();
+
 };
