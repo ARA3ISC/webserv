@@ -180,6 +180,17 @@ void server::setMaxBodySize(std::string line, int nbln) {
     this->max_body_size = lastResult;
 }
 
+bool server::isLocationAlreadyExist(std::string toFind)
+{
+    for (std::vector<location>::iterator it = this->_locations.begin(); it != this->_locations.end(); it++)
+    {
+        if (it->getPath() == toFind)
+            return true;
+    }
+    return false;
+}
+
+
 location* server::createLocation()
 {
     location* l = new location;

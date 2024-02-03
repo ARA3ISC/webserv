@@ -64,7 +64,7 @@ void dataCenter::checkErrors(client &clnt, server srv){
 
     int j = getLocationRequested(srv.getLocations(), clnt, directory);
 
-    if(isMethodAllowed(srv.getLocations()[j].getMethods(), "GET"))
+    if(isMethodAllowed(srv.getLocations()[j].getMethods(), clnt.getStartLine().method))
         throw clnt.getResponse().setAttributes(405, "html");
 
     std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);

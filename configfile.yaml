@@ -4,8 +4,7 @@
     root: /
     error: 404 /path/to/404.html
 
-
-    - location /myWebsite:
+    - location myWebsite:
         dir_listing: on
         allow_methods: GET
         root: ./myWebsite
@@ -15,6 +14,7 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: ./upload
+
 
     - location /about:
         dir_listing: off
@@ -44,16 +44,16 @@
     listen: 9999
     root: myWebsite
     # baqi had lblan
-    error: 404 ./CustomErrors/404.html
+   # error: 404 ./CustomErrors/404.html
     max_body_size: 25M
 
     - location /:
-        dir_listing: on
+        dir_listing: off
         index: index.html
-        allow_methods: POST GET
-        auto_index: on
+        allow_methods: POST 
+        auto_index: off
         root: ./myWebsite/
-        upload: /upload
+        upload: ./uploads
 
     - location /about:
         dir_listing: on
@@ -79,6 +79,7 @@
         cgi_path: sh /usr/bin/sh
         upload: /upload
 
+
     - location /contact:
         dir_listing: on
         index: index.html
@@ -89,6 +90,7 @@
         cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
         index: contact.html
+
 
     - location /home/test:
         dir_listing: on
@@ -125,3 +127,4 @@
         dir_listing: on
         allow_methods: GET
         root: ./www/portfoliolocation2
+        

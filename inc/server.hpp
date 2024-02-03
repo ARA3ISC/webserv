@@ -55,4 +55,5 @@ public:
     location* createLocation();
 	std::vector<location>& getLocations();
 	void   addLocation(location &newloc);
+	bool isLocationAlreadyExist(std::string toFind);
 };

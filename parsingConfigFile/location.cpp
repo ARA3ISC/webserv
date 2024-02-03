@@ -48,7 +48,6 @@ void    location::setPath(std::string line, int nbl, server* s)
 
     if (splited.size() != 2 && splited.size() != 3)
     {
-//        delete this;
         throwError("Syntax error", nbl);
     }
     if (splited.size() == 2) {
@@ -56,14 +55,16 @@ void    location::setPath(std::string line, int nbl, server* s)
     }
     else
     {
+            
         this->_path = removeLastColon(splited[2]);
         if (this->_path.empty())
-        {
-//            delete this;
             throwError("Syntax error", nbl);
-        }
+        
+        if (s->isLocationAlreadyExist(this->_path))
+            throwError("Duplicated location error", nbl);
         checkSlash(this->_path);
     }
+    
     this->_root = s->getRoot();
 }
 
