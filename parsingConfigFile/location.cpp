@@ -60,14 +60,13 @@ void    location::setPath(std::string line, int nbl, server* s)
             throwError("Syntax error", nbl);
         
         
-        checkSlash(this->_path);
+        // checkSlash(this->_path);
     }
     
     if (s->isLocationAlreadyExist(this->_path))
         throwError("Duplicated location error", nbl);
-    std::cout << this->_path << '\n';
-    // error
-    this->_root = s->getRoot();
+    // std::cout << this->_path << '\n';
+
 }
 
 void location::set_dir_listing(std::string line, int nbl)

@@ -17,6 +17,12 @@ std::string rtrim(const std::string &str)
     return str.substr(0, end + 1);
 }
 
+void location::isRootSet(server &s)
+{
+    if (this->_root.empty())
+        this->_root = s.getRoot();
+}
+
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
     location l;
@@ -48,6 +54,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
         if (trimStr(line).find("- location") != std::string::npos)
         {
 //            std::cout << l.getCgiPath().size() << "==" << std::endl;
+            l.isRootSet(*s);
             s->addLocation(l);
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
@@ -63,6 +70,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
     nbline++;
 //    std::cout << l->getCgiPath().size() << ";"<< std::endl;
 
+    l.isRootSet(*s);
     s->addLocation(l);
 //    std::cout << l.getRoot() << "********\n";
 //    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
@@ -225,8 +233,10 @@ void startParsing(std::string filename)
 //        std::cout << .get_dir_listing() << std::endl;
 //        exit(0);
 //        std::cout << webs.getServers().size() << std::endl;
-        printEntryMsg();
-        dataCenter ds(webs);
+        
+        std::cout << webs.getServers()[2].getLocations().size() << '\n';
+        // printEntryMsg();
+        // dataCenter ds(webs);
 
         obj.close();
     }

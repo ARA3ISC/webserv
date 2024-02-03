@@ -63,5 +63,6 @@ public:
     std::map<std::string, std::string>& getCgiPath() ;
     std::string getUpload() ;
     std::string getReturn();
+    void isRootSet(server &s);
 
 };
