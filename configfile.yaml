@@ -4,7 +4,7 @@
     root: ./
     error: 404 /path/to/404.html
 
-    - location /myWebsite:
+    - location:
         dir_listing: on
         allow_methods: GET
         root: ./myWebsite
@@ -14,6 +14,7 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /upload
+    
 
 
     - location /about:

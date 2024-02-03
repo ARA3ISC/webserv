@@ -59,11 +59,14 @@ void    location::setPath(std::string line, int nbl, server* s)
         if (this->_path.empty() || this->_path.at(0) != '/')
             throwError("Syntax error", nbl);
         
-        if (s->isLocationAlreadyExist(this->_path))
-            throwError("Duplicated location error", nbl);
+        
         checkSlash(this->_path);
     }
     
+    if (s->isLocationAlreadyExist(this->_path))
+        throwError("Duplicated location error", nbl);
+    std::cout << this->_path << '\n';
+    // error
     this->_root = s->getRoot();
 }
 
