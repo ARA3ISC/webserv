@@ -78,6 +78,7 @@ public:
     int getLocationRequested(std::vector<location> loc, client &clnt, std::string path);
     bool pathExists(const std::string& path);
 
+    int updateServerIndex(std::string host);
         /* get method*/
     void get(client &clnt, int fd);
     void post(client &clnt, int fd);

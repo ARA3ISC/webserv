@@ -81,6 +81,49 @@ void dataCenter::checkErrors(client &clnt, server srv){
     }
 }
 
+int dataCenter::updateServerIndex(std::string host)
+{
+    int count = 0;
+    std::vector<std::string> splited;
+    std::vector<int> repeated;
+    splited = splitBy(host, ':');
+
+    for (size_t i = 0; i < this->wes.getServers().size(); i++)
+    {
+        if (this->wes.getServers()[i].getListen().size() == 1)
+        {
+            /* one port in config file && host port matches this port */
+            if (this->wes.getServers()[i].getListen()[1] == splited[1])
+                return i;
+        }
+        if (this->wes.getServers()[i].getListen().size() == 2)
+        {
+            if (host == this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1])
+            {
+                repeated.push_back(i);
+                count++;
+            }
+        }
+    }
+
+    if (count > 1)
+    {
+        for (size_t i = 0; i < repeated.size(); i++)
+        {
+            for (size_t k = 0; k < this->wes.getServers()[repeated[i]].getServer_names().size(); k++)
+            {
+                if (splited[0] == this->wes.getServers()[repeated[i]].getServer_names()[k])
+                {
+                    return repeated[i];
+                }
+            }   
+        }
+    }
+
+    return repeated[0];
+}
+
+
 void    dataCenter::reading(int fd)
 {
     std::string directory, file;
@@ -104,6 +147,9 @@ void    dataCenter::reading(int fd)
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
+            clientList[fd].setServIndx(updateServerIndex(this->clientList[fd].getHeaders()["Host"]));
+            std::cout << "Host : " << clientList[fd].getHeaders()["Host"] << '\n';
+            std::cout << "Server index : " << clientList[fd].servIndx() << '\n';
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
         }
         else {

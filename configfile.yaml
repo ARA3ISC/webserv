@@ -1,6 +1,6 @@
 - server:
-    server_name: server1 kkkk1
-    listen: 127.0.0.1:9090
+    server_name: servername1 kkkk1
+    listen: 127.0.0.2:9090
     root: ./
     error: 404 /path/to/404.html
 
@@ -15,7 +15,6 @@
         auto_index: off
         upload: /upload
         
-    
 
 
     - location /about:
@@ -42,8 +41,8 @@
 
 
 - server:
-    server_name: server2 kkkk2
-    listen: 9999
+    server_name:  kkkk2  127.0.0.2
+    listen: 127.0.0.2:9090
     root: ./myWebsite
     # baqi had lblan
    # error: 404 ./CustomErrors/404.html
@@ -104,7 +103,7 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /upload
-        # return: /path
+        return: /path
 
     - location /path:
         dir_listing: off
@@ -119,7 +118,7 @@
 - server:
     listen: 2222
     root: ./root3
-    server_name: server3 kkkk3
+    server_name: servername3 kkkk3
     error: 404 ./error_pages/404.html
     error: 302 ./error_pages/404.html
     - location /akheruahd1:
