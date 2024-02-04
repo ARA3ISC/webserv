@@ -18,8 +18,10 @@ int hexToDecimal(const std::string& hexString) {
     std::istringstream iss(hexString);
     int decimalValue;
     iss >> std::hex >> decimalValue;
-    if (hexString == "0")
+    if (hexString == ""){
+        std::cout << "set to zero\n";
         return 0;
+    }
     return decimalValue;
 }
  
@@ -37,39 +39,31 @@ int getSizeChunck(std::string &buffer){
     return hexToDecimal(hexa);
 }
 
-std::string readBufferChunck(client &clnt, std::string buffer){
+void readBufferChunck(client &clnt, std::string buffer){
 
     size_t i = 0;
-
+    
     buffer = clnt.getTempBuffer() + buffer ;
 
     std::stringstream res;
     std::stringstream iss;
 
-    if (!clnt.getbufferLen()){
+    if (!clnt.getbufferLen() && !clnt.getLastChunk()){
         
         int s = getSizeChunck(buffer);
         clnt.setbufferLen(s);
         clnt.setChunkSize(s);
-        
-        if (clnt.getbufferLen() <= 0){
-            clnt.setChunk(clnt.getChunk() + buffer);
-            return buffer;
-        }
 
     }
 
     int n = clnt.getbufferLen();
 
     while(i < buffer.size() && n){
-
         res << buffer[i];
         i++;
         n--;
     }
-
     clnt.setbufferLen(n);
-
 
     if (!clnt.getbufferLen()){
 
@@ -88,29 +82,24 @@ std::string readBufferChunck(client &clnt, std::string buffer){
         clnt.setTempBuffer(iss.str());
 
         
-        clnt.setChunk(clnt.getChunk() + res.str());
-        return res.str();
+        clnt.setChunk(res.str());
+        return ;
     }
     else{// eof buffer 1024
 
         clnt.setTempBuffer("");
-        clnt.setChunk(clnt.getChunk() + res.str());
-        return res.str();
+        clnt.setChunk(res.str());
+        return ;
     }
-
-    clnt.setChunk(clnt.getChunk() + res.str());
-    return res.str();
 }
-int pp = 0;
-int mm = 0;
-
 
 void dataCenter::post(client &clnt, int fd){
     (void)fd;
     std::string directory, file, res;
-    if (clnt.getHeaders()["Transfer-Encoding"] == "chunked"){
+    if (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && !clnt.getbufferBody().empty()){
 
-        res = readBufferChunck(clnt, clnt.getbufferBody());
+        readBufferChunck(clnt, clnt.getbufferBody());
+        
         if (clnt.getChunk().size() >= clnt.getChunkSize()){
             clnt.setbufferBody(clnt.getChunk());
             clnt.setChunk("");
@@ -119,7 +108,7 @@ void dataCenter::post(client &clnt, int fd){
             return;
         }
     }
-
+    
     if (!clnt.getIsUploadfileOpen()){
         splitPath(clnt.getStartLine().path, directory, file); 
         server srv = getWebserv().getServers()[clnt.servIndx()];    
@@ -141,15 +130,16 @@ void dataCenter::post(client &clnt, int fd){
 
     }
     if (!clnt.getbufferBody().empty()){
-        
+        clnt.setFullSize(clnt.getbufferBody().size());
         clnt.getFileUpload().write(clnt.getbufferBody().c_str(), clnt.getbufferBody().size());
+
     }
-    
+    // std::cout << clnt.getFullSize() << " \n";
     if (clnt.getFullSize() >= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
         
         std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
-        
+        clnt.setFullSize(0);
         throw clnt.getResponse().setAttributes(201, "html");
     }
 

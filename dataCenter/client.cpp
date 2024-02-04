@@ -11,6 +11,7 @@ client::client(int serverIndex, int clientFd) {
     this->_fd = clientFd;
     this->bufferLen = 0;
     this->fullSize = 0;
+    this->lastChunk = false;
 }
 
 client::client(const client &rhs) {
@@ -30,6 +31,7 @@ client::client(const client &rhs) {
     this->chunkSize = rhs.chunkSize;
     this->fileNewUpload = rhs.fileNewUpload;
     this->fullSize = rhs.fullSize;
+    this->lastChunk = rhs.lastChunk;
 }
 
 client& client::operator=(const client &rhs) {
@@ -52,6 +54,7 @@ client& client::operator=(const client &rhs) {
         this->chunkSize = rhs.chunkSize;
         this->fileNewUpload = rhs.fileNewUpload;
         this->fullSize = rhs.fullSize;
+        this->lastChunk = rhs.lastChunk;
     }
     return *this;
 }
@@ -160,7 +163,6 @@ std::string client::getbufferBody(){
 }
 void client::setbufferBody(std::string a){
     this->bufferBody = a;
-    this->fullSize += a.size();
 }
 
 void client::setbufferBody(std::istringstream &a){
@@ -183,7 +185,10 @@ std::string client::getChunk(){
     return this->chunk;
 }
 void client::setChunk(std::string a){
-    this->chunk = a;
+    if (a.empty())
+        this->chunk = a;
+    else
+        this->chunk += a;
 }
 size_t client::getChunkSize(){
     return this->chunkSize;
@@ -204,4 +209,15 @@ FILE* client::getFileNewUpload(){
 
 size_t client::getFullSize(){
     return this->fullSize;
+}
+
+void client::setFullSize(int a){
+    this->fullSize += a;
+}
+
+bool client::getLastChunk(){
+    return this->lastChunk;
+}
+void client::setLastChunk(bool a){
+    this->lastChunk = a;
 }
