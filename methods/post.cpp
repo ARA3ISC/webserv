@@ -15,19 +15,24 @@ std::string dataCenter::getFileName(std::string root, std::string pathUpload, st
 
 
 int hexToDecimal(const std::string& hexString) {
-    std::istringstream iss(hexString);
-    int decimalValue;
-    iss >> std::hex >> decimalValue;
+    // std::cout << "hexa : " << hexString << std::endl;
     if (hexString == ""){
         std::cout << "set to zero\n";
         return 0;
     }
+    std::istringstream iss(hexString);
+    int decimalValue;
+    iss >> std::hex >> decimalValue;
     return decimalValue;
 }
  
 int getSizeChunck(std::string &buffer){
     int i = 0;
     std::string hexa;
+    if (buffer[i] == '\r' && buffer[i + 1] == '\n'){
+        std::cout << "^^^^^^^^^^^^^^^^\n";
+        i += 2;
+    }
     while((size_t)i < buffer.size() && buffer[i] != '\r'){
         hexa += buffer[i];
         i++;
@@ -65,23 +70,14 @@ void readBufferChunck(client &clnt, std::string buffer){
     }
     clnt.setbufferLen(n);
 
-    if (!clnt.getbufferLen()){
-
-        if (buffer[i] == 13 && buffer[i + 1] == 10){
+    if (!n){
+        
+        if (buffer[i] == '\r' && buffer[i + 1] == '\n'){
             i += 2;
         }
 
+        clnt.setTempBuffer(buffer.substr(i));
 
-        while(i < buffer.size()){
-
-            iss << buffer[i];
-            i++;
-        }
-
-
-        clnt.setTempBuffer(iss.str());
-
-        
         clnt.setChunk(res.str());
         return ;
     }

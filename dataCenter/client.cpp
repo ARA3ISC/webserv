@@ -185,7 +185,7 @@ void client::setChunk(std::string a){
     if (a.empty())
         this->chunk = a;
     else
-        this->chunk += a;
+        this->chunk.append(a);
 }
 size_t client::getChunkSize(){
     return this->chunkSize;
