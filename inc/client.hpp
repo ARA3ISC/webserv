@@ -34,7 +34,6 @@ private:
     std::string chunk;
     size_t chunkSize;
     size_t fullSize;
-    bool lastChunk;
     // std:: iStringBufferBody;
 public:
     client();
@@ -88,6 +87,4 @@ public:
     size_t getFullSize();
     void setFullSize(int a);
 
-    bool getLastChunk();
-    void setLastChunk(bool a);
 };

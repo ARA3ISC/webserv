@@ -11,7 +11,6 @@ client::client(int serverIndex, int clientFd) {
     this->_fd = clientFd;
     this->bufferLen = 0;
     this->fullSize = 0;
-    this->lastChunk = false;
 }
 
 client::client(const client &rhs) {
@@ -31,7 +30,6 @@ client::client(const client &rhs) {
     this->chunkSize = rhs.chunkSize;
     this->fileNewUpload = rhs.fileNewUpload;
     this->fullSize = rhs.fullSize;
-    this->lastChunk = rhs.lastChunk;
 }
 
 client& client::operator=(const client &rhs) {
@@ -54,7 +52,6 @@ client& client::operator=(const client &rhs) {
         this->chunkSize = rhs.chunkSize;
         this->fileNewUpload = rhs.fileNewUpload;
         this->fullSize = rhs.fullSize;
-        this->lastChunk = rhs.lastChunk;
     }
     return *this;
 }
@@ -213,11 +210,4 @@ size_t client::getFullSize(){
 
 void client::setFullSize(int a){
     this->fullSize += a;
-}
-
-bool client::getLastChunk(){
-    return this->lastChunk;
-}
-void client::setLastChunk(bool a){
-    this->lastChunk = a;
 }

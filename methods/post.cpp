@@ -48,7 +48,7 @@ void readBufferChunck(client &clnt, std::string buffer){
     std::stringstream res;
     std::stringstream iss;
 
-    if (!clnt.getbufferLen() && !clnt.getLastChunk()){
+    if (!clnt.getbufferLen()){
         
         int s = getSizeChunck(buffer);
         clnt.setbufferLen(s);
