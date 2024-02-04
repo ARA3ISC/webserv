@@ -102,17 +102,18 @@
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
-        auto_index: on
+        auto_index: off
         upload: /upload
+        # return: /path
 
     - location /path:
-        dir_listing: on
+        dir_listing: off
         allow_methods: GET POST
         root: ./myWebsite
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
-        auto_index: on
+        auto_index: off
         upload: /upload1
 
 - server:

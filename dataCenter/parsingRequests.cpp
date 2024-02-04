@@ -25,10 +25,11 @@ void    dataCenter::requestSyntaxError(client& rq)
         throw 414;
 
     /* if no host present in the headers*/
-    if (rq.getHeaders().find("Host") == rq.getHeaders().end())
+    if (rq.getHeaders().find("Host") == rq.getHeaders().end() || rq.getHeaders()["Content-Type"].find("boundary") != std::string::npos)
         throw 400;
 
-
+    if (std::atoi(rq.getHeaders()["Content-Length"].c_str()) > this->wes.getServers()[rq.servIndx()].getMaxBodySize())
+        throw 413;
 }
 
 void    dataCenter::loadHeaders(int fd)
@@ -64,6 +65,10 @@ void dataCenter::checkErrors(client &clnt, server srv){
 
     int j = getLocationRequested(srv.getLocations(), clnt, directory);
 
+    if (!srv.getLocations()[j].getReturn().empty()){
+        clnt.getResponse().setPath(srv.getLocations()[j].getReturn());
+        throw clnt.getResponse().setAttributes(301, "html");
+    }
     if(isMethodAllowed(srv.getLocations()[j].getMethods(), clnt.getStartLine().method))
         throw clnt.getResponse().setAttributes(405, "html");
 
@@ -75,30 +80,25 @@ void dataCenter::checkErrors(client &clnt, server srv){
         throw clnt.getResponse().setAttributes(404, "html");
     }
 }
-int ll = 0;
+
 void    dataCenter::reading(int fd)
 {
     std::string directory, file;
 
     char buffer[BUFFER_SIZE] = {0};
-    // int a = read(fd, buffer, BUFFER_SIZE);
-    int a = recv(fd, buffer, BUFFER_SIZE - 1, 0);
-    // std::cout << a << std::endl;
+    int a = read(fd, buffer, BUFFER_SIZE);
+    
     if (a == 0)
     {
+        // remove the fd from the map
         this->clientList.erase(fd);
         close(fd);
-        // remove the fd from the map
     }
     
-    // if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) == std::string::npos){
     if (!this->clientList[fd].isHeadersLoaded()){
-        std::cout << "koko\n";
         std::string rqline(buffer, a);
         this->clientList[fd].setFullRequest(rqline);
     }
-    // }
-
     if (this->clientList[fd].getFullRequest().find("\r\n\r\n", 0) != std::string::npos)
     {
         if (!this->clientList[fd].isHeadersLoaded())
@@ -108,10 +108,7 @@ void    dataCenter::reading(int fd)
         }
         else {
             std::string tmp(buffer, a);
-            // std::istringstream iss(buffer);
-            // this->clientList[fd].setbufferBody(iss);
             this->clientList[fd].setbufferBody(tmp);
-            // this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
         }
         // checking body size with content-length
         

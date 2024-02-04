@@ -134,7 +134,6 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
         perror("epoll_ctl: conn_sock");
     }
     size_t indx = this->getServerIndex(server_fds, fd);
-    std::cout << clientSocket << " new req\n";
     client c(indx, clientSocket);
     
     this->clientList[clientSocket] = c;

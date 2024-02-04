@@ -88,6 +88,7 @@ void dataCenter::sending(int fd){
     statusCodeMsgs[501] = "Not Implemented";
     statusCodeMsgs[502] = "Bad Gateway";
     statusCodeMsgs[414] = "Request URI ToLong";
+    statusCodeMsgs[413] = "Request Entity Too Large";
     statusCodeMsgs[405] = "Method Not Allowed";
     statusCodeMsgs[500] = "Internal Server Error";
     statusCodeMsgs[403] = "Forbidden";
@@ -111,13 +112,16 @@ void dataCenter::sending(int fd){
         }
         if (res.getStatusCode() == 201)
         {
-            std::string header = "HTTP/1.1 201 Created\r\nLocation: " + res.getPath() + "Content-Type: text/html\r\n\r\n";
-            write(fd, header.c_str(), header.length());
-            close(fd);
-            return ;
+            std::string header = "HTTP/1.1 201 Created\r\nContent-Type: text/html\r\n\r\n";
+            // write(fd, header.c_str(), header.length());
+            // close(fd);
+            // return ;
         }
-        if (res.getStatusCode() != 200)
+        if (res.getStatusCode() != 200){
             res.openfilePathError(this->getWebserv().getServers()[this->clientList[fd].servIndx()].get_error_pages()[res.getStatusCode()]);
+            if (!res.getFilePathError().is_open())
+                res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], res.getStatusCode()));
+        }
         else
             res.openFile(res.getPath());
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);
@@ -128,7 +132,7 @@ void dataCenter::sending(int fd){
         res.setLisDir(false);
         res.setIsResponseSent(true);
     }else{
-        if (!res.getFilePath().eof() && res.getStatusCode() == 200)
+        if (!res.getFilePath().eof() && (res.getStatusCode() == 200 || res.getStatusCode() == 201))
         {
             content = readBufferFromFile(res.getFilePath());
             if (res.getFilePath().eof())
