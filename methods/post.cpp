@@ -51,6 +51,8 @@ void readBufferChunck(client &clnt, std::string buffer){
     buffer = clnt.getTempBuffer() + buffer ;
 
     std::stringstream res;
+    std::string result;
+    std::string tmp;
     std::stringstream iss;
 
     if (!clnt.getbufferLen()){
@@ -63,11 +65,23 @@ void readBufferChunck(client &clnt, std::string buffer){
 
     int n = clnt.getbufferLen();
 
-    while(i < buffer.size() && n){
-        res << buffer[i];
-        i++;
-        n--;
+    if ((unsigned long)n < buffer.size()){
+        result = buffer.substr(0, n);
+        i = n;
+        n = 0;
+        // tmp = buffer.substr(n + 1);
+    }else{
+        result = buffer;
+        i += buffer.size();
+        n -= buffer.size();
     }
+
+
+    // while(i < buffer.size() && n){
+    //     res << buffer[i];
+    //     i++;
+    //     n--;
+    // }
     clnt.setbufferLen(n);
 
     if (!n){
@@ -78,13 +92,13 @@ void readBufferChunck(client &clnt, std::string buffer){
 
         clnt.setTempBuffer(buffer.substr(i));
 
-        clnt.setChunk(res.str());
+        clnt.setChunk(result);
         return ;
     }
     else{// eof buffer 1024
 
         clnt.setTempBuffer("");
-        clnt.setChunk(res.str());
+        clnt.setChunk(result);
         return ;
     }
 }
