@@ -1,12 +1,12 @@
 - server:
     server_name: servername1 kkkk1
-    listen: 127.0.0.2:9090
+    listen: 127.0.0.1:9090
     root: ./
     error: 404 /path/to/404.html
 
     - location:
         dir_listing: on
-        allow_methods: GET
+        allow_methods: POST GET
         root: ./myWebsite
         index: loc1.html flow.php
         cgi_path: py /usr/bin/python3
@@ -27,6 +27,7 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /upload
+        
 
     - location /test:
         dir_listing: off
@@ -39,9 +40,14 @@
         auto_index: on
         upload: /upload
 
+    - location /upload:
+        dir_listing: on
+        allow_methods: GET
+        root: ./myWebsite
+
 
 - server:
-    server_name:  kkkk2  127.0.0.2
+    server_name:  127.0.0.2
     listen: 127.0.0.2:9090
     root: ./myWebsite
     # baqi had lblan

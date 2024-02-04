@@ -122,8 +122,9 @@ void dataCenter::sending(int fd){
             if (!res.getFilePathError().is_open())
                 res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], res.getStatusCode()));
         }
-        else
+        else{
             res.openFile(res.getPath());
+        }
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);
         res.setIsHeaderSend(true);
     }
@@ -146,7 +147,6 @@ void dataCenter::sending(int fd){
         }
 
     }
-    // std::cout << content.size() << std::endl;
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
         std::cout << fd << "()()()()()()()()\n";
