@@ -134,8 +134,11 @@ void dataCenter::post(client &clnt, int fd){
         clnt.getFileUpload().write(clnt.getbufferBody().c_str(), clnt.getbufferBody().size());
 
     }
-    // std::cout << clnt.getFullSize() << " \n";
-    if (clnt.getFullSize() >= (std::size_t)std::atoi(clnt.getHeaders()["Content-Length"].c_str())){
+    std::istringstream iss(clnt.getHeaders()["Content-Length"]);
+    size_t nb;
+    iss >> nb;
+    
+    if (clnt.getFullSize() >= nb){
         
         std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
