@@ -151,6 +151,7 @@ void dataCenter::handlingRequests()
     while (true)
     {
         nfds = epoll_wait(this->epollfd, events, MAX_EVENTS, -1);
+        // std::cout << 
         if (nfds == -1) {
             perror("epoll_wait");
             throw std::runtime_error("Error epoll wait");

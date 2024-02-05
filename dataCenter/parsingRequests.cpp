@@ -10,14 +10,11 @@ void    dataCenter::requestSyntaxError(client& rq)
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
             throw 501;
     }
-    else // check absence of content len and transfer encoding and presence of POST method
-        if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0)
-            if (rq.getStartLine().method == "POST")
-            {
-               
-                throw 400;
-            }
-
+    if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0){
+        if (rq.getStartLine().method == "POST")
+            throw 400;
+    }
+    
     // check URI allowed characters
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
