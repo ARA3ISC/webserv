@@ -47,8 +47,8 @@
 
 
 - server:
-    server_name:  127.0.0.2
-    listen: 127.0.0.2:9090
+    server_name:  127.0.0.1
+    listen: 127.0.0.1:9999
     root: ./myWebsite
     # baqi had lblan
    # error: 404 ./CustomErrors/404.html

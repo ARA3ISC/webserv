@@ -30,7 +30,6 @@ int getSizeChunck(std::string &buffer){
     int i = 0;
     std::string hexa;
     if (buffer[i] == '\r' && buffer[i + 1] == '\n'){
-        std::cout << "^^^^^^^^^^^^^^^^\n";
         i += 2;
     }
     while((size_t)i < buffer.size() && buffer[i] != '\r'){
@@ -50,10 +49,8 @@ void readBufferChunck(client &clnt, std::string buffer){
     
     buffer = clnt.getTempBuffer() + buffer ;
 
-    std::stringstream res;
     std::string result;
     std::string tmp;
-    std::stringstream iss;
 
     if (!clnt.getbufferLen()){
         
@@ -69,19 +66,12 @@ void readBufferChunck(client &clnt, std::string buffer){
         result = buffer.substr(0, n);
         i = n;
         n = 0;
-        // tmp = buffer.substr(n + 1);
     }else{
         result = buffer;
         i += buffer.size();
         n -= buffer.size();
     }
 
-
-    // while(i < buffer.size() && n){
-    //     res << buffer[i];
-    //     i++;
-    //     n--;
-    // }
     clnt.setbufferLen(n);
 
     if (!n){

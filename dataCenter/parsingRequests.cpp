@@ -11,7 +11,7 @@ void    dataCenter::requestSyntaxError(client& rq)
             throw 501;
     }
     else // check absence of content len and transfer encoding and presence of POST method
-        if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end())
+        if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0)
             if (rq.getStartLine().method == "POST")
                 throw 400;
 
@@ -119,7 +119,7 @@ int dataCenter::updateServerIndex(std::string host)
             }   
         }
     }
-
+    repeated.push_back(0);
     return repeated[0];
 }
 
@@ -148,8 +148,6 @@ void    dataCenter::reading(int fd)
         {
             loadHeaders(fd);
             clientList[fd].setServIndx(updateServerIndex(this->clientList[fd].getHeaders()["Host"]));
-            std::cout << "Host : " << clientList[fd].getHeaders()["Host"] << '\n';
-            std::cout << "Server index : " << clientList[fd].servIndx() << '\n';
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
         }
         else {
