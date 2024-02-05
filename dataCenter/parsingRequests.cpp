@@ -13,20 +13,31 @@ void    dataCenter::requestSyntaxError(client& rq)
     else // check absence of content len and transfer encoding and presence of POST method
         if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0)
             if (rq.getStartLine().method == "POST")
+            {
+               
                 throw 400;
+            }
 
     // check URI allowed characters
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
+        {
+            
             throw 400;
+        }
     }
     // check the length of the URI
     if (rq.getStartLine().path.size() > 2048)
         throw 414;
 
     /* if no host present in the headers*/
+    std::cout << "header: " << rq.getHeaders()["Content-Type"] << '\n';
     if (rq.getHeaders().find("Host") == rq.getHeaders().end() || rq.getHeaders()["Content-Type"].find("boundary") != std::string::npos)
+    {
+        
+         std::cout << "****\n";
         throw 400;
+    }
 
     if (std::atoi(rq.getHeaders()["Content-Length"].c_str()) > this->wes.getServers()[rq.servIndx()].getMaxBodySize())
         throw 413;
