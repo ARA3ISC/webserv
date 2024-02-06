@@ -29,7 +29,7 @@ void    dataCenter::requestSyntaxError(client& rq)
 
     /* if no host present in the headers*/
     std::cout << "header: " << rq.getHeaders()["Content-Type"] << '\n';
-    if (rq.getHeaders().find("Host") == rq.getHeaders().end() || rq.getHeaders()["Content-Type"].find("boundary") != std::string::npos)
+    if (rq.getHeaders().find("Host") == rq.getHeaders().end())
     {
         
          std::cout << "****\n";

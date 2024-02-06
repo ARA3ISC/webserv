@@ -31,6 +31,7 @@ client::client(const client &rhs) {
     this->fileNewUpload = rhs.fileNewUpload;
     this->fullSize = rhs.fullSize;
     this->startTime = rhs.startTime;
+    this->fileUploadName = rhs.fileUploadName;
 }
 
 client& client::operator=(const client &rhs) {
@@ -54,6 +55,7 @@ client& client::operator=(const client &rhs) {
         this->fileNewUpload = rhs.fileNewUpload;
         this->fullSize = rhs.fullSize;
         this->startTime = rhs.startTime;
+        this->fileUploadName = rhs.fileUploadName;
     }
     return *this;
 }
@@ -152,6 +154,7 @@ bool client::getIsUploadfileOpen(){
     return this->isUploadfileOpen;
 }
 void client::openFileUpload(std::string path){
+    this->fileUploadName = path;
     this->fileUpload.open(path.c_str(), std::ios::out | std::ios::binary);
 }
 std::fstream &client::getFileUpload(){
@@ -220,4 +223,7 @@ clock_t client::getStartTime(){
 
 void client::setStartTime(clock_t a){
     this->startTime = a;
+}
+std::string client::getFileUploadName(){
+    return this->fileUploadName;
 }

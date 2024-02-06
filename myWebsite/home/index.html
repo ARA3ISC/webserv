@@ -1,37 +1,15 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POST Request Test</title>
-</head>
-<body>
-
-    <h1>POST Request Test</h1>
-
-    <form action="/home/test/index.html" method="post" enctype="multipart/form-data">
-        <input type="file" name="myfile" id="myfile">
-        <input type="submit" value="Submit">
-    </form>
-
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload Test</title>
+    <title>Submit Form</title>
 </head>
 <body>
-    <h1>File Upload Test</h1>
-    <form action="index.html" id="fileUploadForm" method="get">
-        <label for="file">Select a file:</label>
-        <!-- <input type="file" name="file" id="file" multiple required> -->
-        <input type="text" name="file" required>
-        <br>
-        <input type="submit" value="Upload">
+    <form action="display_name.php" method="post" enctype="multipart/form-data">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>

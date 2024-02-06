@@ -40,11 +40,11 @@ bool checkCgiPaths(location loc, std::string path){
     return true;
 }
 
-void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
-    (void)fd;
-
+void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, std::string filePost){
+    
     if (checkCgiPaths(loc, path))
     {
+        std::cout << "cgi not found\n";
         clnt.getResponse().setAttributes(200,  getExtention(path));
         clnt.getResponse().setPath(path);
         throw 0;
@@ -62,22 +62,45 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
     
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
 
-    if (fdFile == -1)
+    if (fdFile == -1){
+        std::cout << "error opening tmp file \n";
         throw clnt.getResponse().setAttributes(500, "html");
-
+    }
     int id = fork();
     if (id == 0){
+        std::cout << "path : " << path << std::endl;
+
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
+
         std::string queryString = "QUERY_STRING=" + clnt.getQueryString();
         std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
-        
+        std::string contentType = "CONTENT_TYPE=" + clnt.getHeaders()["Content-Type"];
+        std::string contentLength = "CONTENT_LENGTH=" + clnt.getHeaders()["Content-Length"];
+        std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
+        std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
+
+        std::cout << "content Type : " << contentType << std::endl;
+        std::cout << "content Length : " << contentLength << std::endl;
+
         char* const envp[] = {
-            (char*)requestMethod.c_str(),
             (char*)queryString.c_str(),
+            (char*)requestMethod.c_str(),
+            (char*)contentType.c_str(),
+            (char*)contentLength.c_str(),
+            (char*)scriptName.c_str(),
+            (char*)serverProtocol.c_str(),
             NULL
         };
-
+        int infileFd;
+        if (isPost){
+            infileFd = open(filePost.c_str(), O_RDWR , 0644);
+            
+            if (infileFd == -1)
+                std::cout << "error opening\n";
+            dup2(infileFd, 0);
+            close(infileFd);
+        }
         dup2(fdFile, 1);
         close(fdFile);
 
@@ -96,7 +119,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int fd){
             usleep(100000);
         }
     }
-
+    std::cout << "exit status : " << WEXITSTATUS(status) << std::endl;
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
         throw clnt.getResponse().setAttributes(500, "html");
     }

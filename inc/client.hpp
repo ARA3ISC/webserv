@@ -27,6 +27,7 @@ private:
     std::string _queryString;
     bool isUploadfileOpen;
     std::fstream fileUpload;
+    std::string fileUploadName;
     FILE* fileNewUpload;
     std::string bufferBody;
     std::string tempBuffer;
@@ -90,4 +91,5 @@ public:
 
     clock_t getStartTime();
     void setStartTime(clock_t a);
+    std::string getFileUploadName();
 };

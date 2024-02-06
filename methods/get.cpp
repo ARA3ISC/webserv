@@ -154,7 +154,7 @@ void dataCenter::get(client &clnt, int fd){
     if (!file.empty() && file.find('.') != std::string::npos)
     {
         std::cout << "file " <<   "\n";
-        cgi(clnt, srv.getLocations()[j], path, fd);
+        cgi(clnt, srv.getLocations()[j], path, 0, "");
         throw 0;
     }
     else
@@ -171,7 +171,7 @@ void dataCenter::get(client &clnt, int fd){
                 // clnt.getResponse().setPath(directory + "/" + fileIndexed);
                 // throw clnt.getResponse().setAttributes(301, "html");
                 std::cout << "file to cgi " << srv.getLocations()[j].getRoot() << directory << "/" << fileIndexed << std::endl;
-                cgi(clnt, srv.getLocations()[j], srv.getLocations()[j].getRoot() + directory + "/" + fileIndexed, fd);
+                cgi(clnt, srv.getLocations()[j], srv.getLocations()[j].getRoot() + directory + "/" + fileIndexed, 0, "");
             }
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
                 throw clnt.getResponse().setAttributes(403, "html");
