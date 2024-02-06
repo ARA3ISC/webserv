@@ -30,6 +30,7 @@ client::client(const client &rhs) {
     this->chunkSize = rhs.chunkSize;
     this->fileNewUpload = rhs.fileNewUpload;
     this->fullSize = rhs.fullSize;
+    this->startTime = rhs.startTime;
 }
 
 client& client::operator=(const client &rhs) {
@@ -52,6 +53,7 @@ client& client::operator=(const client &rhs) {
         this->chunkSize = rhs.chunkSize;
         this->fileNewUpload = rhs.fileNewUpload;
         this->fullSize = rhs.fullSize;
+        this->startTime = rhs.startTime;
     }
     return *this;
 }
@@ -210,4 +212,12 @@ size_t client::getFullSize(){
 
 void client::setFullSize(int a){
     this->fullSize += a;
+}
+
+clock_t client::getStartTime(){
+    return this->startTime;
+}
+
+void client::setStartTime(clock_t a){
+    this->startTime = a;
 }

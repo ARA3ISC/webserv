@@ -34,6 +34,7 @@ private:
     std::string chunk;
     size_t chunkSize;
     size_t fullSize;
+    clock_t startTime;
     // std:: iStringBufferBody;
 public:
     client();
@@ -87,4 +88,6 @@ public:
     size_t getFullSize();
     void setFullSize(int a);
 
+    clock_t getStartTime();
+    void setStartTime(clock_t a);
 };

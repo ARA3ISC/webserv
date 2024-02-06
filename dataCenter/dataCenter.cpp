@@ -135,7 +135,7 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     }
     size_t indx = this->getServerIndex(server_fds, fd);
     client c(indx, clientSocket);
-    
+    c.setStartTime(clock());
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
@@ -151,7 +151,7 @@ void dataCenter::handlingRequests()
     while (true)
     {
         nfds = epoll_wait(this->epollfd, events, MAX_EVENTS, -1);
-        // std::cout << 
+
         if (nfds == -1) {
             perror("epoll_wait");
             throw std::runtime_error("Error epoll wait");
@@ -171,14 +171,18 @@ void dataCenter::handlingRequests()
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-                        //  std::cout << this->clientList[events[i].data.fd].getResponse().getStatusCode() << "&&&&&&&&&\n";
-                        // std::cout << this->clientList[events[i].data.fd].getBody() << std::endl;
-                        // close(events[i].data.fd);
+
                     }
                 }
-                else if ((events[i].events & EPOLLOUT) && !this->clientList[events[i].data.fd].getResponse().getIsReading()) {
-                    // std::cout << "------------------> fd to write " << events[i].data.fd << std::endl;
-                    this->sending(events[i].data.fd);
+                else if ((events[i].events & EPOLLOUT)) {
+                    // std::cout << clock() - this->clientList[events[i].data.fd].getStartTime() << std::endl;
+                    if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                        // std::cout << "time out\n";
+                        this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                        
+                    }
+                    if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
+                        this->sending(events[i].data.fd);
                 }
                 /* check if the response is ready to send */
             }
@@ -213,10 +217,6 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     this->clientList[fd].getResponse().setContent(response);
     this->clientList[fd].getResponse().setLisDir(true);
 
-    // std::cout << "-------------in list directory get " <<  this->clientList[fd].getResponse().getLisDir() << " \n";
-    // sendResponse(fd, 200, "OK", response, "text/html");
-    // this->
-    // exit(0);
     throw 0;
 }
 
