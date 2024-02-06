@@ -142,6 +142,7 @@ void dataCenter::get(client &clnt, int fd){
     
     //get the index of the location 
     int j = getLocationRequested(srv.getLocations(), clnt, directory);
+    std::cout <<  "location " << j << '\n';
 
     // seting the querystring from the complite path of the request 
     getQueryStringFromPath(clnt, srv, j);
@@ -166,9 +167,11 @@ void dataCenter::get(client &clnt, int fd){
             // get the files indexed and put the content in variable content 
             if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed)){
                 // it should redirect to new request with the previes request joined with the file indexed 
-                std::cout << "index : " << directory << "/" << fileIndexed << std::endl;
-                clnt.getResponse().setPath(directory + "/" + fileIndexed);
-                throw clnt.getResponse().setAttributes(301, "html");
+                // std::cout << "index : " << directory << "/" << fileIndexed << std::endl;
+                // clnt.getResponse().setPath(directory + "/" + fileIndexed);
+                // throw clnt.getResponse().setAttributes(301, "html");
+                std::cout << "file to cgi " << srv.getLocations()[j].getRoot() << directory << "/" << fileIndexed << std::endl;
+                cgi(clnt, srv.getLocations()[j], srv.getLocations()[j].getRoot() + directory + "/" + fileIndexed, fd);
             }
             else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
                 throw clnt.getResponse().setAttributes(403, "html");

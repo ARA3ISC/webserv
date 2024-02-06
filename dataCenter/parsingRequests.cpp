@@ -101,7 +101,7 @@ int dataCenter::updateServerIndex(std::string host)
         if (this->wes.getServers()[i].getListen().size() == 1)
         {
             /* one port in config file && host port matches this port */
-            if (this->wes.getServers()[i].getListen()[1] == splited[1])
+            if (this->wes.getServers()[i].getListen()[0] == splited[1])
                 return i;
         }
         if (this->wes.getServers()[i].getListen().size() == 2)
@@ -127,7 +127,8 @@ int dataCenter::updateServerIndex(std::string host)
             }   
         }
     }
-    repeated.push_back(0);
+    if (repeated.size() == 0)
+        repeated.push_back(0);
     return repeated[0];
 }
 
@@ -156,6 +157,7 @@ void    dataCenter::reading(int fd)
         {
             loadHeaders(fd);
             clientList[fd].setServIndx(updateServerIndex(this->clientList[fd].getHeaders()["Host"]));
+            std::cout << clientList[fd].servIndx() << '\n';
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
         }
         else {

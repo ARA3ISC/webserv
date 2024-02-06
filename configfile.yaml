@@ -1,6 +1,6 @@
 - server:
     server_name: servername1 kkkk1
-    listen: 127.0.0.1:9090
+    listen: 127.0.0.3:9090
     root: ./
     error: 404 /path/to/404.html
 
@@ -8,7 +8,7 @@
         dir_listing: on
         allow_methods: POST GET
         root: ./myWebsite
-        index: loc1.htm127.0.0.1:9090/home/testl flow.php
+        index: flow.php test.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
         cgi_path: purl /usr/bin/purl
@@ -32,7 +32,7 @@
     - location /home/test:
         dir_listing: off
         allow_methods: GET POST
-        root: ./myWebsite
+        root: ./huruhuru
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
         cgi_path: php /Users/maneddam/.local/bin/php-cgi
@@ -44,3 +44,30 @@
         dir_listing: on
         allow_methods: GET
         root: ./myWebsite
+
+
+- server:
+    server_name: servername1 kkkk1
+    listen: 127.0.0.1:9999
+    root: ./
+    error: 404 /path/to/404.html
+
+    - location:
+        dir_listing: on
+        allow_methods: POST  GET
+        root: ./avito
+        index: test.html flow.html
+        auto_index: on
+        upload: /uploads
+
+
+    - location /home/test:
+        dir_listing: off
+        allow_methods: GET POST
+        # root: ./avito
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        # upload: /upload
