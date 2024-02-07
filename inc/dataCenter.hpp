@@ -83,12 +83,12 @@ public:
     void get(client &clnt, int fd);
     void post(client &clnt, int fd);
     void cgi(client &clnt ,location loc,std::string path, int isPost, std::string filePost);
+    void deleteMethod(client &clnt, int fd);
 //    const std::string& getErrorPath();
 
 
     /* delete method */
 
-    void deleteMethod(client clnt, int fd);
     void listDirectory(std::string path, std::string directory, int fd);
     void checkErrors(client &clnt, server serv); 
     std::string getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention);

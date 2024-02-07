@@ -175,10 +175,10 @@ void    dataCenter::reading(int fd)
         {
             post(this->clientList[fd], fd);
         }
-        // if (this->clientList[fd].getStartLine().method == "DELETE")
-        // {
-        //     deleteMethod(this->clientList[fd], fd);
-        // }
+        if (this->clientList[fd].getStartLine().method == "DELETE")
+        {
+            deleteMethod(this->clientList[fd], fd);
+        }
     }
 
 

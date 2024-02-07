@@ -82,22 +82,25 @@ void dataCenter::sending(int fd){
     std::map<int , std::string> statusCodeMsgs;
     statusCodeMsgs[200] = "OK";
     statusCodeMsgs[201] = "Created";
+    statusCodeMsgs[204] = "No Content";
+
     statusCodeMsgs[301] = "Moved Permanently";
+    
     statusCodeMsgs[400] = "Bad Request";
-    statusCodeMsgs[404] = "Not Found";
-    statusCodeMsgs[501] = "Not Implemented";
-    statusCodeMsgs[502] = "Bad Gateway";
-    statusCodeMsgs[414] = "Request URI ToLong";
-    statusCodeMsgs[413] = "Request Entity Too Large";
-    statusCodeMsgs[405] = "Method Not Allowed";
-    statusCodeMsgs[500] = "Internal Server Error";
     statusCodeMsgs[403] = "Forbidden";
+    statusCodeMsgs[404] = "Not Found";
+    statusCodeMsgs[405] = "Method Not Allowed";
     statusCodeMsgs[408] = "Request TimeOut";
     statusCodeMsgs[409] = "Conflict";
-    statusCodeMsgs[505] = "HTTP Version Not Supported";
-    statusCodeMsgs[504] = "Gateway Timeout";
-    statusCodeMsgs[413] = "Payload Too Large";
+    statusCodeMsgs[413] = "Request Entity Too Large";
     statusCodeMsgs[411] = "Length Required";
+    statusCodeMsgs[414] = "Request URI ToLong";
+
+    statusCodeMsgs[500] = "Internal Server Error";
+    statusCodeMsgs[501] = "Not Implemented";
+    statusCodeMsgs[502] = "Bad Gateway";
+    statusCodeMsgs[504] = "Gateway Timeout";
+    statusCodeMsgs[505] = "HTTP Version Not Supported";
 
     response &res = this->clientList[fd].getResponse();
     std::string content = "";

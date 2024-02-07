@@ -13,6 +13,7 @@
     $scriptName = $_SERVER['SCRIPT_NAME'];
     $serverProtocol = $_SERVER['SERVER_PROTOCOL'];
     
+    $QUERY_STRING = $_SERVER['QUERY_STRING'];
     echo "pathInfo : ";
     echo $pathInfo;
     echo "<br>";
@@ -36,19 +37,37 @@
     echo $_POST;
     // Check if the request method is POST
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $postData = file_get_contents('php://input');
+
+        // Print the request body
+        echo "body : " ;echo $postData; echo "<br>";
         // Check if the 'name' field exists in the POST data
         print_r($_POST);
         if(isset($_POST['name'])) {
             // Retrieve the submitted name
             $name = $_POST['name'];
-
+            
             // Display the submitted name
             echo "<p>Hello, $name!</p>";
         } else {
             // Handle case when 'name' field is not found
             echo "<p>name not found</p>";
         }
-    } else {
+    } 
+    if ($_SERVER["REQUEST_METHOD"] == "GET"){
+        echo "QUERY_STRING : "; echo $QUERY_STRING . "<br>";
+        if(isset($_GET['name'])) {
+            // Retrieve the submitted name
+            $name = $_GET['name'];
+    
+            // Display the submitted name
+            echo "<p>Hello, $name!</p>";
+        } else {
+            // Handle case when 'name' field is not found
+            echo "<p>name not found :( </p>";
+        }
+    }  
+    else {
         // Handle case when form is not submitted
         echo "<p>No data submitted.</p>";
     }

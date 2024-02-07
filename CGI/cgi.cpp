@@ -80,6 +80,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
         std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
 
+        std::cout << "query String : " << queryString << std::endl;
         std::cout << "content Type : " << contentType << std::endl;
         std::cout << "content Length : " << contentLength << std::endl;
 
@@ -96,9 +97,14 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         if (isPost){
             infileFd = open(filePost.c_str(), O_RDWR , 0644);
             
-            if (infileFd == -1)
+            if (infileFd == -1){
                 std::cout << "error opening\n";
-            dup2(infileFd, 0);
+                exit(12);
+            }
+            if (dup2(infileFd, 0) == -1){
+                std::cout << "error dup2\n";
+                exit(12);
+            }
             close(infileFd);
         }
         dup2(fdFile, 1);
