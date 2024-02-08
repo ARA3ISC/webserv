@@ -67,12 +67,14 @@ void    dataCenter::loadHeaders(int fd)
 
 void dataCenter::getLocationCF(client &clnt,server srv){
 
-
-    std::vector<std::string> splitURL = splitBy(clnt.getStartLine().path, '/');
+    // std::cout << 
+    std::string reqUrl = clnt.getStartLine().path;
+    if (reqUrl.find_last_of("?") != std::string::npos)
+        reqUrl = reqUrl.substr(0, reqUrl.find_last_of("?"));
+    std::vector<std::string> splitURL = splitBy(reqUrl, '/');
     std::vector<int> indexes;
     size_t i = 0;
 
-    std::cout << "************\n";
     int tmp = getLocationRequested(srv.getLocations(), "/");
     if (tmp != -1)
         indexes.push_back(tmp);
@@ -82,7 +84,7 @@ void dataCenter::getLocationCF(client &clnt,server srv){
         std::string tmpPath;
         while(j <= i){
             tmpPath += "/" + splitURL[j];
-            // std::cout << tmpPath << std::endl;
+            std::cout << tmpPath << std::endl;
             j++;
         }
         

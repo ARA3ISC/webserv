@@ -67,6 +67,16 @@ void removeTrailingSlashes(std::string& str) {
         str.erase(pos + 1);
     }
 }
+
+void getQueryStringFromPath(client &clnt, std::string &toOpen){
+    
+    size_t pos = toOpen.find_last_of("?");
+    if (pos != std::string::npos){
+        clnt.setQueryString(toOpen.substr(pos + 1));
+        toOpen = toOpen.substr(0, pos);
+    }
+}
+
 void dataCenter::splitPath(client &clnt,std::string& directory, std::string& file) {
     int index = clnt.getLocationIndex();
     server srv = getWebserv().getServers()[clnt.servIndx()];
@@ -78,6 +88,8 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     if (trimUrl[0] != '/')
         trimUrl.insert(0, "/");
     std::string toOpen = srv.getLocations()[index].getRoot() + trimUrl;
+
+    getQueryStringFromPath(clnt, toOpen);
 
     std::cout << "to open " << isDirectory(toOpen) << " " << toOpen << std::endl;
     if (!isDirectory(toOpen)){
@@ -132,17 +144,6 @@ bool dataCenter::isMethodAllowed(std::vector<std::string> methods, std::string m
     return true;
 }
 
-void getQueryStringFromPath(client &clnt, server srv, int locationIndex){
-    std::string tmp = srv.getLocations()[locationIndex].getRoot() + clnt.getStartLine().path;
-    
-    std::size_t queryIndex = tmp.find_last_of("?");
-    
-    if (queryIndex != std::string::npos)
-        clnt.setQueryString(tmp.substr(queryIndex + 1));
-    else
-        clnt.setQueryString("");
-}
-
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
     
@@ -153,7 +154,7 @@ void dataCenter::get(client &clnt, int fd){
 
     splitPath(clnt, directory, file); 
 
-    getQueryStringFromPath(clnt, srv, j);
+    // getQueryStringFromPath(clnt, file, directory);
 
     if (!file.empty())
     {
@@ -163,9 +164,10 @@ void dataCenter::get(client &clnt, int fd){
     }
     else
     {
-        std::cout << "directory " << directory << "\n";
+        std::cout << "directory " << directory << " " << srv.getLocations()[j].getPath()  << "\n";
 
         if (srv.getLocations()[j].isAutoIndex()){
+            std::cout << "auto index on \n";
             std::string fileIndexed;
             
             if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){

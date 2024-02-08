@@ -72,7 +72,10 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     }
     int id = fork();
     if (id == 0){
-
+        int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
+        if (logFd == -1)
+            std::cout << "errrrrro\n";
+        std::cout << "*******path of gci " << path << std::endl;
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
 
@@ -80,8 +83,8 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
         std::string contentType = "CONTENT_TYPE=" + clnt.getHeaders()["Content-Type"];
         std::string contentLength = "CONTENT_LENGTH=" + clnt.getHeaders()["Content-Length"];
-        // std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
-        // std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
+        std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
+        std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
         std::string redirectStatus = "REDIRECT_STATUS=CGI";
         std::string pathTranslated = "PATH_TRANSLATED=" + path;
 
@@ -90,8 +93,8 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
             (char*)queryString.c_str(),
             (char*)contentType.c_str(),
             (char*)contentLength.c_str(),
-            // (char*)scriptName.c_str(),
-            // (char*)serverProtocol.c_str(),
+            (char*)scriptName.c_str(),
+            (char*)serverProtocol.c_str(),
             (char*)redirectStatus.c_str(),
             (char*)requestMethod.c_str(),
             (char*)pathTranslated.c_str(),
@@ -109,6 +112,10 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         }
         dup2(fdFile, 1);
         close(fdFile);
+
+        dup2(logFd, 2);
+        close(logFd);
+        fprintf(stderr, "--------------------------\n");
         
         execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
         perror("execve");

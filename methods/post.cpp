@@ -110,12 +110,11 @@ void dataCenter::post(client &clnt, int fd){
     }
     
     if (!clnt.getIsUploadfileOpen()){
-        // splitPath(clnt.getStartLine().path, directory, file); 
-    splitPath(clnt, directory, file); 
+        splitPath(clnt, directory, file); 
         
         server srv = getWebserv().getServers()[clnt.servIndx()];    
 
-        int j = getLocationRequested(srv.getLocations(), directory);
+        int j = clnt.getLocationIndex();
 
         std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
@@ -147,15 +146,17 @@ void dataCenter::post(client &clnt, int fd){
         std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
-    splitPath(clnt, directory, file); 
+
+        splitPath(clnt, directory, file); 
 
         // splitPath(clnt.getStartLine().path, directory, file); 
         server srv = getWebserv().getServers()[clnt.servIndx()];    
-        int j = getLocationRequested(srv.getLocations(), directory);
-        
+        int j = clnt.getLocationIndex();
+
         if (!file.empty()){
             //cgi
-            cgi(clnt, srv.getLocations()[j], srv.getLocations()[j].getRoot() +  clnt.getStartLine().path, 1, clnt.getFileUploadName());
+            std::cout << "file to cgi : " << file << std::endl;
+            cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
         }else
             throw clnt.getResponse().setAttributes(201, "html");
     }
