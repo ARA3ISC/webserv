@@ -45,6 +45,10 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     if (checkCgiPaths(loc, path))
     {
         std::cout << "cgi not found\n";
+        if (isPost){
+            std::cout << "unlink\n";
+            unlink(filePost.c_str());
+        }
         clnt.getResponse().setAttributes(200,  getExtention(path));
         clnt.getResponse().setPath(path);
         throw 0;
@@ -68,7 +72,6 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     }
     int id = fork();
     if (id == 0){
-        std::cout << "path : " << path << std::endl;
 
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
@@ -77,40 +80,38 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
         std::string contentType = "CONTENT_TYPE=" + clnt.getHeaders()["Content-Type"];
         std::string contentLength = "CONTENT_LENGTH=" + clnt.getHeaders()["Content-Length"];
-        std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
-        std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
+        // std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
+        // std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
+        std::string redirectStatus = "REDIRECT_STATUS=CGI";
+        std::string pathTranslated = "PATH_TRANSLATED=" + path;
 
-        std::cout << "query String : " << queryString << std::endl;
-        std::cout << "content Type : " << contentType << std::endl;
-        std::cout << "content Length : " << contentLength << std::endl;
-
+        std::cout << "queryString : " << queryString << std::endl;
         char* const envp[] = {
             (char*)queryString.c_str(),
-            (char*)requestMethod.c_str(),
             (char*)contentType.c_str(),
             (char*)contentLength.c_str(),
-            (char*)scriptName.c_str(),
-            (char*)serverProtocol.c_str(),
+            // (char*)scriptName.c_str(),
+            // (char*)serverProtocol.c_str(),
+            (char*)redirectStatus.c_str(),
+            (char*)requestMethod.c_str(),
+            (char*)pathTranslated.c_str(),
             NULL
         };
         int infileFd;
         if (isPost){
             infileFd = open(filePost.c_str(), O_RDWR , 0644);
             
-            if (infileFd == -1){
-                std::cout << "error opening\n";
+            if (infileFd == -1)
                 exit(12);
-            }
-            if (dup2(infileFd, 0) == -1){
-                std::cout << "error dup2\n";
+            if (dup2(infileFd, 0) == -1)
                 exit(12);
-            }
             close(infileFd);
         }
         dup2(fdFile, 1);
         close(fdFile);
-
+        
         execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
+        perror("execve");
         exit(127);
     }
     else {
@@ -125,13 +126,13 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
             usleep(100000);
         }
     }
-    std::cout << "exit status : " << WEXITSTATUS(status) << std::endl;
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
         throw clnt.getResponse().setAttributes(500, "html");
     }
 
     close(fdFile);
-
+    if (isPost)
+        unlink(filePost.c_str());
     clnt.getResponse().setAttributes(200, "html");
     clnt.getResponse().setPath(FileName);
     throw 0;

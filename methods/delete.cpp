@@ -9,10 +9,11 @@ void dataCenter::deleteMethod(client &clnt, int fd)
     server srv = getWebserv().getServers()[clnt.servIndx()];    
 
     //split the directory and file fron the client request
-    splitPath(clnt.getStartLine().path, directory, file); 
+    // splitPath(clnt.getStartLine().path, directory, file); 
+    splitPath(clnt, directory, file); 
     
     //get the index of the location 
-    int j = getLocationRequested(srv.getLocations(), clnt, directory);
+    int j = getLocationRequested(srv.getLocations(), directory);
 
     if (!file.empty()){
         std::string fileName = srv.getLocations()[j].getRoot()+ clnt.getStartLine().path;

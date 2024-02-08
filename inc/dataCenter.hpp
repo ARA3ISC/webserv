@@ -74,8 +74,8 @@ public:
     bool isMethodAllowed(std::vector<std::string> methods, std::string method);;
     std::string cleanPath(std::string path);
     std::string getCleanPath(std::string path);
-    void splitPath(std::string fullPath, std::string& directory, std::string& file);
-    int getLocationRequested(std::vector<location> loc, client &clnt, std::string path);
+    void splitPath(client &clnt, std::string& directory, std::string& file);
+    int getLocationRequested(std::vector<location> loc, std::string path);
     bool pathExists(const std::string& path);
 
     int updateServerIndex(std::string host);
@@ -93,6 +93,8 @@ public:
     void checkErrors(client &clnt, server serv); 
     std::string getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention);
     int getFilePrefix();
+
+    void getLocationCF(client &clnt,server srv);
 };
 
 

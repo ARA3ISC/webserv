@@ -41,50 +41,61 @@ std::string dataCenter::getCleanPath(std::string path){
         return path.substr(0, last);
     return path;
 }
+// /home/f1/f2/file.kpk
 
-int dataCenter::getLocationRequested(std::vector<location> loc, client &clnt, std::string path){
+int dataCenter::getLocationRequested(std::vector<location> loc, std::string path){
 
     for (size_t i = 0; i < loc.size(); i++)
         if (loc[i].getPath() == path)
             return i;
-    throw clnt.getResponse().setAttributes(404, "html");
+    return -1;
 }
 
-void dataCenter::splitPath(std::string fullPath, std::string& directory, std::string& file) {
-
-    fullPath = cleanPath(fullPath);
-
-    std::size_t last = fullPath.find_last_of("/");
-
-    if (last != std::string::npos){
-
-        if(fullPath.substr(last + 1).find(".") != std::string::npos){
-            directory = fullPath.substr(0, last);
-            if (directory.empty())
-                directory = "/";
-            file = fullPath.substr(last + 1);
-        }
-        else// /home/iindex.html?key1=valu1
-        {
-            directory = fullPath;
-            file = "";
-        }
-    }
-    else
-    {
-        directory = fullPath;
-        file = "";
+bool isDirectory(const std::string& path) {
+    struct stat fileStat;
+    if (stat(path.c_str(), &fileStat) != 0) {
+        // Failed to retrieve file status
+        return false;
     }
 
-    // removing ? form the uri
-    directory = getCleanPath(directory);
-    file = getCleanPath(file);
+    return S_ISDIR(fileStat.st_mode);
+}
+void removeTrailingSlashes(std::string& str) {
+    std::string::size_type pos = str.find_last_not_of('/');
+
+    if (pos != std::string::npos) {
+        str.erase(pos + 1);
+    }
+}
+void dataCenter::splitPath(client &clnt,std::string& directory, std::string& file) {
+    int index = clnt.getLocationIndex();
+    server srv = getWebserv().getServers()[clnt.servIndx()];
+    
+    std::string path = srv.getLocations()[index].getPath();
+    std::string url = clnt.getStartLine().path;
+
+    std::string trimUrl = trimFromBeginning(url, path);
+    if (trimUrl[0] != '/')
+        trimUrl.insert(0, "/");
+    std::string toOpen = srv.getLocations()[index].getRoot() + trimUrl;
+
+    std::cout << "to open " << isDirectory(toOpen) << " " << toOpen << std::endl;
+    if (!isDirectory(toOpen)){
+        removeTrailingSlashes(toOpen);
+        int fd = open(toOpen.c_str(), O_RDONLY);
+        if (fd == -1)
+            throw clnt.getResponse().setAttributes(404, "html");
+        close(fd);
+        file = toOpen;
+        return ; 
+    }
+    directory = toOpen;
 }
 
 bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
     
     std::string nameFile;
-    //checking the indexed file from the config file
+    
     for (size_t i = 2; i < index.size(); i++)
     {
         nameFile = path + "/" + index[i];
@@ -97,7 +108,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
         }
         input.close();
     }
-    // if not checking between index.html or index.htm
+    
     for (size_t i = 0; i < 2; i++)
     {
         nameFile = path + "/" + index[i];
@@ -135,52 +146,39 @@ void getQueryStringFromPath(client &clnt, server srv, int locationIndex){
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
     
+    int j = clnt.getLocationIndex();
+    
     server srv = getWebserv().getServers()[clnt.servIndx()];    
 
-    //split the directory and file fron the client request
-    splitPath(clnt.getStartLine().path, directory, file); 
-    
-    //get the index of the location 
-    int j = getLocationRequested(srv.getLocations(), clnt, directory);
-    std::cout <<  "location " << j << '\n';
 
-    // seting the querystring from the complite path of the request 
+    splitPath(clnt, directory, file); 
+
     getQueryStringFromPath(clnt, srv, j);
 
-    //the complite path of the directory or the file 
-    std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
-
-    // file or directory requested
-    if (!file.empty() && file.find('.') != std::string::npos)
+    if (!file.empty())
     {
-        std::cout << "file " <<   "\n";
-        cgi(clnt, srv.getLocations()[j], path, 0, "");
+        std::cout << "file " <<  file << "\n";
+        cgi(clnt, srv.getLocations()[j], file, 0, "");
         throw 0;
     }
     else
     {
         std::cout << "directory " << directory << "\n";
 
-        //checking auto index
         if (srv.getLocations()[j].isAutoIndex()){
             std::string fileIndexed;
-            // get the files indexed and put the content in variable content 
-            if (getContentIndexedFiles(path, srv.getLocations()[j].getIndexes(), fileIndexed)){
-                // it should redirect to new request with the previes request joined with the file indexed 
-                // std::cout << "index : " << directory << "/" << fileIndexed << std::endl;
-                // clnt.getResponse().setPath(directory + "/" + fileIndexed);
-                // throw clnt.getResponse().setAttributes(301, "html");
-                std::cout << "file to cgi " << srv.getLocations()[j].getRoot() << directory << "/" << fileIndexed << std::endl;
-                cgi(clnt, srv.getLocations()[j], srv.getLocations()[j].getRoot() + directory + "/" + fileIndexed, 0, "");
+            
+            if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
+                std::cout << "file to cgi " << directory << "/" << fileIndexed << std::endl;
+                cgi(clnt, srv.getLocations()[j], directory + "/" + fileIndexed , 0, "");
             }
-            else if (!srv.getLocations()[j].get_dir_listing()) // checking if auto_index false and dir_listing false
+            else if (!srv.getLocations()[j].get_dir_listing())
                 throw clnt.getResponse().setAttributes(403, "html");
         }
 
-        //cheking dir listing 
         if (!srv.getLocations()[j].get_dir_listing())
             throw clnt.getResponse().setAttributes(403, "html");
-        else // if auto index is false or none of the indexed file exist but dir_listing is true
-            listDirectory(srv.getLocations()[j].getRoot() + directory , directory, fd);
+        else
+            listDirectory(directory , directory, fd);
     }
 }

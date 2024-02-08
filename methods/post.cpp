@@ -110,10 +110,12 @@ void dataCenter::post(client &clnt, int fd){
     }
     
     if (!clnt.getIsUploadfileOpen()){
-        splitPath(clnt.getStartLine().path, directory, file); 
+        // splitPath(clnt.getStartLine().path, directory, file); 
+    splitPath(clnt, directory, file); 
+        
         server srv = getWebserv().getServers()[clnt.servIndx()];    
 
-        int j = getLocationRequested(srv.getLocations(), clnt, directory);
+        int j = getLocationRequested(srv.getLocations(), directory);
 
         std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
@@ -145,21 +147,14 @@ void dataCenter::post(client &clnt, int fd){
         std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
+    splitPath(clnt, directory, file); 
 
-        splitPath(clnt.getStartLine().path, directory, file); 
+        // splitPath(clnt.getStartLine().path, directory, file); 
         server srv = getWebserv().getServers()[clnt.servIndx()];    
-        int j = getLocationRequested(srv.getLocations(), clnt, directory);
-
-        // std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
-
-        // std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
-        // if (extension ==" x-www-form-urlencoded")
-        //     extension = "txt";
-        // std::string fileName  = getFileName(srv.getLocations()[j].getRoot(), srv.getLocations()[j].getUpload(), directory, extension);
-
+        int j = getLocationRequested(srv.getLocations(), directory);
+        
         if (!file.empty()){
             //cgi
-            std::cout << "send to cgi\n";
             cgi(clnt, srv.getLocations()[j], srv.getLocations()[j].getRoot() +  clnt.getStartLine().path, 1, clnt.getFileUploadName());
         }else
             throw clnt.getResponse().setAttributes(201, "html");

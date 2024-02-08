@@ -32,6 +32,7 @@ client::client(const client &rhs) {
     this->fullSize = rhs.fullSize;
     this->startTime = rhs.startTime;
     this->fileUploadName = rhs.fileUploadName;
+    this->locationIndex = rhs.locationIndex;
 }
 
 client& client::operator=(const client &rhs) {
@@ -56,6 +57,7 @@ client& client::operator=(const client &rhs) {
         this->fullSize = rhs.fullSize;
         this->startTime = rhs.startTime;
         this->fileUploadName = rhs.fileUploadName;
+        this->locationIndex = rhs.locationIndex;
     }
     return *this;
 }
@@ -226,4 +228,12 @@ void client::setStartTime(clock_t a){
 }
 std::string client::getFileUploadName(){
     return this->fileUploadName;
+}
+
+void client::setLocationIndex(int a){
+    this->locationIndex = a;
+}
+
+int client::getLocationIndex(){
+    return this->locationIndex;
 }

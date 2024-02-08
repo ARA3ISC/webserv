@@ -176,11 +176,11 @@ void dataCenter::handlingRequests()
                 }
                 else if ((events[i].events & EPOLLOUT)) {
                     // std::cout << clock() - this->clientList[events[i].data.fd].getStartTime() << std::endl;
-                    if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                        // std::cout << "time out\n";
-                        this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                    // if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                    //     // std::cout << "time out\n";
+                    //     this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
                         
-                    }
+                    // }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
                         this->sending(events[i].data.fd);
                 }
@@ -200,18 +200,21 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     DIR* dir;
     struct dirent* ent;
     std::string response = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
+    
     if ((dir = opendir(path.c_str())) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string tmp = ent->d_name;
             if (tmp == ".." || tmp == ".")
                 continue;
             if (directory == "/")
-                response += "<li><a href=\""  + directory + tmp + "\" >" + tmp + "</a></li>";
+                response += "<li><a href=\""  + tmp + "\" >" + tmp + "</a></li>";
             else
-                response += "<li><a href=\""  + directory + "/" + tmp + "\" >" + tmp + "</a></li>";
+                response += "<li><a href=\""  + tmp + "\" >" + tmp + "</a></li>";
         }
         closedir(dir);
     }
+    else
+        throw this->clientList[fd].getResponse().setAttributes(403, "html");
     response += "</ul></body></html>";
     this->clientList[fd].getResponse().setAttributes(200, "html");
     this->clientList[fd].getResponse().setContent(response);

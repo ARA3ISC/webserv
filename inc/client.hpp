@@ -36,7 +36,8 @@ private:
     size_t chunkSize;
     size_t fullSize;
     clock_t startTime;
-    // std:: iStringBufferBody;
+    int locationIndex;
+
 public:
     client();
     client(int serverIndex, int clientFd);
@@ -92,4 +93,7 @@ public:
     clock_t getStartTime();
     void setStartTime(clock_t a);
     std::string getFileUploadName();
+
+    void setLocationIndex(int a);
+    int getLocationIndex();
 };

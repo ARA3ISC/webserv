@@ -138,6 +138,8 @@ std::vector<std::string> splitBy(const std::string& input, char delimiter) {
     std::string token;
 
     while (std::getline(ss, token, delimiter)) {
+        if(token.empty())
+            continue;
         tokens.push_back(token);
     }
 

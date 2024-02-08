@@ -14,8 +14,30 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /uploads
-
+        
     - location /home:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite/home
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+
+    - location /about:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite/about
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+        
+    - location /home/folder/ddd:
         dir_listing: on
         allow_methods: GET POST
         root: ./myWebsite
@@ -26,10 +48,10 @@
         auto_index: on
         upload: /upload
 
-    - location /about:
+    - location /search:
         dir_listing: on
         allow_methods: GET POST
-        root: ./myWebsite
+        root: ./myWebsite/search
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
@@ -40,7 +62,7 @@
     - location /contact:
         dir_listing: on
         allow_methods: GET POST DELETE
-        root: ./myWebsite
+        root: ./myWebsite/contact
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
@@ -48,14 +70,14 @@
         auto_index: on
         upload: /upload
         
-
-    - location /home/test:
+# /home/test
+    - location /home/test/folder5:
         dir_listing: off
         allow_methods: GET POST
-        root: ./huruhuru
+        root: ./myWebsite
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
-        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: on
         upload: /upload
@@ -63,7 +85,18 @@
     - location /upload:
         dir_listing: on
         allow_methods: GET
+        root: ./myWebsite/upload
+
+    - location /home/test/folder1:
+        dir_listing: off
+        allow_methods: GET POST
         root: ./myWebsite
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
 
 
 - server:
@@ -87,7 +120,7 @@
         # root: ./avito
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
-        cgi_path: php /Users/maneddam/.local/bin/php-cgi
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: on
         # upload: /upload

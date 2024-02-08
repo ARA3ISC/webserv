@@ -28,13 +28,8 @@ void    dataCenter::requestSyntaxError(client& rq)
         throw 414;
 
     /* if no host present in the headers*/
-    std::cout << "header: " << rq.getHeaders()["Content-Type"] << '\n';
     if (rq.getHeaders().find("Host") == rq.getHeaders().end())
-    {
-        
-         std::cout << "****\n";
         throw 400;
-    }
 
     if (std::atoi(rq.getHeaders()["Content-Length"].c_str()) > this->wes.getServers()[rq.servIndx()].getMaxBodySize())
         throw 413;
@@ -67,24 +62,62 @@ void    dataCenter::loadHeaders(int fd)
     }
 
 }
+// location /home1
+// location /home1/a1 --> url : /home1/a1/b1/file.php
+
+void dataCenter::getLocationCF(client &clnt,server srv){
+
+
+    std::vector<std::string> splitURL = splitBy(clnt.getStartLine().path, '/');
+    std::vector<int> indexes;
+    size_t i = 0;
+
+    std::cout << "************\n";
+    int tmp = getLocationRequested(srv.getLocations(), "/");
+    if (tmp != -1)
+        indexes.push_back(tmp);
+
+    while(i < splitURL.size()){
+        size_t j = 0;
+        std::string tmpPath;
+        while(j <= i){
+            tmpPath += "/" + splitURL[j];
+            // std::cout << tmpPath << std::endl;
+            j++;
+        }
+        
+        int tmp = getLocationRequested(srv.getLocations(), tmpPath);
+        if (tmp != -1)
+            indexes.push_back(tmp);
+        i++;
+    }
+    if (indexes.size() == 0){
+        std::cout << "bhbhbhbhbhbhbhbh\n";
+        throw clnt.getResponse().setAttributes(404, "html");
+    }
+
+    clnt.setLocationIndex(indexes.back());
+
+}
+
+
 void dataCenter::checkErrors(client &clnt, server srv){
     std::string directory, file;
-    splitPath(clnt.getStartLine().path, directory, file);
+    
+    getLocationCF(clnt, srv);
 
-    int j = getLocationRequested(srv.getLocations(), clnt, directory);
-
-    if (!srv.getLocations()[j].getReturn().empty()){
-        clnt.getResponse().setPath(srv.getLocations()[j].getReturn());
+    if (!srv.getLocations()[clnt.getLocationIndex()].getReturn().empty()){
+        clnt.getResponse().setPath(srv.getLocations()[clnt.getLocationIndex()].getReturn());
         throw clnt.getResponse().setAttributes(301, "html");
     }
-    if(isMethodAllowed(srv.getLocations()[j].getMethods(), clnt.getStartLine().method))
+    if(isMethodAllowed(srv.getLocations()[clnt.getLocationIndex()].getMethods(), clnt.getStartLine().method))
         throw clnt.getResponse().setAttributes(405, "html");
 
-    std::string path = getCleanPath(srv.getLocations()[j].getRoot() + clnt.getStartLine().path);
-    if (!pathExists(path))
-        throw clnt.getResponse().setAttributes(404, "html");
+    // std::string path = getCleanPath(srv.getLocations()[clnt.getLocationIndex()].getRoot() + clnt.getStartLine().path);
+    // if (!pathExists(path))
+    //     throw clnt.getResponse().setAttributes(404, "html");
     
-    if (clnt.getStartLine().method == "POST" && srv.getLocations()[j].getUpload().empty()){
+    if (clnt.getStartLine().method == "POST" && srv.getLocations()[clnt.getLocationIndex()].getUpload().empty()){
         throw clnt.getResponse().setAttributes(404, "html");
     }
 }
@@ -157,7 +190,7 @@ void    dataCenter::reading(int fd)
         {
             loadHeaders(fd);
             clientList[fd].setServIndx(updateServerIndex(this->clientList[fd].getHeaders()["Host"]));
-            std::cout << clientList[fd].servIndx() << '\n';
+            // std::cout << clientList[fd].servIndx() << '\n';
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
         }
         else {
