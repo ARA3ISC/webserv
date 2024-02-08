@@ -67,7 +67,7 @@
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php
         cgi_path: purl /usr/bin/purl
-        auto_index: on
+        auto_index: off
         upload: /upload
         
 # /home/test

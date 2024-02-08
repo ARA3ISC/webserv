@@ -197,6 +197,7 @@ webserv dataCenter::getWebserv(){
 
 void dataCenter::listDirectory(std::string path, std::string directory, int fd){
 
+    (void)directory;
     DIR* dir;
     struct dirent* ent;
     std::string response = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
@@ -206,10 +207,12 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
             std::string tmp = ent->d_name;
             if (tmp == ".." || tmp == ".")
                 continue;
-            if (directory == "/")
-                response += "<li><a href=\""  + tmp + "\" >" + tmp + "</a></li>";
+            
+            if (this->clientList[fd].getStartLine().path == "/")
+                response += "<li><a href=\"" + tmp + "\" >" + tmp + "</a></li>";
             else
-                response += "<li><a href=\""  + tmp + "\" >" + tmp + "</a></li>";
+                response += "<li><a href=\"" + this->clientList[fd].getStartLine().path + "/" + tmp + "\" >" + tmp + "</a></li>";
+            std::cout << "directory is " << this->clientList[fd].getStartLine().path << " " << tmp << std::endl;
         }
         closedir(dir);
     }
