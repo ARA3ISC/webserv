@@ -14,6 +14,17 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /uploads
+
+    - location /testToDelete:
+        dir_listing: on
+        allow_methods: DELETE
+        root: ./myWebsite/testToDelete
+        index: flow.php test.html
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: off
+        upload: /uploads
         
     - location /home:
         dir_listing: on

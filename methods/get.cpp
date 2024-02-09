@@ -51,7 +51,7 @@ int dataCenter::getLocationRequested(std::vector<location> loc, std::string path
     return -1;
 }
 
-bool isDirectory(const std::string& path) {
+bool dataCenter::isDirectory(const std::string& path) {
     struct stat fileStat;
     if (stat(path.c_str(), &fileStat) != 0) {
         // Failed to retrieve file status

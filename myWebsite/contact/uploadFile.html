@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+    <input type="file" id="fileInput" name="file">
+    <button onclick="uploadFile()">Upload</button>
+
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/contact', true);
+            xhr.setRequestHeader('Transfer-Encoding', 'chunked');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log('File uploaded successfully');
+                    } else {
+                        console.error('File upload failed');
+                    }
+                }
+            };
+
+            xhr.send(file);
+        }
+    </script>
+</body>
+</html>

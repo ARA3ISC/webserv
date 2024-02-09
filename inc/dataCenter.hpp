@@ -93,8 +93,10 @@ public:
     void checkErrors(client &clnt, server serv); 
     std::string getFileName(std::string pathUpload, std::string directory, std::string extention);
     int getFilePrefix();
-
+    bool isDirectory(const std::string& path);
     void getLocationCF(client &clnt,server srv);
+    void deleteDirectory(std::string directory);
+
 };
 
 
