@@ -135,7 +135,7 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     }
     size_t indx = this->getServerIndex(server_fds, fd);
     client c(indx, clientSocket);
-    c.setStartTime(clock());
+    
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
@@ -168,19 +168,19 @@ void dataCenter::handlingRequests()
                 if ((events[i].events & EPOLLIN) && this->clientList[events[i].data.fd].getResponse().getIsReading())
                 {
                     try {
+                        this->clientList[events[i].data.fd].setStartTime(clock());
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-
+                        this->clientList[events[i].data.fd].setStartTime(clock());
                     }
                 }
                 else if ((events[i].events & EPOLLOUT)) {
                     // std::cout << clock() - this->clientList[events[i].data.fd].getStartTime() << std::endl;
-                    // if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                    //     // std::cout << "time out\n";
-                    //     this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
-                        
-                    // }
+                    if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                        std::cout << "time out\n";
+                        this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                    }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
                         this->sending(events[i].data.fd);
                 }
