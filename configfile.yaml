@@ -1,0 +1,126 @@
+- server:
+    server_name: servername1 kkkk1
+    listen: 127.0.0.3:9090
+    root: ./
+    error: 404 /path/to/404.html
+
+    - location:
+        dir_listing: on
+        allow_methods: POST GET
+        root: ./myWebsite
+        index: flow.php test.html
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: off
+        upload: /uploads
+        
+    - location /home:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite/home
+        index: loc1.html display_name.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+
+    - location /about:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite/about
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+        
+    - location /home/folder/ddd:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+
+    - location /search:
+        dir_listing: on
+        allow_methods: GET POST
+        root: ./myWebsite/search
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+
+    - location /contact:
+        dir_listing: on
+        allow_methods: GET POST DELETE
+        root: ./myWebsite/contact
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php
+        cgi_path: purl /usr/bin/purl
+        auto_index: off
+        upload: /upload
+        
+# /home/test
+    - location /home/test/folder5:
+        dir_listing: off
+        allow_methods: GET POST
+        root: ./myWebsite
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+
+    - location /upload:
+        dir_listing: on
+        allow_methods: POST
+        root: ./myWebsite/upload
+
+    - location /home/test/folder1:
+        dir_listing: off
+        allow_methods: GET POST
+        root: ./myWebsite
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        upload: /upload
+
+
+- server:
+    server_name: servername1 kkkk1
+    listen: 127.0.0.1:9999
+    root: ./
+    error: 404 /path/to/404.html
+
+    - location:
+        dir_listing: on
+        allow_methods: POST  GET
+        root: ./avito
+        index: test.html flow.html
+        auto_index: on
+        upload: /uploads
+
+
+    - location /home/test:
+        dir_listing: off
+        allow_methods: GET POST
+        # root: ./avito
+        index: loc1.html flow.php  gg ds
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        cgi_path: purl /usr/bin/purl
+        auto_index: on
+        # upload: /upload
