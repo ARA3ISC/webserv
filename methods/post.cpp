@@ -1,8 +1,8 @@
 #include "../inc/dataCenter.hpp"
 
-std::string dataCenter::getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention){
+std::string dataCenter::getFileName(std::string pathUpload, std::string directory, std::string extention){
     std::stringstream a;
-    a << root;
+
     a << directory ;
     a << pathUpload;
     a << "/output";
@@ -120,7 +120,7 @@ void dataCenter::post(client &clnt, int fd){
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
         if (extension == "x-www-form-urlencoded")
             extension = "txt";
-        std::string fileName  = getFileName(srv.getLocations()[j].getRoot(), srv.getLocations()[j].getUpload(), directory, extension);
+        std::string fileName  = getFileName(srv.getLocations()[j].getUpload(), directory, extension);
 
         std::cout << fileName << std::endl;
         clnt.openFileUpload(fileName);

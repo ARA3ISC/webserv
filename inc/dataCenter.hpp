@@ -91,7 +91,7 @@ public:
 
     void listDirectory(std::string path, std::string directory, int fd);
     void checkErrors(client &clnt, server serv); 
-    std::string getFileName(std::string root, std::string pathUpload, std::string directory, std::string extention);
+    std::string getFileName(std::string pathUpload, std::string directory, std::string extention);
     int getFilePrefix();
 
     void getLocationCF(client &clnt,server srv);
