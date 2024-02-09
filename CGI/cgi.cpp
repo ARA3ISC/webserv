@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
-
+  
 bool checkHtmlfile(std::string file){
     if (file.length() >= 5 && file.substr(file.length() - 5) == ".html")
         return true;
