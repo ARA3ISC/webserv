@@ -123,14 +123,17 @@ void    server::set_listen(std::string line, int nbln) {
         this->_listen.push_back(splitBy(splited[1], ':')[1]);
     }
     else
-    {
-        if (isNaN(splited[1])) {
-            throwError("Syntax error", nbln);
-        }
-        else {
-            this->_listen.push_back(splited[1]);
-        }
-    }
+         throwError("Invalid syntax (ip:port)", nbln);
+
+    // else
+    // {
+    //     if (isNaN(splited[1])) {
+    //         throwError("Syntax error", nbln);
+    //     }
+    //     else {
+    //         this->_listen.push_back(splited[1]);
+    //     }
+    // }
 //    std::cout << "-->" << this->_listen.size() << std::endl;
 }
 
