@@ -202,10 +202,6 @@ void client::setChunkSize(size_t a){
 }
 void client::openFileNewUpload(std::string path){
     this->fileNewUpload = fopen(path.c_str() , "wb");
-    if (this->fileNewUpload)
-        std::cout << "file created\n";
-    else
-        std::cout << "file error\n"; 
 }
 FILE* client::getFileNewUpload(){
     return this->fileNewUpload;

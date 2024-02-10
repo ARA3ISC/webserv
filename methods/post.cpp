@@ -3,6 +3,7 @@
 std::string dataCenter::getFileName(std::string pathUpload, std::string directory, std::string extention){
     std::stringstream a;
 
+    std::cout << directory << " " << pathUpload << "--------"<<std::endl;
     a << directory ;
     a << pathUpload;
     a << "/output";
@@ -17,7 +18,6 @@ std::string dataCenter::getFileName(std::string pathUpload, std::string director
 int hexToDecimal(const std::string& hexString) {
     // std::cout << "hexa : " << hexString << std::endl;
     if (hexString == ""){
-        std::cout << "set to zero\n";
         return 0;
     }
     std::istringstream iss(hexString);
@@ -120,7 +120,8 @@ void dataCenter::post(client &clnt, int fd){
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
         if (extension == "x-www-form-urlencoded")
             extension = "txt";
-        std::string fileName  = getFileName(srv.getLocations()[j].getUpload(), directory, extension);
+        std::string fileName;
+        fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
 
         std::cout << fileName << std::endl;
         clnt.openFileUpload(fileName);

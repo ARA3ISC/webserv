@@ -44,9 +44,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     
     if (checkCgiPaths(loc, path))
     {
-        std::cout << "cgi not found\n";
         if (isPost){
-            std::cout << "unlink\n";
             unlink(filePost.c_str());
         }
         clnt.getResponse().setAttributes(200,  getExtention(path));
@@ -67,15 +65,13 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
 
     if (fdFile == -1){
-        std::cout << "error opening tmp file \n";
+        
         throw clnt.getResponse().setAttributes(500, "html");
     }
     int id = fork();
     if (id == 0){
         int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
-        if (logFd == -1)
-            std::cout << "errrrrro\n";
-        std::cout << "*******path of gci " << path << std::endl;
+        
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
 
@@ -88,7 +84,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string redirectStatus = "REDIRECT_STATUS=CGI";
         std::string pathTranslated = "PATH_TRANSLATED=" + path;
 
-        std::cout << "queryString : " << queryString << std::endl;
+
         char* const envp[] = {
             (char*)queryString.c_str(),
             (char*)contentType.c_str(),
@@ -134,6 +130,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         }
     }
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
+
         throw clnt.getResponse().setAttributes(500, "html");
     }
 

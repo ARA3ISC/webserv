@@ -176,9 +176,8 @@ void dataCenter::handlingRequests()
                     }
                 }
                 else if ((events[i].events & EPOLLOUT)) {
-                    // std::cout << clock() - this->clientList[events[i].data.fd].getStartTime() << std::endl;
+                    
                     if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                        std::cout << "time out\n";
                         this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
                     }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
@@ -212,7 +211,6 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
                 response += "<li><a href=\"" + tmp + "\" >" + tmp + "</a></li>";
             else
                 response += "<li><a href=\"" + this->clientList[fd].getStartLine().path + "/" + tmp + "\" >" + tmp + "</a></li>";
-            std::cout << "directory is " << this->clientList[fd].getStartLine().path << " " << tmp << std::endl;
         }
         closedir(dir);
     }

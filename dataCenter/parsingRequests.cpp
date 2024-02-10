@@ -84,7 +84,6 @@ void dataCenter::getLocationCF(client &clnt,server srv){
         std::string tmpPath;
         while(j <= i){
             tmpPath += "/" + splitURL[j];
-            std::cout << tmpPath << std::endl;
             j++;
         }
         
@@ -94,7 +93,6 @@ void dataCenter::getLocationCF(client &clnt,server srv){
         i++;
     }
     if (indexes.size() == 0){
-        std::cout << "bhbhbhbhbhbhbhbh\n";
         throw clnt.getResponse().setAttributes(404, "html");
     }
 

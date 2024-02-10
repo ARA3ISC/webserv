@@ -108,20 +108,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
     
     std::string nameFile;
     
-    for (size_t i = 2; i < index.size(); i++)
-    {
-        nameFile = path + "/" + index[i];
-        std::ifstream input(nameFile.c_str());
-        if (input.is_open())
-        {
-            content = index[i];
-            input.close();
-            return true;
-        }
-        input.close();
-    }
-    
-    for (size_t i = 0; i < 2; i++)
+    for (size_t i = 0; i < index.size(); i++)
     {
         nameFile = path + "/" + index[i];
         std::ifstream input(nameFile.c_str());
@@ -167,12 +154,10 @@ void dataCenter::get(client &clnt, int fd){
         std::cout << "directory " << directory << " " << srv.getLocations()[j].getPath()  << "\n";
 
         if (srv.getLocations()[j].isAutoIndex()){
-            std::cout << "auto index on \n";
             std::string fileIndexed;
             
             if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
-                std::cout << "file to cgi " << directory << "/" << fileIndexed << std::endl;
-                cgi(clnt, srv.getLocations()[j], directory + "/" + fileIndexed , 0, "");
+                 cgi(clnt, srv.getLocations()[j], directory + "/" + fileIndexed , 0, "");
             }
             else if (!srv.getLocations()[j].get_dir_listing())
                 throw clnt.getResponse().setAttributes(403, "html");

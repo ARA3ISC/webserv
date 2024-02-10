@@ -2,7 +2,7 @@
     server_name: servername1 kkkk1
     listen: 127.0.0.3:9090
     root: ./
-    error: 404 /path/to/404.html
+    error: 404 dataCenter/client.cpp
 
     - location:
         dir_listing: on
@@ -76,7 +76,7 @@
         root: ./myWebsite/contact
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /upload
@@ -121,7 +121,15 @@
         allow_methods: POST  GET
         root: ./avito
         index: test.html flow.html
-        auto_index: on
+        auto_index: off
+        upload: /uploads
+
+    - location /uploads:
+        dir_listing: on
+        allow_methods: POST  GET
+        root: ./avito
+        index: test.html flow.html
+        auto_index: off
         upload: /uploads
 
 

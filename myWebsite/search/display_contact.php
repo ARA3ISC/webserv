@@ -10,11 +10,12 @@
     <h1>Contact Information</h1>
     <?php
     // Check if form data was submitted
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    echo $_POST;
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
         // Retrieve and display submitted data
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $message = $_POST["message"];
+        $name = $_GET["name"];
+        $email = $_GET["email"];
+        $message = $_GET["message"];
         
         // Display the submitted data
         echo "<p><strong>Name:</strong> $name</p>";

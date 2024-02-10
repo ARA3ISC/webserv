@@ -6,8 +6,6 @@
 
 location::location(): _dir_listing(false), _auto_index(false)
 {
-    this->_index.push_back("index.html");
-    this->_index.push_back("index.htm");
 }
 location::location(const location &rhs) {
 

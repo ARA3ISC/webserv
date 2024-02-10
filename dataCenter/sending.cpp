@@ -116,14 +116,12 @@ void dataCenter::sending(int fd){
         if (res.getStatusCode() == 201)
         {
             std::string header = "HTTP/1.1 201 Created\r\nContent-Type: text/html\r\n\r\n";
-            // write(fd, header.c_str(), header.length());
-            // close(fd);
-            // return ;
         }
         if (res.getStatusCode() != 200){
             res.openfilePathError(this->getWebserv().getServers()[this->clientList[fd].servIndx()].get_error_pages()[res.getStatusCode()]);
-            if (!res.getFilePathError().is_open())
+            if (!res.getFilePathError().is_open()){
                 res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], res.getStatusCode()));
+            }
         }
         else{
             res.openFile(res.getPath());
