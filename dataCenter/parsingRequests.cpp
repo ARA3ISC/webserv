@@ -122,24 +122,25 @@ void dataCenter::checkErrors(client &clnt, server srv){
     }
 }
 
-int dataCenter::updateServerIndex(std::string host)
+int dataCenter::updateServerIndex(server s, std::string hostHeader)
 {
     int count = 0;
     std::vector<std::string> splited;
     std::vector<int> repeated;
-    splited = splitBy(host, ':');
+    splited = splitBy(hostHeader, ':');
 
     for (size_t i = 0; i < this->wes.getServers().size(); i++)
     {
         if (this->wes.getServers()[i].getListen().size() == 1)
         {
             /* one port in config file && host port matches this port */
-            if (this->wes.getServers()[i].getListen()[0] == splited[1])
-                return i;
+            // if (this->wes.getServers()[i].getListen()[0] == splited[1])
+            //     return i;
         }
         if (this->wes.getServers()[i].getListen().size() == 2)
         {
-            if (host == this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1])
+            std::cout << "if (" << s.getListen()[0] + ':' + s.getListen()[1] << " == " << this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1] << ")\n";
+            if (s.getListen()[0] + ':' + s.getListen()[1] == this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1])
             {
                 repeated.push_back(i);
                 count++;
@@ -153,11 +154,13 @@ int dataCenter::updateServerIndex(std::string host)
         {
             for (size_t k = 0; k < this->wes.getServers()[repeated[i]].getServer_names().size(); k++)
             {
+
+                    std::cout << this->wes.getServers()[repeated[i]].getServer_names()[k] << " ---- " << splited[0] << '\n';
                 if (splited[0] == this->wes.getServers()[repeated[i]].getServer_names()[k])
                 {
                     return repeated[i];
                 }
-            }   
+            }
         }
     }
     if (repeated.size() == 0)
@@ -189,7 +192,7 @@ void    dataCenter::reading(int fd)
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
-            clientList[fd].setServIndx(updateServerIndex(this->clientList[fd].getHeaders()["Host"]));
+            clientList[fd].setServIndx(updateServerIndex(this->getServerList()[clientList[fd].servIndx()], this->clientList[fd].getHeaders()["Host"]));
             // std::cout << clientList[fd].servIndx() << '\n';
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]); 
         }

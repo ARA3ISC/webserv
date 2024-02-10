@@ -1,6 +1,6 @@
 - server:
-    server_name: servername1 kkkk1
-    listen: 127.0.0.3:9090
+    server_name: kkkk1
+    listen: 127.0.0.6:2222
     root: ./
     error: 404 dataCenter/client.cpp
 
@@ -110,15 +110,18 @@
         upload: /upload
 
 
+
+
+        
 - server:
-    server_name: servername1 kkkk1
-    listen: 127.0.0.1:9999
+    server_name: kkkk1
+    listen: 127.0.0.6:2222
     root: ./
     error: 404 /path/to/404.html
 
     - location:
         dir_listing: on
-        allow_methods: POST  GET
+        allow_methods: POST GET
         root: ./avito
         index: test.html flow.html
         auto_index: off
@@ -126,7 +129,7 @@
 
     - location /uploads:
         dir_listing: on
-        allow_methods: POST  GET
+        allow_methods: POST  
         root: ./avito
         index: test.html flow.html
         auto_index: off

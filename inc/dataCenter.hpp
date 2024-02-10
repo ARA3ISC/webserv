@@ -20,21 +20,6 @@
 #include <ctime>
 #include <cstring>
 
-//enum statusCodes {
-//    BadRequest = 400,
-//    NotFound = 404,
-//    NotImplemented = 501,
-//    RequestURIToLong = 414,
-//    MethodNotAllowed = 405,
-//    InternalServerError = 500,
-//    Forbidden = 403,
-//    RequestTimeOut = 408,
-//    Conflict = 409,
-//    HTTPVersionNotSupported = 505,
-//    PayloadTooLarge = 413,
-//    LengthRequired = 411
-//};
-
 class dataCenter
 {
 private:
@@ -43,6 +28,7 @@ private:
     std::vector<int> serv_fds;
     std::map<int, client> clientList;
     int filePrefix;
+    std::map<int, server> serversList;
 
 
     /* private member functions */
@@ -78,7 +64,7 @@ public:
     int getLocationRequested(std::vector<location> loc, std::string path);
     bool pathExists(const std::string& path);
 
-    int updateServerIndex(std::string host);
+    int updateServerIndex(server s, std::string hostHeader);
         /* get method*/
     void get(client &clnt, int fd);
     void post(client &clnt, int fd);
@@ -97,7 +83,10 @@ public:
     void getLocationCF(client &clnt,server srv);
     void deleteDirectory(std::string directory);
 
-};
+
+   
+    std::map<int, server>& getServerList() ;
+}; 
 
 
 #endif

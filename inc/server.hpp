@@ -23,6 +23,7 @@ private:
 
 public:
 	server();
+	server(std::string ip, std::string port);
 	server(int locations_count);
 	server(const server& rhs);
 	server& operator=(const server& rhs);

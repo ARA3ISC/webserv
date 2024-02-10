@@ -17,6 +17,7 @@ dataCenter::dataCenter(const dataCenter &rhs) {
     this->epollfd = rhs.epollfd;
     this->serv_fds= rhs.serv_fds;
     this->clientList = rhs.clientList;
+    this->serversList = rhs.serversList;
 }
 dataCenter &dataCenter::operator=(const dataCenter &rhs) {
     if (&rhs != this) {
@@ -24,6 +25,7 @@ dataCenter &dataCenter::operator=(const dataCenter &rhs) {
         this->epollfd = rhs.epollfd;
         this->serv_fds= rhs.serv_fds;
         this->clientList = rhs.clientList;
+        this->serversList = rhs.serversList;
     }
     return *this;
 }
@@ -64,6 +66,23 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
         perror("Error listening socket");
         throw std::runtime_error("");
     }
+    // size_t port = hostAddr.sin_port;
+    // std::stringstream ssport;
+    // ssport << port;
+
+
+    // size_t ip = hostAddr.sin_addr.s_addr;
+    // std::stringstream ssip;
+    // ssip << ip;
+
+    std::string ip = webs.getServers()[i].getListen()[0];
+    std::string port = webs.getServers()[i].getListen()[1];
+
+    // std::cout << "ip : " << ip << " , port : " << port << '\n';
+    server s(ip, port);
+
+
+    this->serversList[i] = s;
     return serv_sock;
 }
 
@@ -222,6 +241,11 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     this->clientList[fd].getResponse().setLisDir(true);
 
     throw 0;
+}
+
+std::map<int, server>& dataCenter::getServerList() 
+{
+    return this->serversList;
 }
 
 int dataCenter::getFilePrefix(){

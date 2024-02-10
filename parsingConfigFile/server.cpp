@@ -29,6 +29,22 @@ bool checkListen(std::string ipport)
 }
 
 // class members
+server::server(std::string ip, std::string port) {
+    this->max_body_size = 2147483648;
+    this->_error_pages[400] = "Errors/400.html";
+    this->_error_pages[403] = "Errors/403.html";
+    this->_error_pages[404] = "Errors/404.html";
+    this->_error_pages[405] = "Errors/405.html";
+    this->_error_pages[414] = "Errors/414.html";
+    this->_error_pages[500] = "Errors/500.html";
+    this->_error_pages[501] = "Errors/501.html";
+    this->_error_pages[502] = "Errors/502.html";
+    this->_error_pages[504] = "Errors/504.html";
+
+    this->_listen.push_back(ip);
+    this->_listen.push_back(port);
+}
+
 server::server() {
     this->max_body_size = 2147483648;
     this->_error_pages[400] = "Errors/400.html";
@@ -41,6 +57,7 @@ server::server() {
     this->_error_pages[502] = "Errors/502.html";
     this->_error_pages[504] = "Errors/504.html";
 }
+
 server::server(const server& rhs)
 {
     this->_locations_count = rhs._locations_count;
