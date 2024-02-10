@@ -65,7 +65,7 @@
         root: ./myWebsite/search
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: on
         upload: /upload

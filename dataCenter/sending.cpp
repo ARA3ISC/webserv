@@ -127,6 +127,7 @@ void dataCenter::sending(int fd){
             res.openFile(res.getPath());
         }
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);
+        std::cout << content << std::endl;
         res.setIsHeaderSend(true);
     }
     else if (res.getLisDir()){

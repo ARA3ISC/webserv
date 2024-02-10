@@ -28,10 +28,19 @@ void dataCenter::deleteDirectory(std::string directory){
             std::string toDelete = directory + "/" + tmp;
             if (tmp == "." || tmp == "..")
                 continue;
-            if (isDirectory(toDelete))
+            if (isDirectory(toDelete) && isDirectoryEmpty(toDelete)){
+                rmdir(toDelete.c_str());
+                continue;
+            }
+            if (isDirectory(toDelete)){
                 deleteDirectory(toDelete);
+            }
             else{
-                unlink(toDelete.c_str());
+                int fd = open(toDelete.c_str(), O_WRONLY);
+                if (fd != -1){
+                    close(fd);
+                    unlink(toDelete.c_str());
+                }
             }
         }
     }
@@ -65,13 +74,13 @@ void dataCenter::deleteMethod(client &clnt, int fd)
             std::cout << "cannot remove root \n";
             throw clnt.getResponse().setAttributes(404, "html");
         }
-        // deleteDirectory(directory);
-        // if (!isDirectoryEmpty(directory)){
-        //     throw clnt.getResponse().setAttributes(403, "html");
-        // }else{
-        //     rmdir(directory.c_str());
-        // }
-
+        deleteDirectory(directory);
+        if (!isDirectoryEmpty(directory)){
+            throw clnt.getResponse().setAttributes(403, "html");
+        }else{
+            rmdir(directory.c_str());
+        }
+        throw clnt.getResponse().setAttributes(204, "html");
     }
     // check ---> ./myWebsite/testToDelete/ ^^^^ ./myWebsite/testToDelete
     // check of / as root 

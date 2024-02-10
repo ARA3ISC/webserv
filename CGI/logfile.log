@@ -101,3 +101,9 @@ PHP Warning:  Undefined array key "message" in /nfs/homes/rlarabi/Desktop/webser
 --------------------------
 --------------------------
 --------------------------
+--------------------------
+--------------------------
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/search/display_contact.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/search/display_contact.php on line 37
+--------------------------
