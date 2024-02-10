@@ -139,7 +139,6 @@ int dataCenter::updateServerIndex(server s, std::string hostHeader)
         }
         if (this->wes.getServers()[i].getListen().size() == 2)
         {
-            std::cout << "if (" << s.getListen()[0] + ':' + s.getListen()[1] << " == " << this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1] << ")\n";
             if (s.getListen()[0] + ':' + s.getListen()[1] == this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1])
             {
                 repeated.push_back(i);
@@ -155,7 +154,7 @@ int dataCenter::updateServerIndex(server s, std::string hostHeader)
             for (size_t k = 0; k < this->wes.getServers()[repeated[i]].getServer_names().size(); k++)
             {
 
-                    std::cout << this->wes.getServers()[repeated[i]].getServer_names()[k] << " ---- " << splited[0] << '\n';
+                    // std::cout << this->wes.getServers()[repeated[i]].getServer_names()[k] << " ---- " << splited[0] << '\n';
                 if (splited[0] == this->wes.getServers()[repeated[i]].getServer_names()[k])
                 {
                     return repeated[i];

@@ -127,7 +127,7 @@ void dataCenter::sending(int fd){
             res.openFile(res.getPath());
         }
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);
-        std::cout << content << std::endl;
+        // std::cout << content << std::endl;
         res.setIsHeaderSend(true);
     }
     else if (res.getLisDir()){
@@ -151,7 +151,14 @@ void dataCenter::sending(int fd){
     }
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
-        std::cout << fd << "()()()()()()()()\n";
+        if (res.getStatusCode() == 200)
+            std::cout << GREEN;
+        else
+            std::cout << RED;
+        std::cout << "Response sent [ " << res.getStatusCode() << " " <<statusCodeMsgs[res.getStatusCode()] << " ]\n";
+        // std::cout << CYAN;
+        // std::cout << "Client disconnected" << std::endl;
+        std::cout << RESET;
         close(fd);
         res.getFilePath().close();
         res.getFilePathError().close();

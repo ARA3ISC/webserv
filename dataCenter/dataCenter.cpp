@@ -158,6 +158,7 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
+    std::cout << CYAN << "Client connected" << RESET << std::endl;
 }
 
 void dataCenter::handlingRequests()

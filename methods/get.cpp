@@ -91,7 +91,7 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
 
     getQueryStringFromPath(clnt, toOpen);
 
-    std::cout << "to open " << isDirectory(toOpen) << " " << toOpen << std::endl;
+    // std::cout << "to open " << isDirectory(toOpen) << " " << toOpen << std::endl;
     if (!isDirectory(toOpen)){
         removeTrailingSlashes(toOpen);
         int fd = open(toOpen.c_str(), O_RDONLY);
@@ -145,13 +145,13 @@ void dataCenter::get(client &clnt, int fd){
 
     if (!file.empty())
     {
-        std::cout << "file " <<  file << "\n";
+        // std::cout << "file " <<  file << "\n";
         cgi(clnt, srv.getLocations()[j], file, 0, "");
         throw 0;
     }
     else
     {
-        std::cout << "directory " << directory << " " << srv.getLocations()[j].getPath()  << "\n";
+        // std::cout << "directory " << directory << " " << srv.getLocations()[j].getPath()  << "\n";
 
         if (srv.getLocations()[j].isAutoIndex()){
             std::string fileIndexed;

@@ -144,7 +144,7 @@ void dataCenter::post(client &clnt, int fd){
     
     if (clnt.getFullSize() >= nb){
         
-        std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
+        // std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
 

@@ -183,7 +183,6 @@ void server::setMaxBodySize(std::string line, int nbln) {
 
     if (splited.size() != 2 || checkMaxBodySize(splited[1]))
     {
-        std::cout << splited.size() << "\n";
         throwError("Syntax error", nbln);
     }
 

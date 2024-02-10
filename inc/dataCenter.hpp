@@ -9,16 +9,21 @@
 # include <netinet/in.h>
 # include <fcntl.h>
 # include <unistd.h>
-# define MAX_EVENTS 10
 # include "webserv.hpp"
 # include "client.hpp"
+# include <dirent.h>
+# include <sys/stat.h>
+# include "returnError.hpp"
+# include "utils3.hpp"
+# include <ctime>
+# include <cstring>
+# define MAX_EVENTS 10
 # define BUFFER_SIZE 2048
-#include <dirent.h>
-#include <sys/stat.h>
-#include "returnError.hpp"
-#include "utils3.hpp"
-#include <ctime>
-#include <cstring>
+# define GREEN "\033[92m"
+# define RESET "\033[0m"
+# define RED "\033[31m"
+# define CYAN "\033[96m"
+
 
 class dataCenter
 {

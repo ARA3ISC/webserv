@@ -69,7 +69,7 @@ void dataCenter::deleteMethod(client &clnt, int fd)
         throw clnt.getResponse().setAttributes(204, "html");
     }
     else{
-        std::cout << directory << " ^^^^ " << this->getWebserv().getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()].getRoot() << std::endl;
+        // std::cout << directory << " ^^^^ " << this->getWebserv().getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()].getRoot() << std::endl;
         if (directory == this->getWebserv().getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()].getRoot()){
             std::cout << "cannot remove root \n";
             throw clnt.getResponse().setAttributes(404, "html");
