@@ -151,7 +151,7 @@ void dataCenter::sending(int fd){
     }
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
-        if (res.getStatusCode() == 200)
+        if (res.getStatusCode() == 200 || res.getStatusCode() == 201)
             std::cout << GREEN;
         else
             std::cout << RED;

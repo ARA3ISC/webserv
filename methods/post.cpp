@@ -3,7 +3,7 @@
 std::string dataCenter::getFileName(std::string pathUpload, std::string directory, std::string extention){
     std::stringstream a;
 
-    std::cout << directory << " " << pathUpload << "--------"<<std::endl;
+    // std::cout << directory << " " << pathUpload << "--------"<<std::endl;
     a << directory ;
     a << pathUpload;
     a << "/output";
@@ -123,7 +123,7 @@ void dataCenter::post(client &clnt, int fd){
         std::string fileName;
         fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
 
-        std::cout << fileName << std::endl;
+        // std::cout << fileName << std::endl;
         clnt.openFileUpload(fileName);
 
         clnt.setIsUploadfileOpen(true);
