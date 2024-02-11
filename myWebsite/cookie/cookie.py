@@ -13,7 +13,7 @@ print("Content-Type: text/html")
 if 'HTTP_COOKIE' in os.environ and 'my_secret_cookie' in os.environ['HTTP_COOKIE']:
     # Cookie already exists, display a message
     print()  # Blank line to indicate the end of headers
-    print("<html><body>")
+    print("\r\n\r\n<html><body>")
     print("<h1>Cookie already set with value:</h1>")
     print("<p>" + os.environ['HTTP_COOKIE'] + "</p>")
     print("</body></html>")
@@ -23,7 +23,7 @@ else:
     if form.getvalue("secret"):
         # If 'secret' is provided, set the cookie
         secret = form.getvalue("secret")
-        print(f"Set-Cookie: my_secret_cookie={secret}; Max-Age=3600")
+        print(f"Set-Cookie: my_secret_cookie={secret}; Max-Age=3600\r\n\r\n")
         print()
         # Display a success message
         print("<html><body>")
