@@ -84,8 +84,12 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
         std::string redirectStatus = "REDIRECT_STATUS=CGI";
         std::string pathTranslated = "PATH_TRANSLATED=" + path;
-
-
+        
+        std::string setCookie;
+        setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
+        std::cout << "set cookie "<< setCookie<< " \n"; 
+        // if (!clnt.getHeaders()["Set-Cookie"].empty()){
+        // }
         char* const envp[] = {
             (char*)queryString.c_str(),
             (char*)contentType.c_str(),
@@ -95,6 +99,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
             (char*)redirectStatus.c_str(),
             (char*)requestMethod.c_str(),
             (char*)pathTranslated.c_str(),
+            (char*)setCookie.c_str(),
             NULL
         };
         int infileFd;

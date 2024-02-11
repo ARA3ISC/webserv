@@ -77,7 +77,7 @@ void client::setStartLine(std::string line) {
     std::vector<std::string> values = splitBySpace(line);
 
     if (values.size() != 3)
-        throw std::runtime_error("Bad client");
+        throw 400;
     if (values[0] != "GET" && values[0] != "POST" && values[0] != "DELETE")
         throw 405;
     this->_startLine.method = values[0];
@@ -90,7 +90,7 @@ void client::setHeaders(std::string line) {
         throw 400;
     std::vector<std::string> values = splitHeaderBycolon(line);
     if (values.size() != 2) {
-        throw std::runtime_error("Bad client!!!");
+        throw 400;
     }
     this->_headers.insert(std::pair<std::string, std::string>(values[0], values[1]));
 }

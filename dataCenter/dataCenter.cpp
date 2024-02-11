@@ -44,7 +44,6 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
     if (setNonBlocking(serv_sock) == -1)
         throw std::runtime_error("Error: non-blocking failed");
     if (serv_sock < 0) {
-        perror("Creating server socket error");
         throw std::runtime_error("Error creating socket");
     }
     hostAddr.sin_family = AF_INET;
@@ -63,8 +62,7 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
     /* Server listens */
     if (listen(serv_sock, SOMAXCONN) < 0)
     {
-        perror("Error listening socket");
-        throw std::runtime_error("");
+        throw std::runtime_error("Error listening socket");
     }
     // size_t port = hostAddr.sin_port;
     // std::stringstream ssport;
@@ -109,7 +107,6 @@ void dataCenter::createEpoll()
         ev.data.fd = serv_fds[i];
         if (epoll_ctl(this->epollfd, EPOLL_CTL_ADD, this->serv_fds[i], &ev) == -1)
         {
-            perror("epoll_ctl");
             throw std::runtime_error("Error epoll ctl");
         }
     }
@@ -171,9 +168,7 @@ void dataCenter::handlingRequests()
     while (true)
     {
         nfds = epoll_wait(this->epollfd, events, MAX_EVENTS, -1);
-
         if (nfds == -1) {
-            perror("epoll_wait");
             throw std::runtime_error("Error epoll wait");
         }
         for (int i = 0; i < nfds; i++)
