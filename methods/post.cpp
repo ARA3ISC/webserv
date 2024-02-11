@@ -155,8 +155,6 @@ void dataCenter::post(client &clnt, int fd){
         int j = clnt.getLocationIndex();
 
         if (!file.empty()){
-            //cgi
-            std::cout << "file to cgi : " << file << std::endl;
             cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
         }else
             throw clnt.getResponse().setAttributes(201, "html");

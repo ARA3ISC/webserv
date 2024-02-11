@@ -151,13 +151,12 @@ void dataCenter::sending(int fd){
     }
     write(fd, content.c_str(), content.length());
     if (res.getIsResponseSent()){
-        if (res.getStatusCode() == 200 || res.getStatusCode() == 201)
+        if (res.getStatusCode() == 200 || res.getStatusCode() == 201 || res.getStatusCode() == 301 || res.getStatusCode() == 204)
             std::cout << GREEN;
         else
             std::cout << RED;
-        std::cout << "Response sent [ " << res.getStatusCode() << " " <<statusCodeMsgs[res.getStatusCode()] << " ]\n";
+        std::cout << "Response sent [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << "\n";
         // std::cout << CYAN;
-        // std::cout << "Client disconnected" << std::endl;
         std::cout << RESET;
         close(fd);
         res.getFilePath().close();

@@ -119,3 +119,68 @@ execve: No such file or directory
 execve: No such file or directory
 --------------------------
 execve: No such file or directory
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+PHP Warning:  Undefined array key "PATH_INFO" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 10
+PHP Warning:  Array to string conversion in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/home/display_name.php on line 37
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+PHP Warning:  Undefined array key "name" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/search/display_contact.php on line 16
+PHP Warning:  Undefined array key "time" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/search/display_contact.php on line 17
+--------------------------
+PHP Warning:  Undefined array key "name" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/search/display_contact.php on line 16
+PHP Warning:  Undefined array key "time" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/search/display_contact.php on line 17

@@ -51,6 +51,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         clnt.getResponse().setPath(path);
         throw 0;
     }
+    std::cout << GREEN << "CGI executed [ " << getExtention(path) << " ]" << RESET << std::endl;
     
     int status = 0;
     double timeoutSeconds = 0.0015;

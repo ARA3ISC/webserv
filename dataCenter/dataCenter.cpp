@@ -158,7 +158,7 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
-    std::cout << CYAN << "Client connected" << RESET << std::endl;
+    std::cout << CYAN << "Client connected " << clientSocket << RESET << std::endl;
 }
 
 void dataCenter::handlingRequests()
@@ -192,12 +192,13 @@ void dataCenter::handlingRequests()
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-                        this->clientList[events[i].data.fd].setStartTime(clock());
+                        this->clientList[events[i].data.fd].setStartTime(0);
                     }
                 }
                 else if ((events[i].events & EPOLLOUT)) {
                     
                     if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                        this->clientList[events[i].data.fd].setStartTime(0);
                         this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
                     }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())

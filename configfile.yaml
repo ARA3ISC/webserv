@@ -28,13 +28,13 @@
         
     - location /home:
         dir_listing: on
-        allow_methods: GET POST
+        allow_methods: GET POST DELETE
         root: ./myWebsite/home
         index: loc1.html display_name.php  gg ds
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
-        auto_index: on
+        auto_index: off
         upload: /upload
 
     - location /about:
@@ -77,11 +77,10 @@
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
+        cgi_path: sh /usr/bin/sh
         auto_index: off
         upload: /upload
-        
-# /home/test
+
     - location /home/test/folder5:
         dir_listing: off
         allow_methods: GET POST
@@ -137,12 +136,9 @@
 
 
     - location /home/test:
-        dir_listing: off
+        dir_listing: on
         allow_methods: GET POST
-        # root: ./avito
-        index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
+        root: ./avito
+        index: loc1.html flow.php test.html
         auto_index: on
         # upload: /upload
