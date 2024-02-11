@@ -192,10 +192,10 @@ void dataCenter::handlingRequests()
                 }
                 else if ((events[i].events & EPOLLOUT)) {
                     
-                    if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                        this->clientList[events[i].data.fd].setStartTime(0);
-                        this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
-                    }
+                    // if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                    //     this->clientList[events[i].data.fd].setStartTime(0);
+                    //     this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                    // }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
                         this->sending(events[i].data.fd);
                 }

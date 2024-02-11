@@ -10,7 +10,7 @@
         root: ./myWebsite
         index: flow.php test.html
         cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /uploads
@@ -21,7 +21,7 @@
         root: ./myWebsite/testToDelete
         index: flow.php test.html
         cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /uploads
@@ -43,7 +43,7 @@
         root: ./myWebsite/about
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: on
         upload: /upload
@@ -54,7 +54,7 @@
         root: ./myWebsite
         index: loc1.html flow.php  gg ds
         cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php
+        cgi_path: php /usr/bin/php-cgi
         cgi_path: purl /usr/bin/purl
         auto_index: on
         upload: /upload
@@ -74,6 +74,7 @@
         dir_listing: on
         allow_methods: GET POST DELETE
         root: ./myWebsite/contact
+        cgi_path: php /usr/bin/php-cgi
         auto_index: off
         upload: /upload
 

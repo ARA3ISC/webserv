@@ -6,6 +6,7 @@ client::client() {
 }
 
 client::client(int serverIndex, int clientFd) {
+    this->isCgi = false;
     this->_headerareloaded = false;
     this->_serverIndex = serverIndex;
     this->_fd = clientFd;
@@ -33,6 +34,7 @@ client::client(const client &rhs) {
     this->startTime = rhs.startTime;
     this->fileUploadName = rhs.fileUploadName;
     this->locationIndex = rhs.locationIndex;
+    this->isCgi = rhs.isCgi;
 }
 
 client& client::operator=(const client &rhs) {
@@ -58,6 +60,7 @@ client& client::operator=(const client &rhs) {
         this->startTime = rhs.startTime;
         this->fileUploadName = rhs.fileUploadName;
         this->locationIndex = rhs.locationIndex;
+        this->isCgi = rhs.isCgi;
     }
     return *this;
 }
@@ -232,4 +235,11 @@ void client::setLocationIndex(int a){
 
 int client::getLocationIndex(){
     return this->locationIndex;
+}
+
+void client::setIsCgi(bool a){
+    this->isCgi = a;
+}
+bool client::getIsCgi(){
+    return this->isCgi;
 }

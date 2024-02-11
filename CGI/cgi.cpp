@@ -40,6 +40,19 @@ bool checkCgiPaths(location loc, std::string path){
     return true;
 }
 
+std::string trimByString(const std::string& input, const std::string& trimString) {
+    // Find the position of trimString in input
+    size_t pos = input.find(trimString);
+    
+    // If trimString is found, return substring from the beginning to trimString
+    if (pos != std::string::npos) {
+        return input.substr(0, pos);
+    }
+    
+    // If trimString is not found, return the original string
+    return input;
+}
+
 void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, std::string filePost){
     
     if (checkCgiPaths(loc, path))
@@ -59,11 +72,12 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     std::ostringstream s;
     s << std::time(0);
     s << this->getFilePrefix();
-    std::string FileName = "/tmp/randomFile" + s.str() + +".txt";
+    std::string FileName = "/tmp/randomFile" + s.str() +".txt";
     
     // clnt.getResponse().setIsCGIFile(true);
     
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
+    // write(fdFile, "HTTP/1.1 200 OK\r\n", 17);
 
     if (fdFile == -1){
         
@@ -87,7 +101,6 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         
         std::string setCookie;
         setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
-        std::cout << "set cookie "<< setCookie<< " \n"; 
         // if (!clnt.getHeaders()["Set-Cookie"].empty()){
         // }
         char* const envp[] = {
@@ -139,8 +152,28 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
 
         throw clnt.getResponse().setAttributes(500, "html");
     }
-
     close(fdFile);
+
+    
+    std::fstream input(FileName.c_str());
+    char line[1024] = {0};
+    input.read(line, 1023);
+    std::string tmp = line;
+    int i = 0;
+    
+    while(true){
+        input.read(line, 1023);
+        if (input.eof())
+            break;
+        tmp += line;
+        if (i++ > 3 && tmp.find("\r\n\r\n") == std::string::npos)
+            break;
+    }
+    if (tmp.find("\r\n\r\n") != std::string::npos){
+        clnt.setIsCgi(true);
+    }
+    
+    input.close();
     if (isPost)
         unlink(filePost.c_str());
     clnt.getResponse().setAttributes(200, "html");

@@ -37,6 +37,7 @@ private:
     size_t fullSize;
     clock_t startTime;
     int locationIndex;
+    bool isCgi;
 
 public:
     client();
@@ -96,4 +97,7 @@ public:
 
     void setLocationIndex(int a);
     int getLocationIndex();
+    
+    void setIsCgi(bool a);
+    bool getIsCgi();
 };

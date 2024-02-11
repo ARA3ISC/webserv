@@ -106,16 +106,22 @@ void dataCenter::sending(int fd){
     std::string content = "";
  
     if(!res.getIsHeaderSend()){
+        if (this->clientList[fd].getIsCgi()){
+            
+            res.setIsHeaderSend(true);
+            res.openFile(res.getPath());
+            write(fd, "HTTP/1.1 200 OK\r\n", 17);
+
+            this->clientList[fd].setIsCgi(false);
+            this->clientList[fd].setResponse(res);
+            return ;
+        }
         if (res.getStatusCode() == 301)
         {
             std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html\r\n\r\n";
             write(fd, header.c_str(), header.length());
             close(fd);
             return ;
-        }
-        if (res.getStatusCode() == 201)
-        {
-            std::string header = "HTTP/1.1 201 Created\r\nContent-Type: text/html\r\n\r\n";
         }
         if (res.getStatusCode() != 200){
             res.openfilePathError(this->getWebserv().getServers()[this->clientList[fd].servIndx()].get_error_pages()[res.getStatusCode()]);
@@ -135,9 +141,10 @@ void dataCenter::sending(int fd){
         res.setLisDir(false);
         res.setIsResponseSent(true);
     }else{
-        if (!res.getFilePath().eof() && (res.getStatusCode() == 200 || res.getStatusCode() == 201))
+        if (!res.getFilePath().eof() && (res.getStatusCode() == 200))
         {
             content = readBufferFromFile(res.getFilePath());
+            // std::cout << "read file "<< content<< "\n";
             if (res.getFilePath().eof())
                 res.setIsResponseSent(true);
         }
