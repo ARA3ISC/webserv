@@ -119,6 +119,7 @@ void dataCenter::sending(int fd){
         if (res.getStatusCode() == 301)
         {
             std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html\r\n\r\n";
+            std::cout << GREEN << "Response sent [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << RESET << "\n";
             write(fd, header.c_str(), header.length());
             close(fd);
             return ;

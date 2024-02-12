@@ -131,6 +131,12 @@ bool dataCenter::isMethodAllowed(std::vector<std::string> methods, std::string m
     return true;
 }
 
+bool pathHasSlashAtEnd(std::string path){
+    if(path.size() != 1 && path[path.size() -1] != '/')
+        return true;
+    return false;
+}
+
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
     
@@ -151,7 +157,10 @@ void dataCenter::get(client &clnt, int fd){
     }
     else
     {
-        // std::cout << "directory " << directory << " " << srv.getLocations()[j].getPath()  << "\n";
+        if (pathHasSlashAtEnd(clnt.getStartLine().path)){
+            clnt.getResponse().setPath(clnt.getStartLine().path + "/");
+            throw clnt.getResponse().setAttributes(301, "html");
+        }
 
         if (srv.getLocations()[j].isAutoIndex()){
             std::string fileIndexed;
