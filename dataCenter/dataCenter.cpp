@@ -184,23 +184,48 @@ void dataCenter::handlingRequests()
             {
                 if ((events[i].events & EPOLLIN) && this->clientList[events[i].data.fd].getResponse().getIsReading())
                 {
+                    this->clientList[events[i].data.fd].setStartTime(clock());
+
+
                     try {
                         // this->clientList[events[i].data.fd].setStartTime(clock());
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-                        this->clientList[events[i].data.fd].setStartTime(clock());
+                        // this->clientList[events[i].data.fd].setStartTime(clock());
                     }
                 }
-                else if ((events[i].events & EPOLLOUT)) {
+                else if ((events[i].events & EPOLLOUT) && !this->clientList[events[i].data.fd].getResponse().getIsReading()) {
 
-                    if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                        this->clientList[events[i].data.fd].setStartTime(clock());
-                        this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
-                    }
                     /* check if the response is ready to send */
+                    this->clientList[events[i].data.fd].setStartTime(clock());
+
+                    // std::cout << this->clientList[events[i].data.fd].getTimeOut() << '\n';
+
+                    // if ((this->clientList[events[i].data.fd].getTimeOut() >= 10000000) && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                    //     this->clientList[events[i].data.fd].resetTimeOut();
+                    //     this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                    // }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
+                    {
+                        // this->clientList[events[i].data.fd].resetTimeOut();
                         this->sending(events[i].data.fd);
+                    }
+                }else{
+
+                    // this->clientList[events[i].data.fd].incrementTimeOut();
+
+
+                    if ((clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000)){
+                        this->clientList[events[i].data.fd].setStartTime(clock());
+						if (this->clientList[events[i].data.fd].getStartLine().method == "POST")
+                        	this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+						else{
+							close(events[i].data.fd);
+							std::cerr << RED << "Response sent [ 504 Gateway Timeout ] " << events[i].data.fd << " Reason: empty request" << RESET << std::endl;
+						}
+                    }
+
                 }
             }
         }

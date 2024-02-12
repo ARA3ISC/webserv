@@ -166,7 +166,6 @@ void dataCenter::sending(int fd){
         // std::cout << CYAN;
         std::cout << RESET;
         close(fd);
-        //
         res.getFilePath().close();
         res.getFilePathError().close();
         if (res.getIsCGIFile()){

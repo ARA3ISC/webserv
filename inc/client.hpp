@@ -38,6 +38,7 @@ private:
     clock_t startTime;
     int locationIndex;
     bool isCgi;
+    int timeOut;
 
 public:
     client();
@@ -66,9 +67,9 @@ public:
     std::string getQueryString();
     void setQueryString(std::string queryString);
     void setIsUploadfileOpen(bool a);
-  
+
     bool getIsUploadfileOpen();
-  
+
     void openFileUpload(std::string path);
     std::fstream &getFileUpload();
 
@@ -97,7 +98,18 @@ public:
 
     void setLocationIndex(int a);
     int getLocationIndex();
-    
+
     void setIsCgi(bool a);
     bool getIsCgi();
+
+    void incrementTimeOut()
+    {
+        this->timeOut++;
+    }
+    int getTimeOut()
+    {
+        return this->timeOut;
+    }
+    void resetTimeOut();
+
 };
