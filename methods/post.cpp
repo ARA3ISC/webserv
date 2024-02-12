@@ -25,7 +25,7 @@ int hexToDecimal(const std::string& hexString) {
     iss >> std::hex >> decimalValue;
     return decimalValue;
 }
- 
+
 int getSizeChunck(std::string &buffer){
     int i = 0;
     std::string hexa;
@@ -39,21 +39,21 @@ int getSizeChunck(std::string &buffer){
 
     if ((size_t)(i + 2) <= buffer.size())
         buffer = buffer.substr(i + 2);
-    
+
     return hexToDecimal(hexa);
 }
 
 void readBufferChunck(client &clnt, std::string buffer){
 
     size_t i = 0;
-    
+
     buffer = clnt.getTempBuffer() + buffer ;
 
     std::string result;
     std::string tmp;
 
     if (!clnt.getbufferLen()){
-        
+
         int s = getSizeChunck(buffer);
         clnt.setbufferLen(s);
         clnt.setChunkSize(s);
@@ -75,7 +75,7 @@ void readBufferChunck(client &clnt, std::string buffer){
     clnt.setbufferLen(n);
 
     if (!n){
-        
+
         if (buffer[i] == '\r' && buffer[i + 1] == '\n'){
             i += 2;
         }
@@ -99,7 +99,7 @@ void dataCenter::post(client &clnt, int fd){
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && !clnt.getbufferBody().empty()){
 
         readBufferChunck(clnt, clnt.getbufferBody());
-        
+
         if (clnt.getChunk().size() >= clnt.getChunkSize()){
             clnt.setbufferBody(clnt.getChunk());
             clnt.setChunk("");
@@ -108,13 +108,17 @@ void dataCenter::post(client &clnt, int fd){
             return;
         }
     }
-    
+
     if (!clnt.getIsUploadfileOpen()){
-        splitPath(clnt, directory, file); 
-        
-        server srv = getWebserv().getServers()[clnt.servIndx()];    
+
+        splitPath(clnt, directory, file);
+
+        server srv = getWebserv().getServers()[clnt.servIndx()];
 
         int j = clnt.getLocationIndex();
+
+        if (srv.getLocations()[j].getUpload().empty())
+            throw clnt.getResponse().setAttributes(403, "html");
 
         std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
@@ -127,10 +131,10 @@ void dataCenter::post(client &clnt, int fd){
         clnt.openFileUpload(fileName);
 
         clnt.setIsUploadfileOpen(true);
-        if (!clnt.getFileUpload().is_open()) {
-            std::cout << "error opening upload file\n";
+
+
+        if (!clnt.getFileUpload().is_open())
             throw clnt.getResponse().setAttributes(500, "html");
-        }
 
     }
     if (!clnt.getbufferBody().empty()){
@@ -141,17 +145,17 @@ void dataCenter::post(client &clnt, int fd){
     std::istringstream iss(clnt.getHeaders()["Content-Length"]);
     size_t nb;
     iss >> nb;
-    
+
     if (clnt.getFullSize() >= nb){
-        
+
         // std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
 
-        splitPath(clnt, directory, file); 
+        splitPath(clnt, directory, file);
 
-        // splitPath(clnt.getStartLine().path, directory, file); 
-        server srv = getWebserv().getServers()[clnt.servIndx()];    
+        // splitPath(clnt.getStartLine().path, directory, file);
+        server srv = getWebserv().getServers()[clnt.servIndx()];
         int j = clnt.getLocationIndex();
 
         if (!file.empty()){
@@ -162,4 +166,3 @@ void dataCenter::post(client &clnt, int fd){
 
 
 }
-        

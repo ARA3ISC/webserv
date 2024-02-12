@@ -3,9 +3,11 @@
     listen: 127.0.0.6:2222
     root: ./
     #error: 404 dataCenter/client.cpp
-    # redirect in case of uri dose not have / at the end
-    # content of body les than content-lenght in post
     # ctr + r in CGI   yrimah
+    # check if zombie proces is exist in case of time out in post cgi
+    # slash at the end in delete -> conflict
+    # directory in post cgi
+    # upload if exist it means upload on
 
     - location:
         dir_listing: on

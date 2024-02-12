@@ -218,8 +218,10 @@ void dataCenter::handlingRequests()
 
                     if ((clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000)){
                         this->clientList[events[i].data.fd].setStartTime(clock());
-						if (this->clientList[events[i].data.fd].getStartLine().method == "POST")
+						if (this->clientList[events[i].data.fd].getStartLine().method == "POST"){
+							this->clientList[events[i].data.fd].getFileUpload().close();
                         	this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+						}
 						else{
 							close(events[i].data.fd);
 							std::cerr << RED << "Response sent [ 504 Gateway Timeout ] " << events[i].data.fd << " Reason: empty request" << RESET << std::endl;
