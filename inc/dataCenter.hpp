@@ -87,6 +87,7 @@ public:
     bool isDirectory(const std::string& path);
     void getLocationCF(client &clnt,server srv);
     void deleteDirectory(std::string directory);
+    bool pathHasSlashAtEnd(std::string path);
 
 
    

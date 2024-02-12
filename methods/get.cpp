@@ -131,7 +131,7 @@ bool dataCenter::isMethodAllowed(std::vector<std::string> methods, std::string m
     return true;
 }
 
-bool pathHasSlashAtEnd(std::string path){
+bool dataCenter::pathHasSlashAtEnd(std::string path){
     if(path.size() != 1 && path[path.size() -1] != '/')
         return true;
     return false;
