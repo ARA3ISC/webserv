@@ -40,7 +40,7 @@
 ?>
 
 <?php
-$uploadDir = "../uploadsq/";
+$uploadDir = "../uploads/";
 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {

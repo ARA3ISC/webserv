@@ -100,6 +100,7 @@ void dataCenter::getLocationCF(client &clnt,server srv){
 
 }
 
+// bool pathHasSlashAtEnd(std::string )
 
 void dataCenter::checkErrors(client &clnt, server srv){
     std::string directory, file;
@@ -120,6 +121,7 @@ void dataCenter::checkErrors(client &clnt, server srv){
     if (clnt.getStartLine().method == "POST" && srv.getLocations()[clnt.getLocationIndex()].getUpload().empty()){
         throw clnt.getResponse().setAttributes(404, "html");
     }
+    // if (pathHasSlashAtEnd(clnt.getStartLine().path))
 }
 
 int dataCenter::updateServerIndex(server s, std::string hostHeader)
