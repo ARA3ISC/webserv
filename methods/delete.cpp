@@ -75,18 +75,22 @@ void dataCenter::deleteMethod(client &clnt, int fd)
     else{
         if (directory.size() != 1 && directory[directory.size() - 1] == '/')
             directory.erase(directory.size() - 1);
+        if (directory == "./")
+            throw clnt.getResponse().setAttributes(403, "html");
+        // if (directory)
+        std::cout << "delete " << directory << std::endl;
 
         deleteDirectory(directory);
         if (!isDirectoryEmpty(directory)){
             throw clnt.getResponse().setAttributes(403, "html");
         }
-        else if(directory != this->getWebserv().getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()].getRoot()){
-            DIR *dir = opendir(directory.c_str());
-            if (dir != NULL)
-                rmdir(directory.c_str());
-            else
-                throw clnt.getResponse().setAttributes(403, "html");
-        }
+        // else if(directory != this->getWebserv().getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()].getRoot()){
+        DIR *dir = opendir(directory.c_str());
+        if (dir != NULL)
+            rmdir(directory.c_str());
+        else
+            throw clnt.getResponse().setAttributes(403, "html");
+        // }
         
         throw clnt.getResponse().setAttributes(204, "html");
     }
