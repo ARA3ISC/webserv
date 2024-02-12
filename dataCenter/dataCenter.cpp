@@ -151,7 +151,9 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     }
     size_t indx = this->getServerIndex(server_fds, fd);
     client c(indx, clientSocket);
-    
+    //
+    c.setStartTime(clock());
+
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
@@ -183,23 +185,23 @@ void dataCenter::handlingRequests()
                 if ((events[i].events & EPOLLIN) && this->clientList[events[i].data.fd].getResponse().getIsReading())
                 {
                     try {
-                        this->clientList[events[i].data.fd].setStartTime(clock());
+                        // this->clientList[events[i].data.fd].setStartTime(clock());
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-                        this->clientList[events[i].data.fd].setStartTime(0);
+                        this->clientList[events[i].data.fd].setStartTime(clock());
                     }
                 }
                 else if ((events[i].events & EPOLLOUT)) {
-                    
-                    // if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                    //     this->clientList[events[i].data.fd].setStartTime(0);
-                    //     this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
-                    // }
+
+                    if (clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000 && !this->clientList[events[i].data.fd].isHeadersLoaded()){
+                        this->clientList[events[i].data.fd].setStartTime(clock());
+                        this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                    }
+                    /* check if the response is ready to send */
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
                         this->sending(events[i].data.fd);
                 }
-                /* check if the response is ready to send */
             }
         }
 
@@ -216,13 +218,13 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     DIR* dir;
     struct dirent* ent;
     std::string response = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
-    
+
     if ((dir = opendir(path.c_str())) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string tmp = ent->d_name;
             if (tmp == ".." || tmp == ".")
                 continue;
-            
+
             if (this->clientList[fd].getStartLine().path == "/")
                 response += "<li><a href=\"" + tmp + "\" >" + tmp + "</a></li>";
             else
@@ -240,7 +242,7 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
     throw 0;
 }
 
-std::map<int, server>& dataCenter::getServerList() 
+std::map<int, server>& dataCenter::getServerList()
 {
     return this->serversList;
 }
