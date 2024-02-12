@@ -13,7 +13,7 @@
     - location:
         dir_listing: on
         allow_methods: POST GET DELETE
-        root: ./myWebsite
+        root: ./../webserv/myWebsite
         index: flow.php test.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi

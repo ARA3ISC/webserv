@@ -70,31 +70,34 @@ void dataCenter::deleteMethod(client &clnt, int fd)
         if (unlink(file.c_str()) == -1)
             throw clnt.getResponse().setAttributes(500, "html");
 
-        throw clnt.getResponse().setAttributes(204, "html");
     }
     else{
-        if (directory.size() != 1 && directory[directory.size() - 1] == '/')
-            directory.erase(directory.size() - 1);
-        if (directory == "./")
-            throw clnt.getResponse().setAttributes(403, "html");
-        // if (directory)
-        std::cout << "delete " << directory << std::endl;
+        char realPath[PATH_MAX];
+        char currentPath[PATH_MAX];
 
-        deleteDirectory(directory);
-        if (!isDirectoryEmpty(directory)){
-            throw clnt.getResponse().setAttributes(403, "html");
+        realpath(directory.c_str(), realPath);
+        realpath(".", currentPath);
+
+        std::string s1 = realPath;
+        std::string s2 = currentPath;
+        
+        if (s1.find(s2) != std::string::npos && s1 != s2){
+            
+            directory = s1;
+            deleteDirectory(directory);
+            if (!isDirectoryEmpty(directory)){
+                throw clnt.getResponse().setAttributes(403, "html");
+            }
+            
+            DIR *dir = opendir(directory.c_str());
+            if (dir != NULL)
+                rmdir(directory.c_str());
+            else
+                throw clnt.getResponse().setAttributes(403, "html");
         }
-        // else if(directory != this->getWebserv().getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()].getRoot()){
-        DIR *dir = opendir(directory.c_str());
-        if (dir != NULL)
-            rmdir(directory.c_str());
         else
             throw clnt.getResponse().setAttributes(403, "html");
-        // }
-        
-        throw clnt.getResponse().setAttributes(204, "html");
+
     }
-    // check ---> ./myWebsite/testToDelete/ ^^^^ ./myWebsite/testToDelete
-    // check of / as root 
-    // check hanging of response after delete directory 
+    throw clnt.getResponse().setAttributes(204, "html");
 }
