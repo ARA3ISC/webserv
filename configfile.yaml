@@ -25,7 +25,7 @@
         cgi_path: purl /usr/bin/purl
         auto_index: off
         upload: /uploads
-        
+
     - location /home:
         dir_listing: on
         allow_methods: GET POST DELETE
@@ -47,7 +47,7 @@
         cgi_path: purl /usr/bin/purl
         auto_index: on
         upload: /upload
-        
+
     - location /home/folder/ddd:
         dir_listing: on
         allow_methods: GET POST
@@ -108,9 +108,9 @@
 
 
 
-        
+
 - server:
-    # server_name: localhost
+    server_name: localhost
     listen: 127.0.0.1:2222
     root: ./
     error: 404 /path/to/404.html

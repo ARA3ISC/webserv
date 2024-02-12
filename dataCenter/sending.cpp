@@ -85,7 +85,7 @@ void dataCenter::sending(int fd){
     statusCodeMsgs[204] = "No Content";
 
     statusCodeMsgs[301] = "Moved Permanently";
-    
+
     statusCodeMsgs[400] = "Bad Request";
     statusCodeMsgs[403] = "Forbidden";
     statusCodeMsgs[404] = "Not Found";
@@ -104,10 +104,10 @@ void dataCenter::sending(int fd){
 
     response &res = this->clientList[fd].getResponse();
     std::string content = "";
- 
+
     if(!res.getIsHeaderSend()){
         if (this->clientList[fd].getIsCgi()){
-            
+
             res.setIsHeaderSend(true);
             res.openFile(res.getPath());
             write(fd, "HTTP/1.1 200 OK\r\n", 17);
@@ -166,6 +166,7 @@ void dataCenter::sending(int fd){
         // std::cout << CYAN;
         std::cout << RESET;
         close(fd);
+        //
         res.getFilePath().close();
         res.getFilePathError().close();
         if (res.getIsCGIFile()){

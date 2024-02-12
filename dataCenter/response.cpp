@@ -56,6 +56,7 @@ int response::setAttributes(int statusCode, std::string contentType){
     this->statusCode = statusCode;
     this->contentType = contentType;
     this->setIsReading(false);
+    
     return 0;
 }
 
