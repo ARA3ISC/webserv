@@ -115,8 +115,7 @@ void dataCenter::checkErrors(client &clnt, server srv){
         throw clnt.getResponse().setAttributes(405, "html");
 
     // std::string path = getCleanPath(srv.getLocations()[clnt.getLocationIndex()].getRoot() + clnt.getStartLine().path);
-    // if (!pathExists(path))
-    //     throw clnt.getResponse().setAttributes(404, "html");
+
 
     if (clnt.getStartLine().method == "POST" && srv.getLocations()[clnt.getLocationIndex()].getUpload().empty()){
         throw clnt.getResponse().setAttributes(404, "html");
@@ -214,11 +213,11 @@ void    dataCenter::reading(int fd)
 
         if (this->clientList[fd].getStartLine().method == "POST")
         {
-            post(this->clientList[fd], fd);
+            post(this->clientList[fd]);
         }
         if (this->clientList[fd].getStartLine().method == "DELETE")
         {
-            deleteMethod(this->clientList[fd], fd);
+            deleteMethod(this->clientList[fd]);
         }
     }
 

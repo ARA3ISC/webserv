@@ -1,35 +1,24 @@
 #include "../inc/dataCenter.hpp"
 #include "../inc/get.hpp"
 
-// void cgi(std::string path){
-//     (void)path;
-// }
-
-bool dataCenter::pathExists(const std::string& path) {
-    struct stat buffer;
-    return (stat(path.c_str(), &buffer) == 0);
-}
 
 std::string dataCenter::cleanPath(std::string path) {
     std::string result;
 
-    // Remove leading slashes
     size_t startPos = path.find_first_not_of('/');
     if (startPos != std::string::npos) {
         result = path.substr(startPos);
     }
 
-    // Remove last slashes
     size_t endPos = result.find_last_not_of('/');
     if (endPos != std::string::npos) {
         result = result.substr(0, endPos + 1);
     }
 
-    // Add a single leading slash
     if (!result.empty() && result[0] != '/') {
         result = '/' + result;
     }
-    // add s single slash if it's empty
+
     if (result.empty())
         result = "/";
     return result;
@@ -41,7 +30,7 @@ std::string dataCenter::getCleanPath(std::string path){
         return path.substr(0, last);
     return path;
 }
-// /home/f1/f2/file.kpk
+
 
 int dataCenter::getLocationRequested(std::vector<location> loc, std::string path){
 
@@ -53,8 +42,8 @@ int dataCenter::getLocationRequested(std::vector<location> loc, std::string path
 
 bool dataCenter::isDirectory(const std::string& path) {
     struct stat fileStat;
+
     if (stat(path.c_str(), &fileStat) != 0) {
-        // Failed to retrieve file status
         return false;
     }
 
@@ -91,7 +80,6 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
 
     getQueryStringFromPath(clnt, toOpen);
 
-    // std::cout << "to open " << isDirectory(toOpen) << " " << toOpen << std::endl;
     if (!isDirectory(toOpen)){
         removeTrailingSlashes(toOpen);
         int fd = open(toOpen.c_str(), O_RDONLY);
@@ -147,11 +135,9 @@ void dataCenter::get(client &clnt, int fd){
 
     splitPath(clnt, directory, file);
 
-    // getQueryStringFromPath(clnt, file, directory);
 
     if (!file.empty())
     {
-        // std::cout << "file " <<  file << "\n";
         cgi(clnt, srv.getLocations()[j], file, 0, "");
         throw 0;
     }

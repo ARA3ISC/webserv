@@ -1,14 +1,5 @@
 #include "../inc/dataCenter.hpp"
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <fcntl.h>
 
-bool checkHtmlfile(std::string file){
-    if (file.length() >= 5 && file.substr(file.length() - 5) == ".html")
-        return true;
-    return false;
-}
 
 std::string getExtention(std::string path){
     std::size_t pos = path.find_last_of(".");
@@ -17,40 +8,13 @@ std::string getExtention(std::string path){
     return "";
 }
 
-std::string readFileToString(int fd) {
-    std::string content;
-    char buffer[1024];
-
-    ssize_t bytesRead;
-    while ((bytesRead = read(fd, buffer, sizeof(buffer))) > 0) {
-        content.append(buffer, bytesRead);
-    }
-    close(fd);
-    return content;
-}
-
 bool checkCgiPaths(location loc, std::string path){
     std::map<std::string, std::string>::iterator it = loc.getCgiPath().find(getExtention(path));
 
     if (it != loc.getCgiPath().end())
         return false;
 
-    // if (access(path.c_str(), F_OK) != 0)
-    //     return true;
     return true;
-}
-
-std::string trimByString(const std::string& input, const std::string& trimString) {
-    // Find the position of trimString in input
-    size_t pos = input.find(trimString);
-
-    // If trimString is found, return substring from the beginning to trimString
-    if (pos != std::string::npos) {
-        return input.substr(0, pos);
-    }
-
-    // If trimString is not found, return the original string
-    return input;
 }
 
 void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, std::string filePost){
@@ -74,10 +38,8 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     s << this->getFilePrefix();
     std::string FileName = "/tmp/randomFile" + s.str() +".txt";
 
-    // clnt.getResponse().setIsCGIFile(true);
 
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
-    // write(fdFile, "HTTP/1.1 200 OK\r\n", 17);
 
     if (fdFile == -1){
 
@@ -98,11 +60,9 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
         std::string redirectStatus = "REDIRECT_STATUS=CGI";
         std::string pathTranslated = "PATH_TRANSLATED=" + path;
+        std::string setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
 
-        std::string setCookie;
-        setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
-        // if (!clnt.getHeaders()["Set-Cookie"].empty()){
-        // }
+
         char* const envp[] = {
             (char*)queryString.c_str(),
             (char*)contentType.c_str(),

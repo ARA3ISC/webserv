@@ -8,7 +8,7 @@
 
     - location:
         dir_listing: on
-        allow_methods: POST GET
+        allow_methods: POST GET DELETE
         root: ./myWebsite
         index: index.html
         cgi_path: py /usr/bin/python3

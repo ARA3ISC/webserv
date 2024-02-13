@@ -20,7 +20,7 @@
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
+                    if (xhr.status === 201) {
                         console.log('File uploaded successfully');
                     } else {
                         console.error('File upload failed');

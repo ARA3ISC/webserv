@@ -17,6 +17,10 @@
 # include "utils3.hpp"
 # include <ctime>
 # include <cstring>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 # define MAX_EVENTS 10
 # define BUFFER_SIZE 2048
 # define GREEN "\033[92m"
@@ -67,21 +71,20 @@ public:
     std::string getCleanPath(std::string path);
     void splitPath(client &clnt, std::string& directory, std::string& file);
     int getLocationRequested(std::vector<location> loc, std::string path);
-    bool pathExists(const std::string& path);
 
     int updateServerIndex(server s, std::string hostHeader);
         /* get method*/
     void get(client &clnt, int fd);
-    void post(client &clnt, int fd);
+    void post(client &clnt);
     void cgi(client &clnt ,location loc,std::string path, int isPost, std::string filePost);
-    void deleteMethod(client &clnt, int fd);
+    void deleteMethod(client &clnt);
 //    const std::string& getErrorPath();
 
 
     /* delete method */
 
     void listDirectory(std::string path, std::string directory, int fd);
-    void checkErrors(client &clnt, server serv); 
+    void checkErrors(client &clnt, server serv);
     std::string getFileName(std::string pathUpload, std::string directory, std::string extention);
     int getFilePrefix();
     bool isDirectory(const std::string& path);
@@ -90,9 +93,9 @@ public:
     bool pathHasSlashAtEnd(std::string path);
 
 
-   
+
     std::map<int, server>& getServerList() ;
-}; 
+};
 
 
 #endif

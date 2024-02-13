@@ -17,7 +17,7 @@ bool isDirectoryEmpty(std::string directory){
 }
 
 void dataCenter::deleteDirectory(std::string directory){
-    
+
     DIR* dir;
     struct dirent* ent;
 
@@ -46,22 +46,21 @@ void dataCenter::deleteDirectory(std::string directory){
             }
         }
     }
-   
+
 }
 
-void dataCenter::deleteMethod(client &clnt, int fd)
+void dataCenter::deleteMethod(client &clnt)
 {
     if (pathHasSlashAtEnd(clnt.getStartLine().path))
         throw clnt.getResponse().setAttributes(409, "html");
 
-    (void)fd;
     int fdFile;
     std::string directory, file;
-    
-    server srv = getWebserv().getServers()[clnt.servIndx()];    
 
-    splitPath(clnt, directory, file); 
-    
+    server srv = getWebserv().getServers()[clnt.servIndx()];
+
+    splitPath(clnt, directory, file);
+
 
     if (!file.empty()){
         if ((fdFile = open(file.c_str(), O_RDONLY)) == -1)
@@ -80,15 +79,15 @@ void dataCenter::deleteMethod(client &clnt, int fd)
 
         std::string s1 = realPath;
         std::string s2 = currentPath;
-        
+
         if (s1.find(s2) != std::string::npos && s1 != s2){
-            
+
             directory = s1;
             deleteDirectory(directory);
             if (!isDirectoryEmpty(directory)){
                 throw clnt.getResponse().setAttributes(403, "html");
             }
-            
+
             DIR *dir = opendir(directory.c_str());
             if (dir != NULL)
                 rmdir(directory.c_str());

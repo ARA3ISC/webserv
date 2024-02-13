@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DELETE Request Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELETE Request Test</title>
 </head>
 <body>
-<input type="text" name="myFile" id="toDelete">
-<button onclick="sendDeleteRequest()">Send DELETE Request</button>
 
-<script>
-function sendDeleteRequest() {
-    let name = document.getElementById("toDelete").value;
-    var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", name, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-            console.log(xhr.status);
-            if (xhr.status == 204) {
-                console.log("DELETE request successful");
-            } else {
-                console.log("DELETE request failed");
+    <h3>Enter File To Delete</h3>
+    <input type="text" name="myFile" id="toDelete">
+    <button onclick="sendDeleteRequest()">Send DELETE Request</button>
+
+    <script>
+    function sendDeleteRequest() {
+        let name = document.getElementById("toDelete").value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", name, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 204) {
+                    console.log("DELETE request successful");
+                } else {
+                    console.log("DELETE request failed");
+                }
             }
-        }
-    };
-    xhr.send();
-}
-</script>
+        };
+        xhr.send();
+    }
+    </script>
 
 </body>
 </html>

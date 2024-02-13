@@ -3,7 +3,6 @@
 std::string dataCenter::getFileName(std::string pathUpload, std::string directory, std::string extention){
     std::stringstream a;
 
-    // std::cout << directory << " " << pathUpload << "--------"<<std::endl;
     a << directory ;
     a << pathUpload;
     a << "/output";
@@ -16,7 +15,6 @@ std::string dataCenter::getFileName(std::string pathUpload, std::string director
 
 
 int hexToDecimal(const std::string& hexString) {
-    // std::cout << "hexa : " << hexString << std::endl;
     if (hexString == ""){
         return 0;
     }
@@ -85,7 +83,7 @@ void readBufferChunck(client &clnt, std::string buffer){
         clnt.setChunk(result);
         return ;
     }
-    else{// eof buffer 1024
+    else{
 
         clnt.setTempBuffer("");
         clnt.setChunk(result);
@@ -93,8 +91,7 @@ void readBufferChunck(client &clnt, std::string buffer){
     }
 }
 
-void dataCenter::post(client &clnt, int fd){
-    (void)fd;
+void dataCenter::post(client &clnt){
     std::string directory, file, res;
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && !clnt.getbufferBody().empty()){
 
@@ -127,7 +124,6 @@ void dataCenter::post(client &clnt, int fd){
         std::string fileName;
         fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
 
-        // std::cout << fileName << std::endl;
         clnt.openFileUpload(fileName);
 
         clnt.setIsUploadfileOpen(true);
@@ -148,13 +144,11 @@ void dataCenter::post(client &clnt, int fd){
 
     if (clnt.getFullSize() >= nb){
 
-        // std::cout << clnt.getFullSize() << "<- file size | content Len ->" << clnt.getHeaders()["Content-Length"] << std::endl;
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
 
         splitPath(clnt, directory, file);
 
-        // splitPath(clnt.getStartLine().path, directory, file);
         server srv = getWebserv().getServers()[clnt.servIndx()];
         int j = clnt.getLocationIndex();
 
