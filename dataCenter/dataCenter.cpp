@@ -255,7 +255,7 @@ void dataCenter::listDirectory(std::string path, std::string directory, int fd){
             if (this->clientList[fd].getStartLine().path == "/")
                 response += "<li><a href=\"" + tmp + "\" >" + tmp + "</a></li>";
             else
-                response += "<li><a href=\"" + this->clientList[fd].getStartLine().path + "/" + tmp + "\" >" + tmp + "</a></li>";
+                response += "<li><a href=\"" + this->clientList[fd].getStartLine().path + tmp + "\" >" + tmp + "</a></li>";
         }
         closedir(dir);
     }

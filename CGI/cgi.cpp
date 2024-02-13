@@ -143,6 +143,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
 
             if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
                 kill(id, SIGKILL);
+                waitpid(id, &status, 0);
                 throw clnt.getResponse().setAttributes(504, "html");
             }
             usleep(100000);

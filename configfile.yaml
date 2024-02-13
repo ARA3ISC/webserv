@@ -3,14 +3,14 @@
     listen: 127.0.0.6:2222
     root: ./
     max_body_size: 500M
-    #error: 404 dataCenter/client.cpp
+    error: 404 dataCenter/cliendfjkht.cpp
     # ctr + r in CGI   yrimah
     # check if zombie proces is exist in case of time out in post cgi
     # slash at the end in delete -> conflict
     # directory in post cgi
 
     - location:
-        dir_listing: off
+        dir_listing: on
         allow_methods: POST GET
         root: ./myWebsite
         index: flow.php test.html

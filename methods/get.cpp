@@ -18,7 +18,7 @@ std::string dataCenter::cleanPath(std::string path) {
     if (startPos != std::string::npos) {
         result = path.substr(startPos);
     }
-    
+
     // Remove last slashes
     size_t endPos = result.find_last_not_of('/');
     if (endPos != std::string::npos) {
@@ -69,7 +69,7 @@ void removeTrailingSlashes(std::string& str) {
 }
 
 void getQueryStringFromPath(client &clnt, std::string &toOpen){
-    
+
     size_t pos = toOpen.find_last_of("?");
     if (pos != std::string::npos){
         clnt.setQueryString(toOpen.substr(pos + 1));
@@ -80,7 +80,7 @@ void getQueryStringFromPath(client &clnt, std::string &toOpen){
 void dataCenter::splitPath(client &clnt,std::string& directory, std::string& file) {
     int index = clnt.getLocationIndex();
     server srv = getWebserv().getServers()[clnt.servIndx()];
-    
+
     std::string path = srv.getLocations()[index].getPath();
     std::string url = clnt.getStartLine().path;
 
@@ -99,18 +99,18 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
             throw clnt.getResponse().setAttributes(404, "html");
         close(fd);
         file = toOpen;
-        return ; 
+        return ;
     }
     directory = toOpen;
 }
 
 bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
-    
+
     std::string nameFile;
-    
+
     for (size_t i = 0; i < index.size(); i++)
     {
-        nameFile = path + "/" + index[i];
+        nameFile = path + index[i];
         std::ifstream input(nameFile.c_str());
         if (input.is_open())
         {
@@ -120,7 +120,7 @@ bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std
         }
         input.close();
     }
-    
+
     return false;
 }
 
@@ -139,13 +139,13 @@ bool dataCenter::pathHasSlashAtEnd(std::string path){
 
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
-    
+
     int j = clnt.getLocationIndex();
-    
-    server srv = getWebserv().getServers()[clnt.servIndx()];    
+
+    server srv = getWebserv().getServers()[clnt.servIndx()];
 
 
-    splitPath(clnt, directory, file); 
+    splitPath(clnt, directory, file);
 
     // getQueryStringFromPath(clnt, file, directory);
 
@@ -164,9 +164,9 @@ void dataCenter::get(client &clnt, int fd){
 
         if (srv.getLocations()[j].isAutoIndex()){
             std::string fileIndexed;
-            
+
             if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
-                 cgi(clnt, srv.getLocations()[j], directory + "/" + fileIndexed , 0, "");
+                cgi(clnt, srv.getLocations()[j], directory + fileIndexed , 0, "");
             }
             else if (!srv.getLocations()[j].get_dir_listing())
                 throw clnt.getResponse().setAttributes(403, "html");
