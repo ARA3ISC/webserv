@@ -128,6 +128,12 @@ void dataCenter::sending(int fd){
             res.openfilePathError(this->getWebserv().getServers()[this->clientList[fd].servIndx()].get_error_pages()[res.getStatusCode()]);
             if (!res.getFilePathError().is_open()){
                 res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], res.getStatusCode()));
+                if (!res.getFilePathError().is_open()){
+                    res.setIsHeaderSend(true);
+                    write(fd, "HTTP/1.1 403 Forbidden\r\nContent-Type: text/html\r\n\r\nERROR PERMISSION", 67);
+                    close(fd);
+                    return ;
+                }
             }
         }
         else{
