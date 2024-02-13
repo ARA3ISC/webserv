@@ -64,5 +64,6 @@ public:
     std::string getUpload() ;
     std::string getReturn();
     void isRootSet(server &s);
+    void isMethodSet(int nbline);
 
 };

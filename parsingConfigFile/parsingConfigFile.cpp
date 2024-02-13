@@ -23,6 +23,12 @@ void location::isRootSet(server &s)
         this->_root = s.getRoot();
 }
 
+void location::isMethodSet(int nbline)
+{
+    if (this->_allow_methods.empty())
+        throwError("Allow methods: at least one method should be set", nbline);
+}
+
 void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server *s)
 {
     location l;
@@ -55,6 +61,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
         {
 //            std::cout << l.getCgiPath().size() << "==" << std::endl;
             l.isRootSet(*s);
+            l.isMethodSet(nbline);
             s->addLocation(l);
             checkIndentation(line, 4, nbline);
             fillLocationAttr(obj, line, nbline, s);
@@ -71,6 +78,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 //    std::cout << l->getCgiPath().size() << ";"<< std::endl;
 
     l.isRootSet(*s);
+    l.isMethodSet(nbline);
     s->addLocation(l);
 //    std::cout << l.getRoot() << "********\n";
 //    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
@@ -233,7 +241,7 @@ void startParsing(std::string filename)
 //        std::cout << .get_dir_listing() << std::endl;
 //        exit(0);
 //        std::cout << webs.getServers().size() << std::endl;
-        
+
         printEntryMsg();
         dataCenter ds(webs);
 

@@ -7,13 +7,11 @@
     # check if zombie proces is exist in case of time out in post cgi
     # slash at the end in delete -> conflict
     # directory in post cgi
-    # upload if exist it means upload on
-    # 
 
     - location:
         dir_listing: on
-        allow_methods: POST GET DELETE
-        root: ./../webserv/myWebsite
+        allow_methods: POST GET
+        root: ./myWebsite
         index: flow.php test.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
