@@ -119,7 +119,7 @@ void dataCenter::sending(int fd){
         if (res.getStatusCode() == 301)
         {
             std::string header = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + res.getPath() + "\r\nContent-Type: text/html\r\n\r\n";
-            std::cout << GREEN << "Response sent [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << RESET << "\n";
+            std::cout << GREEN << "Response sent GET [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << RESET << "\n";
             write(fd, header.c_str(), header.length());
             close(fd);
             return ;
@@ -163,7 +163,7 @@ void dataCenter::sending(int fd){
             std::cout << GREEN;
         else
             std::cout << RED;
-        std::cout << "Response sent [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << "\n";
+        std::cout << "Response sent " << this->clientList[fd].getStartLine().method << " [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << "\n";
         // std::cout << CYAN;
         std::cout << RESET;
         close(fd);

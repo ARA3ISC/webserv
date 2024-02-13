@@ -2,6 +2,7 @@
     server_name: test
     listen: 127.0.0.6:2222
     root: ./
+    max_body_size: 500M
     #error: 404 dataCenter/client.cpp
     # ctr + r in CGI   yrimah
     # check if zombie proces is exist in case of time out in post cgi

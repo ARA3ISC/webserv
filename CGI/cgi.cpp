@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
-  
+
 bool checkHtmlfile(std::string file){
     if (file.length() >= 5 && file.substr(file.length() - 5) == ".html")
         return true;
@@ -34,7 +34,7 @@ bool checkCgiPaths(location loc, std::string path){
 
     if (it != loc.getCgiPath().end())
         return false;
-    
+
     // if (access(path.c_str(), F_OK) != 0)
     //     return true;
     return true;
@@ -43,18 +43,18 @@ bool checkCgiPaths(location loc, std::string path){
 std::string trimByString(const std::string& input, const std::string& trimString) {
     // Find the position of trimString in input
     size_t pos = input.find(trimString);
-    
+
     // If trimString is found, return substring from the beginning to trimString
     if (pos != std::string::npos) {
         return input.substr(0, pos);
     }
-    
+
     // If trimString is not found, return the original string
     return input;
 }
 
 void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, std::string filePost){
-    
+
     if (checkCgiPaths(loc, path))
     {
         if (isPost){
@@ -65,28 +65,28 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         throw 0;
     }
     std::cout << GREEN << "CGI executed [ " << getExtention(path) << " ]" << RESET << std::endl;
-    
+
     int status = 0;
     double timeoutSeconds = 0.0015;
-        
+
     std::ostringstream s;
     s << std::time(0);
     s << this->getFilePrefix();
     std::string FileName = "/tmp/randomFile" + s.str() +".txt";
-    
+
     // clnt.getResponse().setIsCGIFile(true);
-    
+
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
     // write(fdFile, "HTTP/1.1 200 OK\r\n", 17);
 
     if (fdFile == -1){
-        
+
         throw clnt.getResponse().setAttributes(500, "html");
     }
     int id = fork();
     if (id == 0){
         int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
-        
+
         const char* programPath = path.c_str();
         char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
 
@@ -98,7 +98,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
         std::string redirectStatus = "REDIRECT_STATUS=CGI";
         std::string pathTranslated = "PATH_TRANSLATED=" + path;
-        
+
         std::string setCookie;
         setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
         // if (!clnt.getHeaders()["Set-Cookie"].empty()){
@@ -118,7 +118,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         int infileFd;
         if (isPost){
             infileFd = open(filePost.c_str(), O_RDWR , 0644);
-            
+
             if (infileFd == -1)
                 exit(12);
             if (dup2(infileFd, 0) == -1)
@@ -131,7 +131,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         dup2(logFd, 2);
         close(logFd);
         fprintf(stderr, "--------------------------\n");
-        
+
         execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
         perror("execve");
         exit(127);
@@ -140,7 +140,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         clock_t start = clock();
 
         while (waitpid(id, &status, WNOHANG) == 0) {
-            
+
             if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
                 kill(id, SIGKILL);
                 throw clnt.getResponse().setAttributes(504, "html");
@@ -154,13 +154,13 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     }
     close(fdFile);
 
-    
+
     std::fstream input(FileName.c_str());
     char line[1024] = {0};
     input.read(line, 1023);
     std::string tmp = line;
     int i = 0;
-    
+
     while(true){
         input.read(line, 1023);
         if (input.eof())
@@ -172,7 +172,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     if (tmp.find("\r\n\r\n") != std::string::npos){
         clnt.setIsCgi(true);
     }
-    
+
     input.close();
     if (isPost)
         unlink(filePost.c_str());

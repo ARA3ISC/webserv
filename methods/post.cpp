@@ -160,8 +160,9 @@ void dataCenter::post(client &clnt, int fd){
 
         if (!file.empty()){
             cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
-        }else
+        }else{
             throw clnt.getResponse().setAttributes(201, "html");
+        }
     }
 
 
