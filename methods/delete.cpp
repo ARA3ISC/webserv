@@ -51,8 +51,6 @@ void dataCenter::deleteDirectory(std::string directory){
 
 void dataCenter::deleteMethod(client &clnt)
 {
-    if (pathHasSlashAtEnd(clnt.getStartLine().path))
-        throw clnt.getResponse().setAttributes(409, "html");
 
     int fdFile;
     std::string directory, file;
@@ -71,6 +69,8 @@ void dataCenter::deleteMethod(client &clnt)
 
     }
     else{
+        if (pathHasSlashAtEnd(clnt.getStartLine().path))
+            throw clnt.getResponse().setAttributes(409, "html");
         char realPath[PATH_MAX];
         char currentPath[PATH_MAX];
 
