@@ -9,7 +9,7 @@
     # directory in post cgi
 
     - location:
-        dir_listing: on
+        dir_listing: off
         allow_methods: POST GET
         root: ./myWebsite
         index: flow.php test.html
@@ -120,57 +120,26 @@
     error: 404 /path/to/404.html
 
     - location:
-        dir_listing: on
+        dir_listing: off
         allow_methods: POST GET
         root: ./avito
-        index: test.html flow.html
-        auto_index: off
+        index: test.html items.html
+        auto_index: on
         upload: /uploads
 
-    - location /uploads:
+    - location /about:
         dir_listing: on
         allow_methods: POST  GET
         root: ./avito
-        index: test.html flow.html
+        index: about.html flow.html
         auto_index: on
         upload: /uploads
 
 
-    - location /home/test:
+    - location /contact:
         dir_listing: on
         allow_methods: GET POST
         root: ./avito
-        index: loc1.html flow.php test.html
-        auto_index: on
-        # upload: /upload
-
-- server:
-    # server_name: localhost
-    listen: 127.0.0.1:2222
-    root: ./
-    error: 404 /path/to/404.html
-
-    - location:
-        dir_listing: on
-        allow_methods: POST GET
-        root: ./avito
-        index: test.html flow.html
-        auto_index: off
-        upload: /uploads
-
-    - location /uploads:
-        dir_listing: on
-        allow_methods: POST  GET
-        root: ./avito
-        index: test.html flow.html
-        auto_index: on
-        upload: /uploads
-
-
-    - location /home/test:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./avito
-        index: loc1.html flow.php test.html
+        index: contact.html flow.php test.html
         auto_index: on
         # upload: /upload
