@@ -1,96 +1,19 @@
 - server:
-    server_name: test
+    server_name: example.com
     listen: 127.0.0.6:2222
     root: ./
     max_body_size: 500M
-    error: 404 dataCenter/cliendfjkht.cpp
-    # ctr + r in CGI   yrimah
-    # check if zombie proces is exist in case of time out in post cgi
-    # slash at the end in delete -> conflict
+    error: 404 ./CustomErrors/404.html
     # directory in post cgi
 
     - location:
         dir_listing: on
         allow_methods: POST GET
         root: ./myWebsite
-        index: flow.php test.html
+        index: index.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: off
-        upload: /upload
-
-    - location /testToDelete:
-        dir_listing: on
-        allow_methods: DELETE
-        root: ./myWebsite/testToDelete
-        index: flow.php test.html
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: off
-        upload: /uploads
-
-    - location /home:
-        dir_listing: on
-        allow_methods: GET POST DELETE
-        root: ./myWebsite/home
-        index: loc1.html display_name.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: off
-        upload: /upload
-
-    - location /about:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./myWebsite/about
-        index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: on
-        upload: /upload
-
-    - location /home/folder/ddd:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./myWebsite
-        index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: on
-        upload: /upload
-
-    - location /search:
-        dir_listing: on
-        allow_methods: GET POST
-        root: ./myWebsite/search
-        index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: on
-        upload: /upload
-
-    - location /contact:
-        dir_listing: on
-        allow_methods: GET POST DELETE
-        root: ./myWebsite/contact
-        cgi_path: php /usr/bin/php-cgi
-        auto_index: off
-        upload: /upload
-
-    - location /home/test/folder5:
-        dir_listing: off
-        allow_methods: GET POST
-        root: ./myWebsite
-        index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
+        cgi_path: sh /usr/bin/sh
         auto_index: on
         upload: /upload
 
@@ -98,21 +21,6 @@
         dir_listing: on
         allow_methods: GET
         root: ./myWebsite/upload
-
-    - location /home/test/folder1:
-        dir_listing: off
-        allow_methods: GET POST
-        root: ./myWebsite
-        index: loc1.html flow.php  gg ds
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        cgi_path: purl /usr/bin/purl
-        auto_index: on
-        upload: /upload
-
-
-
-
 
 - server:
     server_name: localhost

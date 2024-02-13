@@ -15,7 +15,7 @@
             const file = fileInput.files[0];
             const xhr = new XMLHttpRequest();
 
-            xhr.open('POST', '/contact', true);
+            xhr.open('POST', '/', true);
             xhr.setRequestHeader('Transfer-Encoding', 'chunked');
 
             xhr.onreadystatechange = function () {
