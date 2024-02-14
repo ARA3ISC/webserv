@@ -1,35 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 Forbidden</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            text-align: center;
-            padding: 50px;
-        }
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>403 Forbidden</title>
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+<!--[if lt IE 9]>
+<![endif]-->
+<meta name="robots" content="noindex, follow">
+<style>
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 
-        h1 {
-            color: #dc3545;
+    /* Body Styles */
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    /* 404 Page Styles */
+    #notfound {
+        position: relative;
+        height: 100vh;
+        background: #030005;
+    }
+
+    #notfound .notfound {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .notfound {
+        max-width: 767px;
+        width: 100%;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .notfound .notfound-404 {
+        position: relative;
+        height: 180px;
+        margin-bottom: 20px;
+        z-index: -1;
+    }
+
+    .notfound .notfound-404 h1 {
+        font-family: montserrat, sans-serif;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 224px;
+        font-weight: 900;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: -12px;
+        color: #030005;
+        text-transform: uppercase;
+        text-shadow: -1px -1px 0 #8400ff, 1px 1px 0 #ff005a;
+        letter-spacing: -20px;
+    }
+
+    .notfound .notfound-404 h2 {
+        font-family: montserrat, sans-serif;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 110px;
+        font-size: 42px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        text-shadow: 0 2px 0 #8400ff;
+        letter-spacing: 13px;
+        margin: 0;
+    }
+
+    .notfound a {
+        font-family: montserrat, sans-serif;
+        display: inline-block;
+        text-transform: uppercase;
+        color: #ff005a;
+        text-decoration: none;
+        border: 2px solid;
+        background: 0 0;
+        padding: 10px 40px;
+        font-size: 14px;
+        font-weight: 700;
+        transition: .2s all;
+    }
+
+    .notfound a:hover {
+        color: #8400ff;
+    }
+
+    /* Responsive Styles */
+    @media only screen and (max-width: 767px) {
+        .notfound .notfound-404 h2 {
+            font-size: 24px;
         }
-    </style>
+    }
+
+    @media only screen and (max-width: 480px) {
+        .notfound .notfound-404 h1 {
+            font-size: 182px;
+        }
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>403 Forbidden</h1>
-        <p>Sorry, you don't have permission to access this resource.</p>
+<div id="notfound">
+  <div class="notfound">
+    <div class="notfound-404">
+      <h1>403</h1>
+      <h2>Forbidden</h2>
     </div>
+    <a href="/">Homepage</a>
+  </div>
+</div>
 </body>
 </html>
