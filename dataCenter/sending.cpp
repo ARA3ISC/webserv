@@ -110,7 +110,11 @@ void dataCenter::sending(int fd){
 
             res.setIsHeaderSend(true);
             res.openFile(res.getPath());
-            write(fd, "HTTP/1.1 200 OK\r\n", 17);
+            if (write(fd, "HTTP/1.1 200 OK\r\n", 17) == -1)
+            {
+                close(fd);
+                return;
+            }
 
             this->clientList[fd].setIsCgi(false);
             this->clientList[fd].setResponse(res);
@@ -163,7 +167,11 @@ void dataCenter::sending(int fd){
         }
 
     }
-    write(fd, content.c_str(), content.length());
+    if (write(fd, content.c_str(), content.length()) == -1)
+    {
+        close(fd);
+        return;
+    }
     if (res.getIsResponseSent()){
         if (res.getStatusCode() == 200 || res.getStatusCode() == 201 || res.getStatusCode() == 301 || res.getStatusCode() == 204)
             std::cout << GREEN;

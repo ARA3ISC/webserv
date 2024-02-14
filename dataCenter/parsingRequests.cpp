@@ -180,10 +180,17 @@ void    dataCenter::reading(int fd)
     char buffer[BUFFER_SIZE] = {0};
     int a = read(fd, buffer, BUFFER_SIZE);
 
-    if (a == 0)
+    if (a == 0 || a == -1)
     {
+        struct epoll_event event;
+
+        event.data.fd = fd;
         // remove the fd from the map
         this->clientList.erase(fd);
+        if (epoll_ctl(this->epollfd, EPOLL_CTL_DEL, fd, &event) == -1)
+        {
+            throw std::runtime_error("Error epoll ctl");
+        }
         close(fd);
     }
 

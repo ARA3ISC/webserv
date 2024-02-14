@@ -162,7 +162,8 @@ void dataCenter::post(client &clnt){
                 
                     if (!checkCgiPaths(srv.getLocations()[j], directory + fileIndexed))
                         cgi(clnt, srv.getLocations()[j], directory + fileIndexed ,1, clnt.getFileUploadName());
-                
+                    else
+                        throw clnt.getResponse().setAttributes(201, "html");
                 }
                 else
                     throw clnt.getResponse().setAttributes(201, "html");
