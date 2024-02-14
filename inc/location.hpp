@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOCATION_HPP
+# define LOCATION_HPP
 
 #include <iostream>
 #include <vector>
@@ -57,3 +58,5 @@ public:
     void isMethodSet(int nbline);
 
 };
+
+#endif

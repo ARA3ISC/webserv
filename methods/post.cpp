@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   post.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
+/*   Updated: 2024/02/14 16:00:23 by rlarabi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/dataCenter.hpp"
 
 std::string dataCenter::getFileName(std::string pathUpload, std::string directory, std::string extention){

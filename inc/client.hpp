@@ -1,11 +1,25 @@
-#pragma once
-#include <map>
-#include <string>
-#include "../inc/utils.hpp"
-#include "../inc/webserv.hpp"
-#include "../inc/utils2.hpp"
-#include "../inc/response.hpp"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/14 15:58:46 by rlarabi           #+#    #+#             */
+/*   Updated: 2024/02/14 15:59:05 by rlarabi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CLIENT_HPP
+# define CLIENT_HPP
+# include <map>
+# include <string>
+# include "../inc/utils.hpp"
+# include "../inc/webserv.hpp"
+# include "../inc/utils2.hpp"
+# include "../inc/response.hpp"
+# include <stdio.h>
+
 typedef struct startLine_s
 {
     std::string method;
@@ -101,3 +115,5 @@ public:
     void setIsCgi(bool a);
     bool getIsCgi();
 };
+
+#endif
