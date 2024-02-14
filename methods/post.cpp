@@ -155,7 +155,21 @@ void dataCenter::post(client &clnt){
         if (!file.empty()){
             cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
         }else{
-            throw clnt.getResponse().setAttributes(201, "html");
+            if (srv.getLocations()[j].isAutoIndex()){
+                std::string fileIndexed;
+
+                if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
+                
+                    if (!checkCgiPaths(srv.getLocations()[j], directory + fileIndexed))
+                        cgi(clnt, srv.getLocations()[j], directory + fileIndexed ,1, clnt.getFileUploadName());
+                
+                }
+                else
+                    throw clnt.getResponse().setAttributes(201, "html");
+
+            }
+            else
+                throw clnt.getResponse().setAttributes(201, "html");
         }
     }
 

@@ -92,7 +92,7 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     directory = toOpen;
 }
 
-bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
+bool dataCenter::getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
 
     std::string nameFile;
 

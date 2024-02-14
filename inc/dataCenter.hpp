@@ -91,6 +91,8 @@ public:
     void getLocationCF(client &clnt,server srv);
     void deleteDirectory(std::string directory);
     bool pathHasSlashAtEnd(std::string path);
+    bool checkCgiPaths(location loc, std::string path);
+    bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content);
 
 
 

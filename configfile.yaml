@@ -19,7 +19,7 @@
 
     - location /upload:
         dir_listing: on
-        allow_methods: GET
+        allow_methods: GET DELETE
         root: ./myWebsite/upload
 
 - server:

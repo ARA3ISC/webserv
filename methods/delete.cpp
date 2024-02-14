@@ -73,14 +73,17 @@ void dataCenter::deleteMethod(client &clnt)
             throw clnt.getResponse().setAttributes(409, "html");
         char realPath[PATH_MAX];
         char currentPath[PATH_MAX];
+        char locationRootPath[PATH_MAX];
 
         realpath(directory.c_str(), realPath);
+        realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
         realpath(".", currentPath);
 
         std::string s1 = realPath;
         std::string s2 = currentPath;
+        std::string s3 = locationRootPath;
 
-        if (s1.find(s2) != std::string::npos && s1 != s2){
+        if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
 
             directory = s1;
             deleteDirectory(directory);

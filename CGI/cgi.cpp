@@ -8,7 +8,7 @@ std::string getExtention(std::string path){
     return "";
 }
 
-bool checkCgiPaths(location loc, std::string path){
+bool dataCenter::checkCgiPaths(location loc, std::string path){
     std::map<std::string, std::string>::iterator it = loc.getCgiPath().find(getExtention(path));
 
     if (it != loc.getCgiPath().end())
