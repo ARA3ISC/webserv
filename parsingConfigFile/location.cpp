@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   location.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/14 16:05:10 by maneddam          #+#    #+#             */
+/*   Updated: 2024/02/14 16:05:11 by maneddam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/location.hpp"
 #include "../inc/server.hpp"
 #include "../inc/utils.hpp"
@@ -52,12 +64,12 @@ void    location::setPath(std::string line, int nbl, server* s)
         this->_path = "/";
     }
     else
-    {  
+    {
         this->_path = removeLastColon(splited[2]);
         if (this->_path.empty() || this->_path.at(0) != '/')
             throwError("Syntax error", nbl);
     }
-    
+
     if (s->isLocationAlreadyExist(this->_path))
         throwError("Duplicated location error", nbl);
 
