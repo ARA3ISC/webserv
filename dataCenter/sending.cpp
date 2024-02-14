@@ -1,5 +1,6 @@
 #include "../inc/dataCenter.hpp"
 #include <signal.h>
+
 std::string getErrorPath(server& s, int statusCode) {
     std::string path;
     std::map<int, std::string>::iterator it = s.get_error_pages().find(statusCode);
@@ -144,7 +145,6 @@ void dataCenter::sending(int fd){
             res.openFile(res.getPath());
         }
         content = getHeaderResponse(res, statusCodeMsgs[res.getStatusCode()]);
-        // std::cout << content << std::endl;
         res.setIsHeaderSend(true);
     }
     else if (res.getLisDir()){
@@ -155,7 +155,6 @@ void dataCenter::sending(int fd){
         if (!res.getFilePath().eof() && (res.getStatusCode() == 200))
         {
             content = readBufferFromFile(res.getFilePath());
-            // std::cout << "read file "<< content<< "\n";
             if (res.getFilePath().eof())
                 res.setIsResponseSent(true);
         }
@@ -178,7 +177,6 @@ void dataCenter::sending(int fd){
         else
             std::cout << RED;
         std::cout << "Response sent " << this->clientList[fd].getStartLine().method << " [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << "\n";
-        // std::cout << CYAN;
         std::cout << RESET;
         close(fd);
         res.getFilePath().close();

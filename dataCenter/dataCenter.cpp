@@ -1,4 +1,3 @@
-/* Canonical form */
 #include "../inc/dataCenter.hpp"
 
 
@@ -31,14 +30,12 @@ dataCenter &dataCenter::operator=(const dataCenter &rhs) {
 }
 dataCenter::~dataCenter() {}
 
-/* end of canonical form */
 
 int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr, int i)
 {
     int serv_sock;
     char *end;
     int enable = 1;
-    /* creating server based on conf file */
     serv_sock = socket(AF_INET, SOCK_STREAM, 0);
     setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
     if (setNonBlocking(serv_sock) == -1)
@@ -57,26 +54,14 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
         hostAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     }
 
-    /* binding socket to a port from conf file */
     bind(serv_sock, reinterpret_cast<struct sockaddr *>(&hostAddr),  sizeof(hostAddr));
-    /* Server listens */
     if (listen(serv_sock, SOMAXCONN) < 0)
     {
         throw std::runtime_error("Error listening socket");
     }
-    // size_t port = hostAddr.sin_port;
-    // std::stringstream ssport;
-    // ssport << port;
-
-
-    // size_t ip = hostAddr.sin_addr.s_addr;
-    // std::stringstream ssip;
-    // ssip << ip;
 
     std::string ip = webs.getServers()[i].getListen()[0];
     std::string port = webs.getServers()[i].getListen()[1];
-
-    // std::cout << "ip : " << ip << " , port : " << port << '\n';
     server s(ip, port);
 
 
@@ -87,7 +72,6 @@ int dataCenter::createSingServSocket(webserv& webs, struct sockaddr_in hostAddr,
 void dataCenter::createServerSockets() {
     struct sockaddr_in hostAddr;
 
-    /* Creating and binding and listening servers sockets based on config file + saving servers sockets that will be added to the epoll instance  */
     for (int i = 0; i < this->wes.get_serverCount(); ++i)
     {
         int sck = createSingServSocket(this->wes, hostAddr, i);
@@ -151,7 +135,6 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     }
     size_t indx = this->getServerIndex(server_fds, fd);
     client c(indx, clientSocket);
-    //
     c.setStartTime(clock());
 
     this->clientList[clientSocket] = c;
@@ -175,7 +158,6 @@ void dataCenter::handlingRequests()
         }
         for (int i = 0; i < nfds; i++)
         {
-            /* check if the fd is a server fd */
             if (isServerFd(serv_fds, events[i].data.fd))
             {
                 acceptClientSocket(serv_fds, events[i].data.fd, ev, hostAddr, host_addrlen);
@@ -188,33 +170,20 @@ void dataCenter::handlingRequests()
 
 
                     try {
-                        // this->clientList[events[i].data.fd].setStartTime(clock());
                         this->reading(events[i].data.fd);
                     }
                     catch(int){
-                        // this->clientList[events[i].data.fd].setStartTime(clock());
                     }
                 }
                 else if ((events[i].events & EPOLLOUT) && !this->clientList[events[i].data.fd].getResponse().getIsReading()) {
 
-                    /* check if the response is ready to send */
                     this->clientList[events[i].data.fd].setStartTime(clock());
 
-                    // std::cout << this->clientList[events[i].data.fd].getTimeOut() << '\n';
-
-                    // if ((this->clientList[events[i].data.fd].getTimeOut() >= 10000000) && !this->clientList[events[i].data.fd].isHeadersLoaded()){
-                    //     this->clientList[events[i].data.fd].resetTimeOut();
-                    //     this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
-                    // }
                     if (!this->clientList[events[i].data.fd].getResponse().getIsReading())
                     {
-                        // this->clientList[events[i].data.fd].resetTimeOut();
                         this->sending(events[i].data.fd);
                     }
                 }else{
-
-                    // this->clientList[events[i].data.fd].incrementTimeOut();
-
 
                     if ((clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000)){
                         this->clientList[events[i].data.fd].setStartTime(clock());

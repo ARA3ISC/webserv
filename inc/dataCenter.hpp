@@ -13,7 +13,6 @@
 # include "client.hpp"
 # include <dirent.h>
 # include <sys/stat.h>
-# include "returnError.hpp"
 # include "utils3.hpp"
 # include <ctime>
 # include <cstring>
@@ -40,7 +39,6 @@ private:
     std::map<int, server> serversList;
 
 
-    /* private member functions */
     int setNonBlocking(int sckt);
     int createSingServSocket(webserv& webs, struct sockaddr_in hostAddr, int i);
     void createEpoll();
@@ -50,11 +48,9 @@ private:
     void acceptClientSocket(std::vector<int> s, int fd, struct epoll_event &ev, struct sockaddr_in &hostAddr,  int host_addrlen);
     size_t getServerIndex(std::vector<int> s, int fd);
 
-    /* parsing requests functions */
     void    reading(int fd);
     void    sending(int fd);
     void    loadHeaders(int fd);
-    void    startParsingRequest(int fd);
     void    requestSyntaxError(client& rq);
 
 public:
@@ -65,7 +61,6 @@ public:
     ~dataCenter();
     webserv getWebserv();
 
-    /* common functions */
     bool isMethodAllowed(std::vector<std::string> methods, std::string method);;
     std::string cleanPath(std::string path);
     std::string getCleanPath(std::string path);
@@ -73,15 +68,12 @@ public:
     int getLocationRequested(std::vector<location> loc, std::string path);
 
     int updateServerIndex(server s, std::string hostHeader);
-        /* get method*/
     void get(client &clnt, int fd);
     void post(client &clnt);
     void cgi(client &clnt ,location loc,std::string path, int isPost, std::string filePost);
     void deleteMethod(client &clnt);
-//    const std::string& getErrorPath();
 
 
-    /* delete method */
 
     void listDirectory(std::string path, std::string directory, int fd);
     void checkErrors(client &clnt, server serv);

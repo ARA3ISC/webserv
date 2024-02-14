@@ -56,14 +56,10 @@ void    location::setPath(std::string line, int nbl, server* s)
         this->_path = removeLastColon(splited[2]);
         if (this->_path.empty() || this->_path.at(0) != '/')
             throwError("Syntax error", nbl);
-        
-        
-        // checkSlash(this->_path);
     }
     
     if (s->isLocationAlreadyExist(this->_path))
         throwError("Duplicated location error", nbl);
-    // std::cout << this->_path << '\n';
 
 }
 
@@ -75,7 +71,6 @@ void location::set_dir_listing(std::string line, int nbl)
 
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off") )
     {
-//        delete this;
         throwError("Syntax error", nbl);
     }
 
@@ -94,18 +89,15 @@ void    location::setMethods(std::string line, int nbln) {
 
     if (splited.size() == 1)
     {
-//        delete this;
         throwError("Syntax error", nbln);
     }
     if (invalidMethod(splited))
     {
-//        delete this;
         std::cout << "Invalid method (line: " << nbln << ")";
         throw std::runtime_error("");
     }
     if (hasDuplicates(splited))
     {
-//        delete this;
         std::cout << "Duplicated symbol (line: " << nbln << ")";
         throw std::runtime_error("");
     }
@@ -133,12 +125,10 @@ void location::setIndexes(std::string line, int nbln) {
 
     if (splited.size() == 1)
     {
-//        delete this;
         throwError("Syntax error", nbln);
     }
     if (hasDuplicates(splited))
     {
-//        delete this;
         std::cout << "Duplicated symbol (line: " << nbln << ")";
         throw std::runtime_error("");
     }
@@ -155,8 +145,6 @@ void location::setAutoIndex(std::string line, int nbln)
     removeComment(splited);
     if (splited.size() != 2 || (splited[1] != "on" && splited[1] != "off"))
     {
-//        delete this;
-//        std::cout << splited.size() << " - [" << splited[1] << "]" << std::endl;
         throwError("Syntax error", nbln);
     }
 
@@ -173,16 +161,12 @@ void location::setCgiPath(std::string& line, int nbln)
 
     if (splited.size() != 3)
     {
-//        delete this;
         throwError("Syntax error", nbln);
     }
     if (this->_cgi_path.find(splited[1]) != this->_cgi_path.end()) {
-//        delete this;
         throwError("Duplicated symbol", nbln);
     }
-//    this->_cgi_path[splited[1]] = splited[2];
     this->_cgi_path.insert(std::pair<std::string, std::string>(splited[1], splited[2]));
-//    std::cout << _cgi_path[splited[1]] << std::endl;
 }
 
 void    location::setUpload(std::string line, int nbln)
@@ -227,7 +211,20 @@ std::map<std::string, std::string>& location::getCgiPath()
 {
     return this->_cgi_path;
 }
+bool location::get_dir_listing()
+{
+    return this->_dir_listing;
+}
+std::string location::getPath()
+{
+    return this->_path;
+}
 
+
+std::vector<std::string>& location::getMethods()
+{
+    return this->_allow_methods;
+}
 std::string location::getUpload() {return this->_upload;}
 std::string location::getReturn() {return this->_return;}
 location::~location() {}

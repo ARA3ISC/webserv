@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WEBSERV_HPP
+# define WEBSERV_HPP
 
 #include <string>
 #include <sstream>
@@ -23,15 +24,12 @@ public:
     ~webserv();
 
     int    get_serverCount();
-    void    set_serverCount(int i) {
-        this->_serverCount = i;
-    }
     server* createServer();
     void   addServer(server &newserv);
-
-    std::vector<server>& getServers() {
-        return this->_servers;
-    }
+    void    set_serverCount(int i);
+    std::vector<server>& getServers();
 
 
 };
+
+#endif

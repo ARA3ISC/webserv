@@ -42,21 +42,11 @@ public:
 
 
 
-    bool get_dir_listing()
-    {
-        return this->_dir_listing;
-    }
-    std::string getPath()
-    {
-        return this->_path;
-    }
-//    std::vector<std::string>& getMethods() {return this->_allow_methods;}
+    bool get_dir_listing();
+    std::string getPath();
 
 
-    std::vector<std::string>& getMethods()
-    {
-        return this->_allow_methods;
-    }
+    std::vector<std::string>& getMethods();
     std::string getRoot();
     std::vector<std::string>& getIndexes();
     bool isAutoIndex();

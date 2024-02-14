@@ -1,4 +1,6 @@
 #include "../inc/response.hpp"
+#include <unistd.h>
+#include <fcntl.h>
 
 response::response(){
     this->isReading = true;
@@ -6,7 +8,6 @@ response::response(){
     this->isResponseSent = false;
     this->isHeaderSend = false;
     this->isCGIFile = false;
-    // std::cout << "reading seted\n";
 }
 
 response::response(const response &other){
@@ -76,7 +77,6 @@ std::string response::getContentType(){
 }
 
 void response::setContent(std::string content){
-    // this->lisDir = true;
     this->content= content;
 }
 std::string response::getContent(){
@@ -93,10 +93,7 @@ bool response::getLisDir(){
 
 void response::openFile(std::string path){
     this->filePath.open(path.c_str(), std::ios::in | std::ios::out | std::ios::binary);
-    // std::cout << "file to open : " << path << std::endl;
 }
-#include <unistd.h>
-#include <fcntl.h>
 
 void response::openfilePathError(std::string path){
     this->filePathError.open(path.c_str(), std::ios::in | std::ios::out | std::ios::binary);

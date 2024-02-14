@@ -38,20 +38,12 @@ public:
 
 
 
-    std::vector<std::string>& getServer_names()
-	{
-		return this->_server_name;
-	}
+    std::vector<std::string>& getServer_names();
 
-	std::vector<std::string>& getListen(){
-		return this->_listen;
-	}
-	std::string getRoot(){return this->_root;}
-    std::map<int, std::string>& get_error_pages()
-    {
-        return this->_error_pages;
-    }
-    long getMaxBodySize() {return this->max_body_size;}
+	std::vector<std::string>& getListen();
+    std::map<int, std::string>& get_error_pages();
+	std::string getRoot();
+    long getMaxBodySize();
 
     location* createLocation();
 	std::vector<location>& getLocations();

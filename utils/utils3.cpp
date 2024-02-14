@@ -1,13 +1,5 @@
 #include "../inc/utils3.hpp"
 
-//std::string validPath(std::string path)
-//{
-//    std::string validpath;
-//
-//    validpath = removeLastColon(path);
-//    return validpath;
-//}
-
 void checkSlash(std::string &path)
 {
     if (path.at(0) != '/')
@@ -35,9 +27,6 @@ void printEntryMsg()
 
 bool checkMaxBodySize(std::string line)
 {
-    // kb -> b (x 1024)
-    // mb -> b (x 1024 x 1024)
-    // gb -> b (x 1024 x 1024 x 1024)
     char *end;
     double n = std::strtod(line.c_str(), &end);
     if (*end)
@@ -58,7 +47,6 @@ bool checkMaxBodySize(std::string line)
                     return 1;
         }
     }
-    (void)n;
     return 0;
 }
 

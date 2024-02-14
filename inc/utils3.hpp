@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UTILS3_HPP
+# define UTILS3_HPP
 
 #include <iostream>
 #include "utils.hpp"
@@ -7,10 +8,9 @@
 #include <cstdlib>
 #include <cstring>
 
-
-//std::string validPath(std::string path);
 void checkSlash(std::string &path);
 bool checkMaxBodySize(std::string line);
 void printEntryMsg();
 long getValue(std::string value);
 
+#endif

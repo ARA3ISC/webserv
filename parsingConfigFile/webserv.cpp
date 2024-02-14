@@ -4,16 +4,11 @@ webserv::webserv() {}
 
 webserv::webserv(int server_count) {
     this->_serverCount = server_count;
-//    this->_servers = new server[server_count];
 }
 
 webserv::webserv(const webserv &rhs) {
     this->_serverCount = rhs._serverCount;
     this->_servers = rhs._servers;
-//    this->_servers = new server[rhs._serverCount];
-//    for (int i = 0; i < rhs._serverCount; ++i) {
-//        this->_servers[i] = rhs._servers[i];
-//    }
 }
 
 webserv& webserv::operator=(const webserv &rhs) {
@@ -25,7 +20,6 @@ webserv& webserv::operator=(const webserv &rhs) {
     return *this;
 }
 webserv::~webserv() {
-//    delete[] this->_servers;
 }
 
 
@@ -40,15 +34,12 @@ server* webserv::createServer() {
 
 void webserv::addServer(server &newserv) {
     this->_servers.push_back(newserv);
-//    std::cout << "server created\n";
 }
 
-//void    webserv::freeup() {
-//    for (std::vector<server>::iterator it = this->_servers.begin(); it != this->_servers.end() ; it++) {
-//        for (std::vector<location>::iterator l = it->getLocations().begin(); l != it->getLocations().end(); l++) {
-//            if (*l)
-//
-//        }
-//
-//    }
-//}
+void    webserv::set_serverCount(int i) {
+    this->_serverCount = i;
+}
+
+std::vector<server>& webserv::getServers() {
+    return this->_servers;
+}

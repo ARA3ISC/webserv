@@ -75,14 +75,10 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
             checkIndentation(line, 8, nbline);
     }
     nbline++;
-//    std::cout << l->getCgiPath().size() << ";"<< std::endl;
 
     l.isRootSet(*s);
     l.isMethodSet(nbline);
     s->addLocation(l);
-//    std::cout << l.getRoot() << "********\n";
-//    std::cout << s->getLocations()[0].getCgiPath().size()<< "--"<< std::endl;
-//    delete l;
 }
 
 void fillServerAttr(std::ifstream &obj, int &nbline)
@@ -145,7 +141,6 @@ void    countServers(std::string filename)
                 count++;
         }
         webs.set_serverCount(count);
-        // std::cout << webs.get_serverCount() << std::endl;
         obj.close();
     }
 
@@ -230,18 +225,6 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
-//        location loc = webs.getServers()[0].getLocations()[0];
-//        std::cout << loc.getReturn() << "<-" << std::endl;
-
-
-//        for (std::map<std::string, std::string>::iterator it = loc.getCgiPath().begin(); it != loc.getCgiPath().begin() ; ++it) {
-//            std::cout << it->first << ": " << it->second << std::endl;
-//            std::cout << "**\n";
-//        }
-//        std::cout << .get_dir_listing() << std::endl;
-//        exit(0);
-//        std::cout << webs.getServers().size() << std::endl;
-
         printEntryMsg();
         dataCenter ds(webs);
 

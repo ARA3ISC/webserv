@@ -5,7 +5,6 @@ void    dataCenter::requestSyntaxError(client& rq)
 {
     std::string uriAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 
-    /* check transfer encoding value */
     if (rq.getHeaders().find("Transfer-Encoding") != rq.getHeaders().end()) {
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
             throw 501;
@@ -15,7 +14,6 @@ void    dataCenter::requestSyntaxError(client& rq)
             throw 400;
     }
 
-    // check URI allowed characters
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
         {
@@ -23,11 +21,9 @@ void    dataCenter::requestSyntaxError(client& rq)
             throw 400;
         }
     }
-    // check the length of the URI
     if (rq.getStartLine().path.size() > 2048)
         throw 414;
 
-    /* if no host present in the headers*/
     if (rq.getHeaders().find("Host") == rq.getHeaders().end())
         throw 400;
 
@@ -46,11 +42,9 @@ void    dataCenter::loadHeaders(int fd)
 
         while (getline(obj, line) && line != "\r") {
             this->clientList[fd].setHeaders(line);
-//        std::cout << this->clientList[fd].getHeaders().begin()->first << std::endl;
         }
         this->clientList[fd].setbufferBody(trimFromBeginning(this->clientList[fd].getFullRequest(), "\r\n\r\n"));
 
-        // this->clientList[fd].setBody(this->clientList[fd].getFullRequest());
         requestSyntaxError(this->clientList[fd]);
         this->clientList[fd].headersLoaded(true);
     }
@@ -58,16 +52,12 @@ void    dataCenter::loadHeaders(int fd)
     {
         this->clientList[fd].getResponse().setAttributes(e, "html");
         throw 0;
-        // throw returnError(wes.getServers()[this->clientList[fd].servIndx()], fd, e);
     }
 
 }
-// location /home1
-// location /home1/a1 --> url : /home1/a1/b1/file.php
 
 void dataCenter::getLocationCF(client &clnt,server srv){
 
-    // std::cout <<
     std::string reqUrl = clnt.getStartLine().path;
     if (reqUrl.find_last_of("?") != std::string::npos)
         reqUrl = reqUrl.substr(0, reqUrl.find_last_of("?"));
@@ -100,8 +90,6 @@ void dataCenter::getLocationCF(client &clnt,server srv){
 
 }
 
-// bool pathHasSlashAtEnd(std::string )
-
 void dataCenter::checkErrors(client &clnt, server srv){
     std::string directory, file;
 
@@ -114,17 +102,14 @@ void dataCenter::checkErrors(client &clnt, server srv){
     if(isMethodAllowed(srv.getLocations()[clnt.getLocationIndex()].getMethods(), clnt.getStartLine().method))
         throw clnt.getResponse().setAttributes(405, "html");
 
-    // std::string path = getCleanPath(srv.getLocations()[clnt.getLocationIndex()].getRoot() + clnt.getStartLine().path);
 
 
     if (clnt.getStartLine().method == "POST" && srv.getLocations()[clnt.getLocationIndex()].getUpload().empty()){
         throw clnt.getResponse().setAttributes(404, "html");
     }
     if (clnt.getStartLine().method == "POST" && clnt.getHeaders()["Content-Type"].find("boundary") != std::string::npos){
-        // unlink(clnt.getFileUploadName().c_str());
         throw clnt.getResponse().setAttributes(501, "html");
     }
-    // if (pathHasSlashAtEnd(clnt.getStartLine().path))
 }
 
 int dataCenter::updateServerIndex(server s, std::string hostHeader)
@@ -136,12 +121,6 @@ int dataCenter::updateServerIndex(server s, std::string hostHeader)
 
     for (size_t i = 0; i < this->wes.getServers().size(); i++)
     {
-        if (this->wes.getServers()[i].getListen().size() == 1)
-        {
-            /* one port in config file && host port matches this port */
-            // if (this->wes.getServers()[i].getListen()[0] == splited[1])
-            //     return i;
-        }
         if (this->wes.getServers()[i].getListen().size() == 2)
         {
             if (s.getListen()[0] + ':' + s.getListen()[1] == this->wes.getServers()[i].getListen()[0] + ':' + this->wes.getServers()[i].getListen()[1])
@@ -159,7 +138,6 @@ int dataCenter::updateServerIndex(server s, std::string hostHeader)
             for (size_t k = 0; k < this->wes.getServers()[repeated[i]].getServer_names().size(); k++)
             {
 
-                    // std::cout << this->wes.getServers()[repeated[i]].getServer_names()[k] << " ---- " << splited[0] << '\n';
                 if (splited[0] == this->wes.getServers()[repeated[i]].getServer_names()[k])
                 {
                     return repeated[i];
@@ -185,7 +163,6 @@ void    dataCenter::reading(int fd)
         struct epoll_event event;
 
         event.data.fd = fd;
-        // remove the fd from the map
         this->clientList.erase(fd);
         if (epoll_ctl(this->epollfd, EPOLL_CTL_DEL, fd, &event) == -1)
         {
@@ -204,16 +181,12 @@ void    dataCenter::reading(int fd)
         {
             loadHeaders(fd);
             clientList[fd].setServIndx(updateServerIndex(this->getServerList()[clientList[fd].servIndx()], this->clientList[fd].getHeaders()["Host"]));
-            // std::cout << clientList[fd].servIndx() << '\n';
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]);
         }
         else {
             std::string tmp(buffer, a);
             this->clientList[fd].setbufferBody(tmp);
         }
-        // checking body size with content-length
-
-        //checking erorrs of methods
 
         if (this->clientList[fd].getStartLine().method == "GET")
             get(this->clientList[fd], fd);

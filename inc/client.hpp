@@ -38,7 +38,6 @@ private:
     clock_t startTime;
     int locationIndex;
     bool isCgi;
-    int timeOut;
 
 public:
     client();
@@ -101,15 +100,4 @@ public:
 
     void setIsCgi(bool a);
     bool getIsCgi();
-
-    void incrementTimeOut()
-    {
-        this->timeOut++;
-    }
-    int getTimeOut()
-    {
-        return this->timeOut;
-    }
-    void resetTimeOut();
-
 };

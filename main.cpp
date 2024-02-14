@@ -1,5 +1,4 @@
 #include "inc/parsingConfigFile.hpp"
-//#include <sys/qos.h>
 
 int main(int ac, char *av[]) {
     try {

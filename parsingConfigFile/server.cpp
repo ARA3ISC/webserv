@@ -28,7 +28,6 @@ bool checkListen(std::string ipport)
     return true;
 }
 
-// class members
 server::server(std::string ip, std::string port) {
     this->max_body_size = 2147483648;
     this->_error_pages[400] = "Errors/400.html";
@@ -124,17 +123,6 @@ void    server::set_listen(std::string line, int nbln) {
     }
     else
          throwError("Invalid syntax (ip:port)", nbln);
-
-    // else
-    // {
-    //     if (isNaN(splited[1])) {
-    //         throwError("Syntax error", nbln);
-    //     }
-    //     else {
-    //         this->_listen.push_back(splited[1]);
-    //     }
-    // }
-//    std::cout << "-->" << this->_listen.size() << std::endl;
 }
 
 void    server::setRoot(std::string line, int nbln){
@@ -161,7 +149,6 @@ void server::setErrorPages(std::string line, int nbln)
 
     if (splited.size() != 3)
         throwError("Syntax error", nbln);
-//    std::cout << "****\n";
     if (!is_digit(splited[1]))
         throwError("Syntax error", nbln);
 
@@ -174,7 +161,6 @@ void server::setErrorPages(std::string line, int nbln)
 }
 
 void server::setMaxBodySize(std::string line, int nbln) {
-//    checkIndentation(line, 4, nbln, s, false);
     std::vector<std::string> splited;
 
     splited = splitBySpace(line);
@@ -186,7 +172,6 @@ void server::setMaxBodySize(std::string line, int nbln) {
         throwError("Syntax error", nbln);
     }
 
-//    std::string value = splited[1];
     long  lastResult = 0;
     if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
         lastResult = getValue(splited[1].c_str()) * 1024 * 1024;
@@ -218,7 +203,6 @@ location* server::createLocation()
 
 void server::addLocation(location &location) {
     this->_locations.push_back(location);
-    // std::cout << "location created\n";
 }
 
 std::vector<location>& server::getLocations()
@@ -226,6 +210,21 @@ std::vector<location>& server::getLocations()
     return this->_locations;
 }
 
+std::vector<std::string>& server::getServer_names()
+{
+    return this->_server_name;
+}
+
+std::vector<std::string>& server::getListen(){
+    return this->_listen;
+}
+std::map<int, std::string>& server::get_error_pages()
+{
+    return this->_error_pages;
+}
+
+std::string server::getRoot(){return this->_root;}
+long server::getMaxBodySize() {return this->max_body_size;}
 
 server::~server() {
 }

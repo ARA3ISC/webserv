@@ -1,13 +1,11 @@
 #include "../inc/client.hpp"
 
 client::client() {
-    this->timeOut = 0;
     this->_headerareloaded = false;
     this->isUploadfileOpen = false;
 }
 
 client::client(int serverIndex, int clientFd) {
-    this->timeOut = 0;
     this->isCgi = false;
     this->_headerareloaded = false;
     this->_serverIndex = serverIndex;
@@ -37,7 +35,6 @@ client::client(const client &rhs) {
     this->fileUploadName = rhs.fileUploadName;
     this->locationIndex = rhs.locationIndex;
     this->isCgi = rhs.isCgi;
-    this->timeOut = rhs.timeOut;
 }
 
 client& client::operator=(const client &rhs) {
@@ -64,17 +61,13 @@ client& client::operator=(const client &rhs) {
         this->fileUploadName = rhs.fileUploadName;
         this->locationIndex = rhs.locationIndex;
         this->isCgi = rhs.isCgi;
-        this->timeOut = rhs.timeOut;
 
     }
     return *this;
 }
 
 client::~client() {
-    resetTimeOut();
 }
-
-/* end of canonical form */
 
 void client::setFullRequest(const std::string &line) {
     this->_fullRequest.append(line);
@@ -107,9 +100,6 @@ void client::setHeaders(std::string line) {
 void    client::setBody(std::string line) {
     std::string body = trimFromBeginning(line, "\r\n\r\n");
     this->_body = body;
-    // this->setbufferBody(body);
-
-    // std::cout << "size reded " << body.size() << std::endl;
 
 }
 
@@ -230,10 +220,6 @@ clock_t client::getStartTime(){
 
 void client::setStartTime(clock_t a){
     this->startTime = a;
-}
-
-void client::resetTimeOut(){
-    this->timeOut = 0;
 }
 
 std::string client::getFileUploadName(){
