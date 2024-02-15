@@ -4,7 +4,12 @@
     root: ./
     max_body_size: 500M
     error: 404 ./CustomErrors/404.html
-
+# add / at the end of every location 
+# realpath in GET && POST 
+# status code in DELETE <--> checked , need more tests
+# add byte in max bodu size
+# if upload not found --> 404 instead of 500 <--> checked , need more tests
+# real path in file in case of DELETE <--> checked , need more tests
     - location:
         dir_listing: on
         allow_methods: POST GET
@@ -16,10 +21,12 @@
         auto_index: on
         upload: /upload
 
-    - location /upload:
+    - location /upl:
         dir_listing: on
-        allow_methods: GET DELETE
+        allow_methods: GET DELETE POST
         root: ./myWebsite/upload
+        upload: /upload
+
 
 - server:
     server_name: localhost

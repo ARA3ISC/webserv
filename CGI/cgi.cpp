@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/14 15:57:40 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/15 18:40:35 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
 
     if (fdFile == -1){
-
         throw clnt.getResponse().setAttributes(500, "html");
     }
     int id = fork();
@@ -116,13 +115,14 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
             if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
                 kill(id, SIGKILL);
                 waitpid(id, &status, 0);
+                if (isPost)
+                    unlink(filePost.c_str());
                 throw clnt.getResponse().setAttributes(504, "html");
             }
             usleep(100000);
         }
     }
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
-
         throw clnt.getResponse().setAttributes(500, "html");
     }
     close(fdFile);

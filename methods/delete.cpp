@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/14 16:00:15 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/15 18:14:40 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,31 +71,37 @@ void dataCenter::deleteMethod(client &clnt)
 
     splitPath(clnt, directory, file);
 
+    char realPath[PATH_MAX];
+    char currentPath[PATH_MAX];
+    char locationRootPath[PATH_MAX];
 
-    if (!file.empty()){
-        if ((fdFile = open(file.c_str(), O_RDONLY)) == -1)
-            throw clnt.getResponse().setAttributes(404, "html");
-        close(fdFile);
-        if (unlink(file.c_str()) == -1)
-            throw clnt.getResponse().setAttributes(500, "html");
-
-    }
-    else{
-        if (pathHasSlashAtEnd(clnt.getStartLine().path))
-            throw clnt.getResponse().setAttributes(409, "html");
-        char realPath[PATH_MAX];
-        char currentPath[PATH_MAX];
-        char locationRootPath[PATH_MAX];
-
+    if (file.empty())
         realpath(directory.c_str(), realPath);
-        realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
-        realpath(".", currentPath);
+    else
+        realpath(file.c_str(), realPath);
 
-        std::string s1 = realPath;
-        std::string s2 = currentPath;
-        std::string s3 = locationRootPath;
+    realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
+    realpath(".", currentPath);
 
-        if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+    std::string s1 = realPath;
+    std::string s2 = currentPath;
+    std::string s3 = locationRootPath;
+    std::cout << s1 << " " << s2 << s3 << std::endl;
+    if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+
+        if (!file.empty()){
+            file = s1;
+            
+            if ((fdFile = open(file.c_str(), O_WRONLY)) == -1)
+                throw clnt.getResponse().setAttributes(500, "html");
+            close(fdFile);
+            if (unlink(file.c_str()) == -1)
+                throw clnt.getResponse().setAttributes(500, "html");
+
+        }
+        else{
+            if (pathHasSlashAtEnd(clnt.getStartLine().path))
+                throw clnt.getResponse().setAttributes(409, "html");
 
             directory = s1;
             deleteDirectory(directory);
@@ -109,9 +115,9 @@ void dataCenter::deleteMethod(client &clnt)
             else
                 throw clnt.getResponse().setAttributes(403, "html");
         }
-        else
-            throw clnt.getResponse().setAttributes(403, "html");
-
     }
+    else
+        throw clnt.getResponse().setAttributes(403, "html");
+
     throw clnt.getResponse().setAttributes(204, "html");
 }

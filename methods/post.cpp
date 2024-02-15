@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/14 16:00:23 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/15 18:27:11 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,35 @@ void readBufferChunck(client &clnt, std::string buffer){
 }
 
 void dataCenter::post(client &clnt){
+    
     std::string directory, file, res;
+    
+    if (!clnt.getIsUploadfileOpen()){
+        server srv = getWebserv().getServers()[clnt.servIndx()];
+
+        splitPath(clnt, directory, file);
+
+        char realPath[PATH_MAX];
+        char currentPath[PATH_MAX];
+        char locationRootPath[PATH_MAX];
+
+        if (file.empty())
+            realpath(directory.c_str(), realPath);
+        else
+            realpath(file.c_str(), realPath);
+
+        realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
+        realpath(".", currentPath);
+
+        std::string s1 = realPath;
+        std::string s2 = currentPath;
+        std::string s3 = locationRootPath;
+    
+        if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+        }
+        else
+            throw clnt.getResponse().setAttributes(403, "html");
+    }
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && !clnt.getbufferBody().empty()){
 
         readBufferChunck(clnt, clnt.getbufferBody());
@@ -127,7 +155,7 @@ void dataCenter::post(client &clnt){
         int j = clnt.getLocationIndex();
 
         if (srv.getLocations()[j].getUpload().empty())
-            throw clnt.getResponse().setAttributes(403, "html");
+            throw clnt.getResponse().setAttributes(404, "html");
 
         std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
