@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/15 18:40:35 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/17 19:23:59 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,14 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     s << std::time(0);
     s << this->getFilePrefix();
     std::string FileName = "/tmp/randomFile" + s.str() +".txt";
+    clnt.getResponse().setIsCGIFile(true);
 
-
-    int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
-
-    if (fdFile == -1){
-        throw clnt.getResponse().setAttributes(500, "html");
-    }
     int id = fork();
     if (id == 0){
+        int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
+        if (fdFile == -1){
+            exit(37);
+        }
         int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
 
         const char* programPath = path.c_str();
@@ -115,6 +114,7 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
             if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
                 kill(id, SIGKILL);
                 waitpid(id, &status, 0);
+                unlink(FileName.c_str());
                 if (isPost)
                     unlink(filePost.c_str());
                 throw clnt.getResponse().setAttributes(504, "html");
@@ -123,9 +123,9 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         }
     }
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
+        unlink(FileName.c_str());
         throw clnt.getResponse().setAttributes(500, "html");
     }
-    close(fdFile);
 
 
     std::fstream input(FileName.c_str());
@@ -145,7 +145,6 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
     if (tmp.find("\r\n\r\n") != std::string::npos){
         clnt.setIsCgi(true);
     }
-
     input.close();
     if (isPost)
         unlink(filePost.c_str());

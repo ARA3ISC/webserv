@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dataCenter.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:08 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:04:09 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/17 19:28:13 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ dataCenter::dataCenter() {
 
 }
 dataCenter::dataCenter(webserv& webs) {
+    filePrefix = 0;
     this->wes = webs;
     this->createServerSockets();
     this->createEpoll();

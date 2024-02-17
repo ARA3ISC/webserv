@@ -5,9 +5,11 @@
     max_body_size: 500M
     error: 404 ./CustomErrors/404.html
 # add / at the end of every location 
-# realpath in GET && POST 
-# status code in DELETE <--> checked , need more tests
 # add byte in max bodu size
+# check real path for every path 
+
+# realpath in GET && POST <--> checked , need more tests
+# status code in DELETE <--> checked , need more tests
 # if upload not found --> 404 instead of 500 <--> checked , need more tests
 # real path in file in case of DELETE <--> checked , need more tests
     - location:
