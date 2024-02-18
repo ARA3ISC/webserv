@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:00 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:04:01 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/18 21:45:47 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ client::client() {
 
 client::client(int serverIndex, int clientFd) {
     this->isCgi = false;
+    this->isCgiExec = false;
     this->_headerareloaded = false;
     this->_serverIndex = serverIndex;
     this->_fd = clientFd;
@@ -47,6 +48,12 @@ client::client(const client &rhs) {
     this->fileUploadName = rhs.fileUploadName;
     this->locationIndex = rhs.locationIndex;
     this->isCgi = rhs.isCgi;
+    this->isCgiExec = rhs.isCgiExec;
+    this->startTimeCgi = rhs.startTimeCgi;
+    this->pidCgi = rhs.pidCgi;
+    this->fileNameCgi = rhs.fileNameCgi;
+    this->fileToCgi = rhs.fileToCgi;
+
 }
 
 client& client::operator=(const client &rhs) {
@@ -73,7 +80,11 @@ client& client::operator=(const client &rhs) {
         this->fileUploadName = rhs.fileUploadName;
         this->locationIndex = rhs.locationIndex;
         this->isCgi = rhs.isCgi;
-
+        this->isCgiExec = rhs.isCgiExec;
+        this->startTimeCgi = rhs.startTimeCgi;
+        this->pidCgi = rhs.pidCgi;
+        this->fileNameCgi = rhs.fileNameCgi;
+        this->fileToCgi = rhs.fileToCgi;
     }
     return *this;
 }
@@ -251,4 +262,45 @@ void client::setIsCgi(bool a){
 }
 bool client::getIsCgi(){
     return this->isCgi;
+}
+
+void client::setIsCgiExec(bool a){
+    this->isCgiExec = a;
+}
+bool client::getIsCgiExec(){
+    return this->isCgiExec;
+}
+void client::setStartTimeCgi(clock_t a){
+    this->startTimeCgi = a;
+}
+clock_t client::getStartTimeCgi(){
+    return this->startTimeCgi;
+}
+
+void client::setPidCgi(int a){
+    this->pidCgi = a;
+}
+int client::getPidCgi(){
+    return this->pidCgi;
+}
+
+void client::setFileNameCgi(std::string a){
+    this->fileNameCgi = a;
+}
+std::string client::getFileNameCgi(){
+    return this->fileNameCgi;
+}
+
+void client::setFileToCgi(std::string a){
+    this->fileToCgi = a;
+}
+std::string client::getFileToCgi(){
+    return this->fileToCgi;
+}
+
+void client::setIsPost(bool a){
+    this->isPost = a;
+}
+bool client::getIsPost(){
+    return this->isPost;
 }

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/17 19:23:59 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 22:06:41 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,106 +29,132 @@ bool dataCenter::checkCgiPaths(location loc, std::string path){
     return true;
 }
 
-void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, std::string filePost){
-
-    if (checkCgiPaths(loc, path))
-    {
-        if (isPost){
-            unlink(filePost.c_str());
-        }
-        clnt.getResponse().setAttributes(200,  getExtention(path));
-        clnt.getResponse().setPath(path);
-        throw 0;
-    }
-    std::cout << GREEN << "CGI executed [ " << getExtention(path) << " ]" << RESET << std::endl;
-
-    int status = 0;
-    double timeoutSeconds = 0.0015;
-
-    std::ostringstream s;
-    s << std::time(0);
-    s << this->getFilePrefix();
-    std::string FileName = "/tmp/randomFile" + s.str() +".txt";
-    clnt.getResponse().setIsCGIFile(true);
-
-    int id = fork();
-    if (id == 0){
-        int fdFile = open(FileName.c_str(), O_CREAT | O_RDWR , 0644);
-        if (fdFile == -1){
-            exit(37);
-        }
-        int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
-
-        const char* programPath = path.c_str();
-        char* const argv[] = {(char*)loc.getCgiPath()[getExtention(path)].c_str(), (char*)programPath, NULL};
-
-        std::string queryString = "QUERY_STRING=" + clnt.getQueryString();
-        std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
-        std::string contentType = "CONTENT_TYPE=" + clnt.getHeaders()["Content-Type"];
-        std::string contentLength = "CONTENT_LENGTH=" + clnt.getHeaders()["Content-Length"];
-        std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
-        std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
-        std::string redirectStatus = "REDIRECT_STATUS=CGI";
-        std::string pathTranslated = "PATH_TRANSLATED=" + path;
-        std::string setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
-
-
-        char* const envp[] = {
-            (char*)queryString.c_str(),
-            (char*)contentType.c_str(),
-            (char*)contentLength.c_str(),
-            (char*)scriptName.c_str(),
-            (char*)serverProtocol.c_str(),
-            (char*)redirectStatus.c_str(),
-            (char*)requestMethod.c_str(),
-            (char*)pathTranslated.c_str(),
-            (char*)setCookie.c_str(),
-            NULL
-        };
-        int infileFd;
-        if (isPost){
-            infileFd = open(filePost.c_str(), O_RDWR , 0644);
-
-            if (infileFd == -1)
-                exit(12);
-            if (dup2(infileFd, 0) == -1)
-                exit(12);
-            close(infileFd);
-        }
-        dup2(fdFile, 1);
-        close(fdFile);
-
-        dup2(logFd, 2);
-        close(logFd);
-        fprintf(stderr, "--------------------------\n");
-
-        execve(loc.getCgiPath()[getExtention(path)].c_str(), argv, envp);
-        perror("execve");
-        exit(127);
-    }
-    else {
-        clock_t start = clock();
-
-        while (waitpid(id, &status, WNOHANG) == 0) {
-
-            if (static_cast<double>(clock() - start) / CLOCKS_PER_SEC > timeoutSeconds){
-                kill(id, SIGKILL);
-                waitpid(id, &status, 0);
-                unlink(FileName.c_str());
-                if (isPost)
-                    unlink(filePost.c_str());
-                throw clnt.getResponse().setAttributes(504, "html");
+void dataCenter::cgi(client &clnt){
+    int status;
+    std::string filePost = "";
+    location loc = this->wes.getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()];
+    if (!clnt.getIsCgiExec()){
+        
+        if (checkCgiPaths(loc, clnt.getFileToCgi()))
+        {
+            if (clnt.getIsPost()){
+                unlink(clnt.getFileUploadName().c_str());
             }
-            usleep(100000);
+            clnt.getResponse().setAttributes(200,  getExtention(clnt.getFileToCgi()));
+            clnt.getResponse().setPath(clnt.getFileToCgi());
+            throw 0;
         }
+        std::cout << GREEN << "CGI executed [ " << getExtention(clnt.getFileToCgi()) << " ]" << RESET << std::endl;
+
+        // int status = 0;
+
+        std::ostringstream s;
+        s << std::time(0);
+        s << this->getFilePrefix();
+        // std::string FileName = 
+        clnt.setFileNameCgi("/tmp/randomFile" + s.str() +".txt");
+        clnt.getResponse().setIsCGIFile(true);
+
+        int id = fork();
+        if (id == 0){
+            int fdFile = open(clnt.getFileNameCgi().c_str(), O_CREAT | O_RDWR , 0644);
+            if (fdFile == -1){
+                exit(37);
+            }
+            int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
+
+            std::string pp = clnt.getFileToCgi();
+            const char* programPath = pp.c_str();
+            char* const argv[] = {(char*)loc.getCgiPath()[getExtention(clnt.getFileToCgi())].c_str(), (char*)programPath, NULL};
+
+            std::string queryString = "QUERY_STRING=" + clnt.getQueryString();
+            std::string requestMethod = "REQUEST_METHOD=" + clnt.getStartLine().method;
+            std::string contentType = "CONTENT_TYPE=" + clnt.getHeaders()["Content-Type"];
+            std::string contentLength = "CONTENT_LENGTH=" + clnt.getHeaders()["Content-Length"];
+            std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
+            std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
+            std::string redirectStatus = "REDIRECT_STATUS=CGI";
+            std::string pathTranslated = "PATH_TRANSLATED=" + clnt.getFileToCgi();
+            std::string setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
+
+
+            char* const envp[] = {
+                (char*)queryString.c_str(),
+                (char*)contentType.c_str(),
+                (char*)contentLength.c_str(),
+                (char*)scriptName.c_str(),
+                (char*)serverProtocol.c_str(),
+                (char*)redirectStatus.c_str(),
+                (char*)requestMethod.c_str(),
+                (char*)pathTranslated.c_str(),
+                (char*)setCookie.c_str(),
+                NULL
+            };
+            int infileFd;
+            if (clnt.getIsPost()){
+                infileFd = open(clnt.getFileUploadName().c_str(), O_RDWR , 0644);
+
+                if (infileFd == -1)
+                    exit(12);
+                if (dup2(infileFd, 0) == -1)
+                    exit(12);
+                close(infileFd);
+            }
+            dup2(fdFile, 1);
+            close(fdFile);
+
+            dup2(logFd, 2);
+            close(logFd);
+            fprintf(stderr, "--------------------------\n");
+
+            execve(loc.getCgiPath()[getExtention(clnt.getFileToCgi())].c_str(), argv, envp);
+            perror("execve");
+            exit(127);
+        }
+        
+        clnt.setStartTimeCgi(clock());
+        clnt.setPidCgi(id);
+        clnt.setIsCgiExec(true);
+        
+        // if (waitpid(id, &status, WNOHANG) > 0) {
+        //     std::cout << "kokoko\n";
+        //     if (static_cast<double>(clock() - clnt.getStartTimeCgi()) / CLOCKS_PER_SEC > 0.0015){
+        //         kill(id, SIGKILL);
+        //         waitpid(id, &status, 0);
+        //         unlink(clnt.getFileNameCgi().c_str());
+        //         if (clnt.getIsPost())
+        //             unlink(clnt.getFileUploadName().c_str());
+        //         throw clnt.getResponse().setAttributes(504, "html");
+        //     }
+        // }
+        // else{
+        //     std::cout << "set exe true\n";
+        //     clnt.setIsCgiExec(true);
+        //     throw 0;   
+        // }
+        
     }
+    if (static_cast<double>(clock() - clnt.getStartTimeCgi()) / CLOCKS_PER_SEC > 5){
+        std::cout << "mkmkmkmk\n";
+        kill(clnt.getPidCgi(), SIGKILL);
+        waitpid(clnt.getPidCgi(), &status, 0);
+        unlink(clnt.getFileNameCgi().c_str());
+        if (clnt.getIsPost())
+            unlink(clnt.getFileUploadName().c_str());
+        throw clnt.getResponse().setAttributes(504, "html");
+    }
+    else if(waitpid(clnt.getPidCgi(), &status, WNOHANG) == 0){
+        return ;
+    }
+    std::cout << "--------------------------\n";
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
-        unlink(FileName.c_str());
+        
+        unlink(clnt.getFileNameCgi().c_str());
         throw clnt.getResponse().setAttributes(500, "html");
     }
 
 
-    std::fstream input(FileName.c_str());
+    std::fstream input(clnt.getFileNameCgi().c_str());
     char line[1024] = {0};
     input.read(line, 1023);
     std::string tmp = line;
@@ -146,9 +172,9 @@ void dataCenter::cgi(client &clnt,location loc, std::string path, int isPost, st
         clnt.setIsCgi(true);
     }
     input.close();
-    if (isPost)
-        unlink(filePost.c_str());
+    if (clnt.getIsPost())
+        unlink(clnt.getFileUploadName().c_str());
     clnt.getResponse().setAttributes(200, "html");
-    clnt.getResponse().setPath(FileName);
+    clnt.getResponse().setPath(clnt.getFileNameCgi());
     throw 0;
 }

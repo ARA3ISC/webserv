@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/15 18:27:11 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 22:04:05 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,17 +193,26 @@ void dataCenter::post(client &clnt){
         int j = clnt.getLocationIndex();
 
         if (!file.empty()){
-            cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
+            clnt.setFileToCgi(file);
+            clnt.setIsPost(1);
+            std::cout << "cgi of post\n";
+            cgi(clnt);
+            // cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
         }else{
             if (srv.getLocations()[j].isAutoIndex()){
                 std::string fileIndexed;
 
                 if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
                 
-                    if (!checkCgiPaths(srv.getLocations()[j], directory + fileIndexed))
-                        cgi(clnt, srv.getLocations()[j], directory + fileIndexed ,1, clnt.getFileUploadName());
+                    if (!checkCgiPaths(srv.getLocations()[j], directory + fileIndexed)){
+                        clnt.setFileToCgi(directory + fileIndexed);
+                        clnt.setIsPost(1);
+                        std::cout << "cgi of post\n";
+                        cgi(clnt);
+                    }
                     else
                         throw clnt.getResponse().setAttributes(201, "html");
+                    //     // cgi(clnt, srv.getLocations()[j], directory + fileIndexed ,1, clnt.getFileUploadName());
                 }
                 else
                     throw clnt.getResponse().setAttributes(201, "html");

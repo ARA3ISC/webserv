@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/15 18:24:20 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 22:03:00 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,10 @@ void dataCenter::get(client &clnt, int fd){
 
         if (!file.empty())
         {
-            cgi(clnt, srv.getLocations()[j], file, 0, "");
+            clnt.setFileToCgi(file);
+            clnt.setIsPost(0);
+            std::cout << "cgi of get\n";
+            cgi(clnt);
             throw 0;
         }
         else
@@ -181,7 +184,11 @@ void dataCenter::get(client &clnt, int fd){
                 std::string fileIndexed;
 
                 if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
-                    cgi(clnt, srv.getLocations()[j], directory + fileIndexed , 0, "");
+                    clnt.setFileToCgi(directory + fileIndexed);
+                    clnt.setIsPost(0);
+                    std::cout << "cgi of get\n";
+                    cgi(clnt);
+                    // cgi(clnt, srv.getLocations()[j], directory + fileIndexed , 0, "");
                 }
                 else if (!srv.getLocations()[j].get_dir_listing())
                     throw clnt.getResponse().setAttributes(403, "html");

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:46 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/14 15:59:05 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 21:44:59 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,12 @@ private:
     clock_t startTime;
     int locationIndex;
     bool isCgi;
-
+    bool isCgiExec;
+    clock_t startTimeCgi;
+    int pidCgi;
+    std::string fileNameCgi;
+    std::string fileToCgi;
+    bool isPost;
 public:
     client();
     client(int serverIndex, int clientFd);
@@ -114,6 +119,25 @@ public:
 
     void setIsCgi(bool a);
     bool getIsCgi();
+
+    void setIsCgiExec(bool a);
+    bool getIsCgiExec();
+    
+    void setStartTimeCgi(clock_t a);
+    clock_t getStartTimeCgi();
+    
+    void setPidCgi(int a);
+    int getPidCgi();
+    
+    void setFileNameCgi(std::string a);
+    std::string getFileNameCgi();
+    
+    void setFileToCgi(std::string a);
+    std::string getFileToCgi();
+    
+    void setIsPost(bool a);
+    bool getIsPost();
 };
+
 
 #endif

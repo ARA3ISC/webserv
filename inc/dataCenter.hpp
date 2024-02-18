@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dataCenter.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:34 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:04:35 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/18 21:49:37 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ public:
     int updateServerIndex(server s, std::string hostHeader);
     void get(client &clnt, int fd);
     void post(client &clnt);
-    void cgi(client &clnt ,location loc,std::string path, int isPost, std::string filePost);
+    void cgi(client &clnt);
     void deleteMethod(client &clnt);
 
 

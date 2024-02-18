@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:08 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/17 19:28:13 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 22:05:09 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,18 @@ void dataCenter::handlingRequests()
                     {
                         this->sending(events[i].data.fd);
                     }
-                }else{
+                }
+                else if (this->clientList[events[i].data.fd].getIsCgiExec()){
+                    try
+                    {
+                        cgi(this->clientList[events[i].data.fd]);
+                    }
+                    catch(int)
+                    {
+                        this->clientList[events[i].data.fd].setIsCgiExec(false);
+                    }
+                }   
+                else{
 
                     if ((clock() - this->clientList[events[i].data.fd].getStartTime() >= 5000000)){
                         this->clientList[events[i].data.fd].setStartTime(clock());
