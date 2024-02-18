@@ -12,6 +12,7 @@
 # status code in DELETE <--> checked , need more tests
 # if upload not found --> 404 instead of 500 <--> checked , need more tests
 # real path in file in case of DELETE <--> checked , need more tests
+# multiple slashes
     - location:
         dir_listing: on
         allow_methods: POST GET

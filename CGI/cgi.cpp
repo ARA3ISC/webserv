@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 22:06:41 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 23:43:05 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void dataCenter::cgi(client &clnt){
             std::string redirectStatus = "REDIRECT_STATUS=CGI";
             std::string pathTranslated = "PATH_TRANSLATED=" + clnt.getFileToCgi();
             std::string setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
+            std::string pathInfo = "PATH_INFO=" + clnt.getPathInfo();
 
 
             char* const envp[] = {
@@ -88,6 +89,7 @@ void dataCenter::cgi(client &clnt){
                 (char*)requestMethod.c_str(),
                 (char*)pathTranslated.c_str(),
                 (char*)setCookie.c_str(),
+                (char*)pathInfo.c_str(),
                 NULL
             };
             int infileFd;

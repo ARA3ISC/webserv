@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 22:03:00 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 23:41:40 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,19 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
 
     getQueryStringFromPath(clnt, toOpen);
 
+    checkPathInfos(toOpen, clnt);
+    size_t pos = toOpen.find(clnt.getPathInfo());
+    if (pos != std::string::npos && !clnt.getPathInfo().empty())
+        toOpen = toOpen.substr(0, pos);
+
     if (!isDirectory(toOpen)){
         removeTrailingSlashes(toOpen);
         int fd = open(toOpen.c_str(), O_RDONLY);
-        if (fd == -1)
+        if (fd == -1){
+            
+            std::cout << "OPOPOPO "<< toOpen<< " \n";
             throw clnt.getResponse().setAttributes(404, "html");
+        }
         close(fd);
         file = toOpen;
         return ;
@@ -136,6 +144,48 @@ bool dataCenter::pathHasSlashAtEnd(std::string path){
     return false;
 }
 
+int dataCenter::isPathInfos(std::vector<std::string>& v)
+{
+    size_t i = 0;
+    while(i < v.size()){
+        size_t j = 0;
+        std::string tmpPath = ".";
+        while(j <= i){
+            tmpPath += "/" + v[j];
+            j++;
+        }
+
+        std::cout << "tmp path : |" << tmpPath << '\n';
+        if (!isDirectory(tmpPath))
+        {
+            std::cout << "i: " << i << '\n';
+            return i + 1;
+        }
+        i++;
+    }
+    return -1;
+}
+
+void dataCenter::checkPathInfos(std::string file, client& clnt)
+{
+    std::vector<std::string> v = splitBy(file, '/');
+    v.erase(v.begin());
+    size_t pos = isPathInfos(v);
+    std::string p;
+    if ((int)pos != -1)
+    {
+        // std::cout << "pos " << v[pos] << '\n';
+        // p = "./";
+        while (pos < v.size())
+        {
+            p += "/" + v[pos];
+            pos++;
+        }
+    }
+    clnt.setPathInfo(p);
+    std::cout << "path info : |" << clnt.getPathInfo() << "|\n";
+}
+
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
 
@@ -163,10 +213,10 @@ void dataCenter::get(client &clnt, int fd){
     std::string s3 = locationRootPath;
     
     if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
-
-
+        
         if (!file.empty())
         {
+            // checkPathInfos(file, clnt);
             clnt.setFileToCgi(file);
             clnt.setIsPost(0);
             std::cout << "cgi of get\n";

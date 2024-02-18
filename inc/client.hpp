@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:46 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 21:44:59 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 23:16:43 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ private:
     std::string fileNameCgi;
     std::string fileToCgi;
     bool isPost;
+    std::string pathInfo;
+
 public:
     client();
     client(int serverIndex, int clientFd);
@@ -137,6 +139,9 @@ public:
     
     void setIsPost(bool a);
     bool getIsPost();
+    void setPathInfo(std::string a);
+    std::string getPathInfo();
+
 };
 
 

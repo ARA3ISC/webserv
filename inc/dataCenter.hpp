@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:34 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/18 21:49:37 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 23:08:28 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ public:
     bool checkCgiPaths(location loc, std::string path);
     bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content);
 
-
+int isPathInfos(std::vector<std::string>& v);
+void checkPathInfos(std::string file, client& clnt);
 
     std::map<int, server>& getServerList() ;
 };

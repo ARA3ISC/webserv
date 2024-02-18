@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsingRequests.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:04:14 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/18 23:25:22 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,10 @@ void dataCenter::getLocationCF(client &clnt,server srv){
 }
 
 void dataCenter::checkErrors(client &clnt, server srv){
-    std::string directory, file;
 
     getLocationCF(clnt, srv);
+    // checkPathInfos(clnt.getStartLine().path, clnt);
+
 
     if (!srv.getLocations()[clnt.getLocationIndex()].getReturn().empty()){
         clnt.getResponse().setPath(srv.getLocations()[clnt.getLocationIndex()].getReturn());

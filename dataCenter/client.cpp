@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:00 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/18 21:45:47 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/18 23:11:03 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ client::client(const client &rhs) {
     this->pidCgi = rhs.pidCgi;
     this->fileNameCgi = rhs.fileNameCgi;
     this->fileToCgi = rhs.fileToCgi;
+    this->pathInfo = rhs.pathInfo;
+    
 
 }
 
@@ -85,6 +87,7 @@ client& client::operator=(const client &rhs) {
         this->pidCgi = rhs.pidCgi;
         this->fileNameCgi = rhs.fileNameCgi;
         this->fileToCgi = rhs.fileToCgi;
+        this->pathInfo = rhs.pathInfo;
     }
     return *this;
 }
@@ -303,4 +306,11 @@ void client::setIsPost(bool a){
 }
 bool client::getIsPost(){
     return this->isPost;
+}
+
+void client::setPathInfo(std::string a){
+    this->pathInfo = a;
+}
+std::string client::getPathInfo(){
+    return this->pathInfo;
 }
