@@ -2,11 +2,11 @@
     server_name: example.com
     listen: 127.0.0.6:2222
     root: ./
-    max_body_size: 500M
+    max_body_size: 0b
     error: 404 ./CustomErrors/404.html
-# add / at the end of every location 
-# add byte in max bodu size
-# check real path for every path 
+# add / at the end of every location
+# add byte in max bodu size <--> checked , need more tests
+# check real path for every path
 
 # realpath in GET && POST <--> checked , need more tests
 # status code in DELETE <--> checked , need more tests

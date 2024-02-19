@@ -6,7 +6,7 @@
 /*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:18 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:05:19 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/19 12:22:03 by maneddam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,9 @@ void server::setMaxBodySize(std::string line, int nbln) {
     }
 
     long  lastResult = 0;
-    if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
+    if (*(splited[1].end() - 1) == 'B' || *(splited[1].end() - 1) == 'b')
+        lastResult = getValue(splited[1].c_str());
+    else if (*(splited[1].end() - 1) == 'M' || *(splited[1].end() - 1) == 'm')
         lastResult = getValue(splited[1].c_str()) * 1024 * 1024;
     else if (*(splited[1].end() - 1) == 'G' || *(splited[1].end() - 1) == 'g')
         lastResult = getValue(splited[1].c_str()) * 1024 * 1024 * 1024;

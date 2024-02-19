@@ -6,7 +6,7 @@
 /*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:29 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:05:30 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/19 12:23:45 by maneddam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ bool checkMaxBodySize(std::string line)
     if (*end)
     {
         if (strcmp(end, "m") != 0 && strcmp(end, "M") != 0 && strcmp(end, "g") != 0
-         && strcmp(end, "G") != 0 && strcmp(end, "k") != 0 && strcmp(end, "K") != 0)
+         && strcmp(end, "G") != 0 && strcmp(end, "k") != 0 && strcmp(end, "K") != 0
+         && strcmp(end, "b") != 0 && strcmp(end, "B") != 0)
             return 1;
         else
         {
@@ -56,6 +57,9 @@ bool checkMaxBodySize(std::string line)
                     return 1;
             if (strcmp(end, "k") == 0 || strcmp(end, "K") == 0)
                 if (n > 20000)
+                    return 1;
+            if (strcmp(end, "b") == 0 || strcmp(end, "B") == 0)
+                if (n > 2147483648)
                     return 1;
         }
     }
