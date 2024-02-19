@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 14:19:50 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 17:34:15 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ std::string dataCenter::getFileName(std::string pathUpload, std::string director
     a << this->getFilePrefix();
     a << ".";
     a << extention;
+
     return a.str();
 }
 
@@ -163,6 +164,29 @@ void dataCenter::post(client &clnt){
             extension = "txt";
         std::string fileName;
         fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
+
+
+        
+
+            char realPath[PATH_MAX];
+            char currentPath[PATH_MAX];
+            char locationRootPath[PATH_MAX];
+
+            realpath(fileName.c_str(), realPath);
+            realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
+            std::string s3 = locationRootPath;
+
+            realpath(".", currentPath);
+            std::string s1 = realPath;
+            std::string s2 = currentPath;
+
+            // std::cout << "real Path is : " << realPath << " " << currentPath << std::endl; 
+            if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+                
+            }else
+                throw clnt.getResponse().setAttributes(403, "html");
+
+
 
         clnt.openFileUpload(fileName);
 

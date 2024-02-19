@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 17:22:18 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 17:29:49 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,6 @@ int dataCenter::updateServerIndex(server s, std::string hostHeader)
         repeated.push_back(0);
     return repeated[0];
 }
-
 
 void    dataCenter::reading(int fd)
 {
