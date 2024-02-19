@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/15 18:14:40 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:29:50 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void dataCenter::deleteMethod(client &clnt)
     std::string s1 = realPath;
     std::string s2 = currentPath;
     std::string s3 = locationRootPath;
-    std::cout << s1 << " " << s2 << s3 << std::endl;
+    
     if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
 
         if (!file.empty()){

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 17:23:17 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:29:37 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void dataCenter::cgi(client &clnt){
     else if(waitpid(clnt.getPidCgi(), &status, WNOHANG) == 0){
         return ;
     }
-    std::cout << "--------------------------\n";
+    
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
         
         unlink(clnt.getFileNameCgi().c_str());

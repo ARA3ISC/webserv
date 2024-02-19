@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 17:34:15 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:30:10 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,6 @@ void dataCenter::post(client &clnt){
             std::string s1 = realPath;
             std::string s2 = currentPath;
 
-            // std::cout << "real Path is : " << realPath << " " << currentPath << std::endl; 
             if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
                 
             }else
@@ -219,9 +218,7 @@ void dataCenter::post(client &clnt){
         if (!file.empty()){
             clnt.setFileToCgi(file);
             clnt.setIsPost(1);
-            std::cout << "cgi of post\n";
             cgi(clnt);
-            // cgi(clnt, srv.getLocations()[j], file, 1, clnt.getFileUploadName());
         }else{
             if (srv.getLocations()[j].isAutoIndex()){
                 std::string fileIndexed;
@@ -231,7 +228,6 @@ void dataCenter::post(client &clnt){
                     if (!checkCgiPaths(srv.getLocations()[j], directory + fileIndexed)){
                         clnt.setFileToCgi(directory + fileIndexed);
                         clnt.setIsPost(1);
-                        std::cout << "cgi of post\n";
                         cgi(clnt);
                     }
                     else

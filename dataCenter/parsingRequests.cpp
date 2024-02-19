@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 18:35:26 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:26:07 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void    dataCenter::requestSyntaxError(client& rq)
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
         {
-
             throw 400;
         }
     }
@@ -71,35 +70,18 @@ void    dataCenter::loadHeaders(int fd)
 void dataCenter::getLocationCF(client &clnt,server srv){
 
     std::string reqUrl = clnt.getStartLine().path;
+    
     if (reqUrl.find_last_of("?") != std::string::npos)
         reqUrl = reqUrl.substr(0, reqUrl.find_last_of("?"));
+        
     std::vector<std::string> splitURL = splitBy(reqUrl, '/');
-    std::vector<int> indexes;
-    size_t i = 0;
-
-    int tmp = getLocationRequested(srv.getLocations(), "/");
+    
+    int tmp = getLocationRequested(srv.getLocations(), clnt);
     if (tmp != -1)
-        indexes.push_back(tmp);
-
-    while(i < splitURL.size()){
-        size_t j = 0;
-        std::string tmpPath;
-        while(j <= i){
-            tmpPath += "/" + splitURL[j];
-            j++;
-        }
-        tmpPath  += "/";
-        int tmp = getLocationRequested(srv.getLocations(), tmpPath);
-        if (tmp != -1)
-            indexes.push_back(tmp);
-        i++;
-    }
-        // std::cout << RED << "size index " << indexes.back() << RESET << '\n';
-    if (indexes.size() == 0){
+        clnt.setLocationIndex(tmp);
+    else
         throw clnt.getResponse().setAttributes(404, "html");
-    }
 
-    clnt.setLocationIndex(indexes.back());
 }
 
 void dataCenter::checkErrors(client &clnt, server srv){

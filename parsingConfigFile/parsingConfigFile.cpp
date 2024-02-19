@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsingConfigFile.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:15 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:05:16 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/19 23:30:18 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
         }
         if (trimStr(line).find("- location") != std::string::npos)
         {
-//            std::cout << l.getCgiPath().size() << "==" << std::endl;
             l.isRootSet(*s);
             l.isMethodSet(nbline);
             s->addLocation(l);

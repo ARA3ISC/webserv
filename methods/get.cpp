@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 17:49:17 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:30:01 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,31 @@ std::string dataCenter::getCleanPath(std::string path){
 }
 
 
-int dataCenter::getLocationRequested(std::vector<location> loc, std::string path){
+int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
 
-    for (size_t i = 0; i < loc.size(); i++)
-        if (loc[i].getPath() == path)
+    
+    std::vector<std::string> paths;
+    for (size_t i = 0; i < loc.size(); i++){
+        paths.push_back(loc[i].getPath());
+    }
+    
+    std::sort(paths.begin(), paths.end());
+
+    int j = -1;
+    for (size_t i = 0; i < paths.size(); i++){
+        
+        if (clnt.getStartLine().path.find(paths[i]) != std::string::npos && clnt.getStartLine().path.find(paths[i]) == 0)
+        {
+            j = i;
+            break;
+        }    
+    }
+    if (j == -1)
+        return -1;
+    for(size_t i= 0; i < loc.size(); i++){
+        if (paths[j] == loc[i].getPath())
             return i;
+    }
     return -1;
 }
 
@@ -90,7 +110,7 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     std::string toOpen = srv.getLocations()[index].getRoot() + trimUrl;
 
     getQueryStringFromPath(clnt, toOpen);
-
+    
     checkPathInfos(toOpen, clnt);
     size_t pos = toOpen.find(clnt.getPathInfo());
     if (pos != std::string::npos && !clnt.getPathInfo().empty())
@@ -99,16 +119,10 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     if (isDirectory(toOpen)){
         directory = toOpen;
     }else{
-        std::cout << toOpen << "------\n";
         removeTrailingSlashes(toOpen);
         int fd = open(toOpen.c_str(), O_RDONLY);
         if (fd == -1)
         {
-            if (pathHasSlashAtEnd(clnt.getStartLine().path)){
-                clnt.getResponse().setPath(clnt.getStartLine().path + "/");
-                throw clnt.getResponse().setAttributes(301, "html");
-            }
-            std::cout << "OPOPOPO "<< toOpen<< " \n";
             throw clnt.getResponse().setAttributes(404, "html");
         }
         close(fd);
@@ -162,10 +176,8 @@ int dataCenter::isPathInfos(std::vector<std::string>& v)
             j++;
         }
 
-        std::cout << "tmp path : |" << tmpPath << '\n';
         if (!isDirectory(tmpPath))
         {
-            std::cout << "i: " << i << '\n';
             return i + 1;
         }
         i++;
@@ -181,8 +193,6 @@ void dataCenter::checkPathInfos(std::string file, client& clnt)
     std::string p;
     if ((int)pos != -1)
     {
-        // std::cout << "pos " << v[pos] << '\n';
-        // p = "./";
         while (pos < v.size())
         {
             p += "/" + v[pos];
@@ -190,14 +200,12 @@ void dataCenter::checkPathInfos(std::string file, client& clnt)
         }
     }
     clnt.setPathInfo(p);
-    std::cout << "path info : |" << clnt.getPathInfo() << "|\n";
 }
 
 void dataCenter::get(client &clnt, int fd){
     std::string directory, file;
 
     int j = clnt.getLocationIndex();
-
     server srv = getWebserv().getServers()[clnt.servIndx()];
 
 
@@ -223,10 +231,8 @@ void dataCenter::get(client &clnt, int fd){
         
         if (!file.empty())
         {
-            // checkPathInfos(file, clnt);
             clnt.setFileToCgi(file);
             clnt.setIsPost(0);
-            std::cout << "cgi of get\n";
             cgi(clnt);
             throw 0;
         }
@@ -243,9 +249,7 @@ void dataCenter::get(client &clnt, int fd){
                 if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
                     clnt.setFileToCgi(directory + fileIndexed);
                     clnt.setIsPost(0);
-                    std::cout << "cgi of get\n";
                     cgi(clnt);
-                    // cgi(clnt, srv.getLocations()[j], directory + fileIndexed , 0, "");
                 }
                 else if (!srv.getLocations()[j].get_dir_listing())
                     throw clnt.getResponse().setAttributes(403, "html");

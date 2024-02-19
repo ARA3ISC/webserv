@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:34 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/18 23:08:28 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 22:51:01 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ public:
     std::string cleanPath(std::string path);
     std::string getCleanPath(std::string path);
     void splitPath(client &clnt, std::string& directory, std::string& file);
-    int getLocationRequested(std::vector<location> loc, std::string path);
+    int getLocationRequested(std::vector<location> loc, client clnt);
 
     int updateServerIndex(server s, std::string hostHeader);
     void get(client &clnt, int fd);
