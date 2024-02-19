@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 16:21:00 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 17:23:17 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,28 @@ bool dataCenter::checkCgiPaths(location loc, std::string path){
 
     return true;
 }
-
+// real Path is : /nfs/homes/rlarabi/Desktop/webserv/myWebsite/CGI/index.php /nfs/homes/rlarabi/Desktop/webserv
 void dataCenter::cgi(client &clnt){
+    server srv = getWebserv().getServers()[clnt.servIndx()];
     
     char realPath[PATH_MAX];
-    // realpath(clnt.getFileToCgi().
-    // .c_str(), realPath);
+    char currentPath[PATH_MAX];
+    char locationRootPath[PATH_MAX];
 
+    realpath(clnt.getFileToCgi().c_str(), realPath);
+    realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
+    std::string s3 = locationRootPath;
+
+    realpath(".", currentPath);
+    std::string s1 = realPath;
+    std::string s2 = currentPath;
+
+    // std::cout << "real Path is : " << realPath << " " << currentPath << std::endl; 
+    if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+        
+    }else
+        throw clnt.getResponse().setAttributes(403, "html");
+    
     int status;
     
     location loc = this->wes.getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()];

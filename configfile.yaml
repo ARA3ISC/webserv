@@ -43,7 +43,7 @@
         dir_listing: off
         allow_methods: POST GET
         root: ./avito
-        index: test.html items.html
+        index: ../main.cpp items.html test.html
         auto_index: on
         upload: /uploads
 

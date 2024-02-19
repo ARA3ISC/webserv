@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 14:09:35 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 17:22:18 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,11 @@ void    dataCenter::reading(int fd)
 
     if (a == 0 || a == -1)
     {
+        if (this->clientList[fd].getIsCgiExec()){
+            int status;
+            kill(this->clientList[fd].getPidCgi(), SIGKILL);
+            waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+        }
         struct epoll_event event;
 
         event.data.fd = fd;
