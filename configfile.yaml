@@ -2,9 +2,9 @@
     server_name: example.com
     listen: 127.0.0.6:2222
     root: ./
-    max_body_size: 0b
+    max_body_size: 1M
     error: 404 ./CustomErrors/404.html
-# add / at the end of every location
+# add / at the end of every location <--> checked , need more tests
 # add byte in max bodu size <--> checked , need more tests
 # check real path for every path
 
@@ -12,7 +12,7 @@
 # status code in DELETE <--> checked , need more tests
 # if upload not found --> 404 instead of 500 <--> checked , need more tests
 # real path in file in case of DELETE <--> checked , need more tests
-# multiple slashes
+# multiple slashes <--> checked , need more tests
     - location:
         dir_listing: on
         allow_methods: POST GET
@@ -23,8 +23,10 @@
         cgi_path: sh /usr/bin/sh
         auto_index: on
         upload: /upload
+        # ln -s /nfs/homes/desktop /upload/
 
-    - location /upl:
+
+    - location /upl/:
         dir_listing: on
         allow_methods: GET DELETE POST
         root: ./myWebsite/upload
@@ -37,7 +39,7 @@
     root: ./
     error: 404 /path/to/404.html
 
-    - location:
+    - location /:
         dir_listing: off
         allow_methods: POST GET
         root: ./avito
@@ -45,7 +47,7 @@
         auto_index: on
         upload: /uploads
 
-    - location /about:
+    - location /about/:
         dir_listing: on
         allow_methods: POST  GET
         root: ./avito
@@ -54,10 +56,10 @@
         upload: /uploads
 
 
-    - location /contact:
+    - location /contact/:
         dir_listing: on
         allow_methods: GET POST
         root: ./avito
         index: contact.html
-        auto_index: on
+        auto_index: off
         upload: /upload

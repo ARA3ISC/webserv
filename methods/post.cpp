@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 22:04:05 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 14:19:50 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void dataCenter::post(client &clnt){
 
 
         if (!clnt.getFileUpload().is_open())
-            throw clnt.getResponse().setAttributes(500, "html");
+            throw clnt.getResponse().setAttributes(404, "html");
 
     }
     if (!clnt.getbufferBody().empty()){

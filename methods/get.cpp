@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 23:41:40 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 14:12:44 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,19 +96,26 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     if (pos != std::string::npos && !clnt.getPathInfo().empty())
         toOpen = toOpen.substr(0, pos);
 
-    if (!isDirectory(toOpen)){
+    if (isDirectory(toOpen)){
+        directory = toOpen;
+    }else{
+        std::cout << toOpen << "------\n";
         removeTrailingSlashes(toOpen);
         int fd = open(toOpen.c_str(), O_RDONLY);
-        if (fd == -1){
-            
+        if (fd == -1)
+        {
+            if (pathHasSlashAtEnd(clnt.getStartLine().path)){
+                clnt.getResponse().setPath(clnt.getStartLine().path + "/");
+                throw clnt.getResponse().setAttributes(301, "html");
+            }
             std::cout << "OPOPOPO "<< toOpen<< " \n";
             throw clnt.getResponse().setAttributes(404, "html");
         }
         close(fd);
         file = toOpen;
         return ;
+        
     }
-    directory = toOpen;
 }
 
 bool dataCenter::getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){

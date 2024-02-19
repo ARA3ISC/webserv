@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:10 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:05:11 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:39:38 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void    location::setPath(std::string line, int nbl, server* s)
     else
     {
         this->_path = removeLastColon(splited[2]);
-        if (this->_path.empty() || this->_path.at(0) != '/')
+        if (this->_path.empty() || this->_path.at(0) != '/' || this->_path[_path.size() -1] != '/')
             throwError("Syntax error", nbl);
     }
 

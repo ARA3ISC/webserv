@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 23:43:05 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 16:21:00 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,13 @@ bool dataCenter::checkCgiPaths(location loc, std::string path){
 }
 
 void dataCenter::cgi(client &clnt){
+    
+    char realPath[PATH_MAX];
+    // realpath(clnt.getFileToCgi().
+    // .c_str(), realPath);
+
     int status;
-    std::string filePost = "";
+    
     location loc = this->wes.getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()];
     if (!clnt.getIsCgiExec()){
         
@@ -46,17 +51,17 @@ void dataCenter::cgi(client &clnt){
         }
         std::cout << GREEN << "CGI executed [ " << getExtention(clnt.getFileToCgi()) << " ]" << RESET << std::endl;
 
-        // int status = 0;
 
         std::ostringstream s;
         s << std::time(0);
         s << this->getFilePrefix();
-        // std::string FileName = 
+        
         clnt.setFileNameCgi("/tmp/randomFile" + s.str() +".txt");
         clnt.getResponse().setIsCGIFile(true);
 
         int id = fork();
         if (id == 0){
+   
             int fdFile = open(clnt.getFileNameCgi().c_str(), O_CREAT | O_RDWR , 0644);
             if (fdFile == -1){
                 exit(37);
@@ -117,27 +122,11 @@ void dataCenter::cgi(client &clnt){
         clnt.setStartTimeCgi(clock());
         clnt.setPidCgi(id);
         clnt.setIsCgiExec(true);
-        
-        // if (waitpid(id, &status, WNOHANG) > 0) {
-        //     std::cout << "kokoko\n";
-        //     if (static_cast<double>(clock() - clnt.getStartTimeCgi()) / CLOCKS_PER_SEC > 0.0015){
-        //         kill(id, SIGKILL);
-        //         waitpid(id, &status, 0);
-        //         unlink(clnt.getFileNameCgi().c_str());
-        //         if (clnt.getIsPost())
-        //             unlink(clnt.getFileUploadName().c_str());
-        //         throw clnt.getResponse().setAttributes(504, "html");
-        //     }
-        // }
-        // else{
-        //     std::cout << "set exe true\n";
-        //     clnt.setIsCgiExec(true);
-        //     throw 0;   
-        // }
+
         
     }
     if (static_cast<double>(clock() - clnt.getStartTimeCgi()) / CLOCKS_PER_SEC > 5){
-        std::cout << "mkmkmkmk\n";
+        
         kill(clnt.getPidCgi(), SIGKILL);
         waitpid(clnt.getPidCgi(), &status, 0);
         unlink(clnt.getFileNameCgi().c_str());

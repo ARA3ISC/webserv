@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/18 23:25:22 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 14:09:35 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,18 +88,18 @@ void dataCenter::getLocationCF(client &clnt,server srv){
             tmpPath += "/" + splitURL[j];
             j++;
         }
-
+        tmpPath  += "/";
         int tmp = getLocationRequested(srv.getLocations(), tmpPath);
         if (tmp != -1)
             indexes.push_back(tmp);
         i++;
     }
+        // std::cout << RED << "size index " << indexes.back() << RESET << '\n';
     if (indexes.size() == 0){
         throw clnt.getResponse().setAttributes(404, "html");
     }
 
     clnt.setLocationIndex(indexes.back());
-
 }
 
 void dataCenter::checkErrors(client &clnt, server srv){

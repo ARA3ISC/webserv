@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:08 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/18 22:05:09 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 14:23:29 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ void dataCenter::handlingRequests()
                     try
                     {
                         cgi(this->clientList[events[i].data.fd]);
-                    }
+                    }   
                     catch(int)
                     {
                         this->clientList[events[i].data.fd].setIsCgiExec(false);
@@ -213,11 +213,12 @@ void dataCenter::handlingRequests()
                         this->clientList[events[i].data.fd].setStartTime(clock());
 						if (this->clientList[events[i].data.fd].getStartLine().method == "POST"){
 							this->clientList[events[i].data.fd].getFileUpload().close();
-                        	this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
+                        	this->clientList[events[i].data.fd].getResponse().setAttributes(408, "html");
 						}
 						else{
+                        	// this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
 							close(events[i].data.fd);
-							std::cerr << RED << "Response sent [ 504 Gateway Timeout ] " << events[i].data.fd << " Reason: empty request" << RESET << std::endl;
+							std::cerr << RED << "Response sent [ 408 Request Timeout ] " << events[i].data.fd << " Reason: empty request" << RESET << std::endl;
 						}
                     }
 
