@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/18 23:48:24 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 17:51:54 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void dataCenter::sending(int fd){
         if (this->clientList[fd].getIsCgi()){
             res.setIsHeaderSend(true);
             res.openFile(res.getPath());
-            if (write(fd, "HTTP/1.1 200 OK\r\n", 17) == -1)
+            if (write(fd, "HTTP/1.1 200 OK\r\n", 17) < 1)
             {
                 std::cout << RED << "Client disconnected " <<  fd << std::endl;
                 close(fd);
@@ -181,7 +181,7 @@ void dataCenter::sending(int fd){
         }
 
     }
-    if (write(fd, content.c_str(), content.length()) == -1)
+    if (write(fd, content.c_str(), content.length()) < 1)
     {
         std::cout << RED << "Client disconnected " <<  fd << std::endl;
         close(fd);

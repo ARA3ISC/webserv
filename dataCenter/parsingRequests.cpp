@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 17:29:49 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 18:35:26 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,11 @@ int dataCenter::updateServerIndex(server s, std::string hostHeader)
     std::vector<int> repeated;
     splited = splitBy(hostHeader, ':');
 
+    if (splited.size() == 2)
+        if (isNaN(splited[1]))
+            return -1;
+            
+
     for (size_t i = 0; i < this->wes.getServers().size(); i++)
     {
         if (this->wes.getServers()[i].getListen().size() == 2)
@@ -197,7 +202,10 @@ void    dataCenter::reading(int fd)
         if (!this->clientList[fd].isHeadersLoaded())
         {
             loadHeaders(fd);
-            clientList[fd].setServIndx(updateServerIndex(this->getServerList()[clientList[fd].servIndx()], this->clientList[fd].getHeaders()["Host"]));
+            int newIndx = updateServerIndex(this->getServerList()[clientList[fd].servIndx()], this->clientList[fd].getHeaders()["Host"]);
+            if (newIndx == -1)
+                throw clientList[fd].getResponse().setAttributes(400, "html");
+            clientList[fd].setServIndx(newIndx);
             checkErrors(this->clientList[fd], this->getWebserv().getServers()[this->clientList[fd].servIndx()]);
         }
         else {

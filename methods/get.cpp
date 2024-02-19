@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 14:12:44 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 17:49:17 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void dataCenter::get(client &clnt, int fd){
 
     realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
     realpath(".", currentPath);
-
+    
     std::string s1 = realPath;
     std::string s2 = currentPath;
     std::string s3 = locationRootPath;
