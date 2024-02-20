@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/20 10:27:25 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/20 10:53:16 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
     std::string pathStart = clnt.getStartLine().path;
     for (size_t i = 0; i < paths.size(); i++){
         
-        std::cout << "loc[i] " << paths[i] << " " << pathStart << std::endl;
         if (pathStart[pathStart.size() -1] != '/'){
-            std::cout << "----\n";
             pathStart += "/";
         }
             

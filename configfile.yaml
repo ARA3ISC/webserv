@@ -7,14 +7,14 @@
 
     - location:
         dir_listing: on
-        allow_methods: POST GET DELETE
+        allow_methods: POST GET
         root: ./myWebsite
         index: index.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
         auto_index: on
         upload: /upload
-        # return: example.com
+
 
 - server:
     server_name: serv1
@@ -28,3 +28,16 @@
         index: index.html
         auto_index: on
         upload: /upload
+
+
+- server:
+    server_name: serv2
+    listen: 127.0.0.1:1515
+    root: ./toDelete
+
+    - location /:
+        dir_listing: on
+        allow_methods: DELETE GET
+        root: ./toDelete
+        index: index.html
+        auto_index: on
