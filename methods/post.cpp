@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 23:30:10 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:42:32 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,20 @@ std::string dataCenter::getFileName(std::string pathUpload, std::string director
     return a.str();
 }
 
+bool isValidHexadecimal(const std::string& input) {
+
+    for (std::string::const_iterator it = input.begin(); it != input.end(); ++it) {
+        
+        if (!isxdigit(*it)) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 int hexToDecimal(const std::string& hexString) {
-    if (hexString == ""){
+    if (hexString == "" || !isValidHexadecimal(hexString)){
         return 0;
     }
     std::istringstream iss(hexString);
