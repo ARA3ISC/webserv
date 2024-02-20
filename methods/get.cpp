@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 23:30:01 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/20 10:27:25 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,16 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
     std::sort(paths.begin(), paths.end());
 
     int j = -1;
+    std::string pathStart = clnt.getStartLine().path;
     for (size_t i = 0; i < paths.size(); i++){
         
-        if (clnt.getStartLine().path.find(paths[i]) != std::string::npos && clnt.getStartLine().path.find(paths[i]) == 0)
+        std::cout << "loc[i] " << paths[i] << " " << pathStart << std::endl;
+        if (pathStart[pathStart.size() -1] != '/'){
+            std::cout << "----\n";
+            pathStart += "/";
+        }
+            
+        if (pathStart.find(paths[i]) != std::string::npos && pathStart.find(paths[i]) == 0)
         {
             j = i;
             break;
@@ -123,6 +130,9 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
         int fd = open(toOpen.c_str(), O_RDONLY);
         if (fd == -1)
         {
+            if (!access(toOpen.c_str(), F_OK) && clnt.getStartLine().method == "DELETE")
+                throw clnt.getResponse().setAttributes(403, "html");
+                
             throw clnt.getResponse().setAttributes(404, "html");
         }
         close(fd);

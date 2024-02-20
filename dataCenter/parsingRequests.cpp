@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 23:26:07 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/20 10:41:15 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,22 @@ void dataCenter::getLocationCF(client &clnt,server srv){
     int tmp = getLocationRequested(srv.getLocations(), clnt);
     if (tmp != -1)
         clnt.setLocationIndex(tmp);
-    else
+    else{
         throw clnt.getResponse().setAttributes(404, "html");
+    }
 
 }
 
 void dataCenter::checkErrors(client &clnt, server srv){
 
     getLocationCF(clnt, srv);
-    // checkPathInfos(clnt.getStartLine().path, clnt);
-
-
+    
     if (!srv.getLocations()[clnt.getLocationIndex()].getReturn().empty()){
+
+        if (srv.getLocations()[clnt.getLocationIndex()].getReturn() == clnt.getStartLine().path)
+        {
+            return ;
+        }
         clnt.getResponse().setPath(srv.getLocations()[clnt.getLocationIndex()].getReturn());
         throw clnt.getResponse().setAttributes(301, "html");
     }

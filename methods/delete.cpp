@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 23:29:50 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/20 09:49:38 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@ bool isDirectoryEmpty(std::string directory){
     while((ent = readdir(dir)) != NULL){
         std::string tmp = ent->d_name;
         if (tmp != "." && tmp != ".."){
+            closedir(dir);
             return false;
         }
     }
+    closedir(dir);
     return empty;
 }
 
@@ -57,6 +59,7 @@ void dataCenter::deleteDirectory(std::string directory){
                 continue;
             }
         }
+        closedir(dir);
     }
 
 }
@@ -110,8 +113,10 @@ void dataCenter::deleteMethod(client &clnt)
             }
 
             DIR *dir = opendir(directory.c_str());
-            if (dir != NULL)
+            if (dir != NULL){
+                closedir(dir);
                 rmdir(directory.c_str());
+            }
             else
                 throw clnt.getResponse().setAttributes(403, "html");
         }

@@ -7,25 +7,19 @@
 
     - location:
         dir_listing: on
-        allow_methods: POST GET
+        allow_methods: POST GET DELETE
         root: ./myWebsite
         index: index.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
         auto_index: on
         upload: /upload
-
-    - location /upload/:
-        dir_listing: on
-        allow_methods: GET
-        root: ./myWebsite/upload
-        auto_index: off
+        # return: example.com
 
 - server:
     server_name: serv1
     listen: 127.0.0.1:2222
     root: ./avito
-    error: 404 ./CustomErrors/404.html
 
     - location /:
         dir_listing: on
@@ -34,10 +28,3 @@
         index: index.html
         auto_index: on
         upload: /upload
-
-    - location /upload/:
-        dir_listing: on
-        allow_methods: GET
-        root: ./avito/upload
-        auto_index: off
-
