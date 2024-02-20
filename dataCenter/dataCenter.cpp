@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:08 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 14:23:29 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/20 16:15:50 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,9 @@ void dataCenter::acceptClientSocket(std::vector<int> server_fds, int fd, struct 
     client c(indx, clientSocket);
     c.setStartTime(clock());
 
+    if (this->clientList.find(clientSocket) != this->clientList.end()){
+        this->clientList.erase(this->clientList.find(clientSocket));
+    }
     this->clientList[clientSocket] = c;
     response res;
     this->clientList[clientSocket].setResponse(res);
