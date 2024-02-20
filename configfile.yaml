@@ -1,13 +1,13 @@
 - server:
-    server_name: serv2
-    listen: 127.0.0.1:2223
+    server_name: localhost
+    listen: 127.0.0.1:9090
     root: ./myWebsite
     max_body_size: 1G
     error: 404 ./CustomErrors/404.html
 
     - location:
         dir_listing: on
-        allow_methods: POST GET DELETE
+        allow_methods: POST GET
         root: ./myWebsite
         index: index.html
         cgi_path: py /usr/bin/python3
@@ -15,38 +15,29 @@
         auto_index: on
         upload: /upload
 
+    - location /upload/:
+        dir_listing: on
+        allow_methods: GET
+        root: ./myWebsite/upload
+        auto_index: off
 
 - server:
     server_name: serv1
     listen: 127.0.0.1:2222
     root: ./avito
-    error: 404 /path/to/404.html
+    error: 404 ./CustomErrors/404.html
 
-    - location /contact/:
+    - location /:
         dir_listing: on
         allow_methods: POST GET
         root: ./avito
         index: index.html
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
         auto_index: on
         upload: /upload
 
-
-
-- server:
-    server_name: serv1
-    listen: 127.0.0.1:2222
-    root: ./avito/serv1
-    max_body_size: 1M
-    error: 404 ./CustomErrors/404.html
-
-    - location:
+    - location /upload/:
         dir_listing: on
-        allow_methods: POST GET
-        root: ./myWebsite
-        index: index.html
-        cgi_path: py /usr/bin/python3
-        cgi_path: php /usr/bin/php-cgi
-        auto_index: on
-        upload: /upload
+        allow_methods: GET
+        root: ./avito/upload
+        auto_index: off
+
