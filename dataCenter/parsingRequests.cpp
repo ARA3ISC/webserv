@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/21 16:03:16 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 00:26:43 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void    dataCenter::requestSyntaxError(client& rq)
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
             throw 501;
     }
-    if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end()){
-        if (rq.getStartLine().method == "POST")
-            throw 400;
-    }
+    // if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end()){
+    //     if (rq.getStartLine().method == "POST")
+    //         throw 400;
+    // }
 
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)

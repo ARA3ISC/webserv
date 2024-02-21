@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/21 21:50:19 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 00:27:23 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ std::string dataCenter::getFileName(std::string pathUpload, std::string director
     return a.str();
 }
 
-bool isValidHexadecimal(const std::string& input) {
-
+bool isValidHexadecimal(std::string input) {
+    if(input.empty())
+        return false;
     for (std::string::const_iterator it = input.begin(); it != input.end(); ++it) {
         
         if (!isxdigit(*it)) {
@@ -36,6 +37,23 @@ bool isValidHexadecimal(const std::string& input) {
     }
 
     return true;
+}
+// bool isValidHexadecimal(const std::string& input) {
+
+//     for (std::string::const_iterator it = input.begin(); it != input.end(); ++it) {
+        
+//         if (!isxdigit(*it)) {
+//             return false;
+//         }
+//     }
+
+//     return true;
+// }
+
+bool hexToDecimalLast(std::string hexString) {
+    if(hexString.find("0\r\n\r\n") != std::string::npos && hexString.find("0\r\n\r\n") == 0)
+        return true;
+    return false;
 }
 
 int hexToDecimal(const std::string& hexString) {
@@ -75,11 +93,9 @@ void readBufferChunck(client &clnt, std::string buffer){
     std::string tmp;
 
     if (!clnt.getbufferLen()){
-
         int s = getSizeChunck(buffer);
         clnt.setbufferLen(s);
         clnt.setChunkSize(s);
-
     }
 
     int n = clnt.getbufferLen();
@@ -103,12 +119,13 @@ void readBufferChunck(client &clnt, std::string buffer){
         }
 
         clnt.setTempBuffer(buffer.substr(i));
-
+        if (hexToDecimalLast(clnt.getTempBuffer())){
+            clnt.setIsLastChunk(true);
+        }
         clnt.setChunk(result);
         return ;
     }
     else{
-
         clnt.setTempBuffer("");
         clnt.setChunk(result);
         return ;
@@ -197,7 +214,7 @@ void dataCenter::post(client &clnt){
     size_t nb;
     iss >> nb;
 
-    if (clnt.getFullSize() >= nb){
+    if ((clnt.getFullSize() >= nb  && clnt.getHeaders()["Transfer-Encoding"] != "chunked")|| (clnt.getIsLastChunk() && clnt.getHeaders()["Transfer-Encoding"] == "chunked")){
 
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
