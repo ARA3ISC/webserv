@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/20 16:30:30 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 16:07:09 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,11 @@ void dataCenter::sending(int fd){
     statusCodeMsgs[504] = "Gateway Timeout";
     statusCodeMsgs[505] = "HTTP Version Not Supported";
 
+        std::cout << "sending \n";
+    if (this->clientList[fd].getIsCgiExec()){
+        std::cout << "child running \n";
+    }
+
     response &res = this->clientList[fd].getResponse();
     std::string content = "";
     int status;
@@ -127,6 +132,7 @@ void dataCenter::sending(int fd){
                 std::cout << RED << "Client disconnected " <<  fd << std::endl;
                 close(fd);
                 if (this->clientList[fd].getIsCgiExec()){
+                    unlink(this->clientList[fd].getFileNameCgi().c_str());
                     kill(this->clientList[fd].getPidCgi(), SIGKILL);
                     waitpid(this->clientList[fd].getPidCgi(), &status, 0);
                 }
@@ -144,6 +150,7 @@ void dataCenter::sending(int fd){
             write(fd, header.c_str(), header.length());
             close(fd);
             if (this->clientList[fd].getIsCgiExec()){
+                unlink(this->clientList[fd].getFileNameCgi().c_str());
                 kill(this->clientList[fd].getPidCgi(), SIGKILL);
                 waitpid(this->clientList[fd].getPidCgi(), &status, 0);
             }
@@ -158,6 +165,7 @@ void dataCenter::sending(int fd){
                     write(fd, "HTTP/1.1 403 Forbidden\r\nContent-Type: text/html\r\n\r\nERROR PERMISSION", 67);
                     close(fd);
                     if (this->clientList[fd].getIsCgiExec()){
+                        unlink(this->clientList[fd].getFileNameCgi().c_str());
                         kill(this->clientList[fd].getPidCgi(), SIGKILL);
                         waitpid(this->clientList[fd].getPidCgi(), &status, 0);
                     }
@@ -195,6 +203,7 @@ void dataCenter::sending(int fd){
         std::cout << RED << "Client disconnected " <<  fd << std::endl;
         close(fd);
         if (this->clientList[fd].getIsCgiExec()){
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
             kill(this->clientList[fd].getPidCgi(), SIGKILL);
             waitpid(this->clientList[fd].getPidCgi(), &status, 0);
         }
@@ -209,6 +218,7 @@ void dataCenter::sending(int fd){
         std::cout << RESET;
         close(fd);
         if (this->clientList[fd].getIsCgiExec()){
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
             kill(this->clientList[fd].getPidCgi(), SIGKILL);
             waitpid(this->clientList[fd].getPidCgi(), &status, 0);
         }

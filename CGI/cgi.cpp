@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 23:29:37 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 18:32:18 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool dataCenter::checkCgiPaths(location loc, std::string path){
 
     return true;
 }
-// real Path is : /nfs/homes/rlarabi/Desktop/webserv/myWebsite/CGI/index.php /nfs/homes/rlarabi/Desktop/webserv
+
 void dataCenter::cgi(client &clnt){
     server srv = getWebserv().getServers()[clnt.servIndx()];
     
@@ -44,7 +44,7 @@ void dataCenter::cgi(client &clnt){
     std::string s1 = realPath;
     std::string s2 = currentPath;
 
-    // std::cout << "real Path is : " << realPath << " " << currentPath << std::endl; 
+
     if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
         
     }else

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/20 10:41:15 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 16:03:16 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void    dataCenter::requestSyntaxError(client& rq)
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
             throw 501;
     }
-    if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0){
+    if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end()){
         if (rq.getStartLine().method == "POST")
             throw 400;
     }
@@ -164,6 +164,7 @@ void    dataCenter::reading(int fd)
     if (a == 0 || a == -1)
     {
         if (this->clientList[fd].getIsCgiExec()){
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
             int status;
             kill(this->clientList[fd].getPidCgi(), SIGKILL);
             waitpid(this->clientList[fd].getPidCgi(), &status, 0);

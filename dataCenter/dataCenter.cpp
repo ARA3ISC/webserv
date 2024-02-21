@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:08 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/20 16:15:50 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 20:52:14 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,6 @@ void dataCenter::handlingRequests()
                         	this->clientList[events[i].data.fd].getResponse().setAttributes(408, "html");
 						}
 						else{
-                        	// this->clientList[events[i].data.fd].getResponse().setAttributes(504, "html");
 							close(events[i].data.fd);
 							std::cerr << RED << "Response sent [ 408 Request Timeout ] " << events[i].data.fd << " Reason: empty request" << RESET << std::endl;
 						}
