@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/21 21:45:07 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 21:50:19 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,9 +166,6 @@ void dataCenter::post(client &clnt){
 
         int j = clnt.getLocationIndex();
 
-        if (srv.getLocations()[j].getUpload().empty())
-            throw clnt.getResponse().setAttributes(404, "html");
-
         std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
         
@@ -185,9 +182,8 @@ void dataCenter::post(client &clnt){
 
         clnt.setIsUploadfileOpen(true);
 
-
         if (!clnt.getFileUpload().is_open())
-            throw clnt.getResponse().setAttributes(404, "html");
+            throw clnt.getResponse().setAttributes(500, "html");
 
     }
     
