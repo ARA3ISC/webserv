@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/21 18:32:18 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 21:46:05 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,8 @@ bool dataCenter::checkCgiPaths(location loc, std::string path){
 void dataCenter::cgi(client &clnt){
     server srv = getWebserv().getServers()[clnt.servIndx()];
     
-    char realPath[PATH_MAX];
-    char currentPath[PATH_MAX];
-    char locationRootPath[PATH_MAX];
+    checkRealPath(clnt, clnt.getFileToCgi());
 
-    realpath(clnt.getFileToCgi().c_str(), realPath);
-    realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
-    std::string s3 = locationRootPath;
-
-    realpath(".", currentPath);
-    std::string s1 = realPath;
-    std::string s2 = currentPath;
-
-
-    if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
-        
-    }else
-        throw clnt.getResponse().setAttributes(403, "html");
-    
     int status;
     
     location loc = this->wes.getServers()[clnt.servIndx()].getLocations()[clnt.getLocationIndex()];

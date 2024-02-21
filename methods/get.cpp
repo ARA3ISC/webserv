@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/20 10:53:16 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 21:47:50 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,58 +218,41 @@ void dataCenter::get(client &clnt, int fd){
 
 
     splitPath(clnt, directory, file);
-
-    char realPath[PATH_MAX];
-    char currentPath[PATH_MAX];
-    char locationRootPath[PATH_MAX];
-
+    
     if (file.empty())
-        realpath(directory.c_str(), realPath);
+        checkRealPath(clnt, directory);
     else
-        realpath(file.c_str(), realPath);
-
-    realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
-    realpath(".", currentPath);
+        checkRealPath(clnt, file);
     
-    std::string s1 = realPath;
-    std::string s2 = currentPath;
-    std::string s3 = locationRootPath;
-    
-    if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
-        
-        if (!file.empty())
-        {
-            clnt.setFileToCgi(file);
-            clnt.setIsPost(0);
-            cgi(clnt);
-            throw 0;
-        }
-        else
-        {
-            if (pathHasSlashAtEnd(clnt.getStartLine().path)){
-                clnt.getResponse().setPath(clnt.getStartLine().path + "/");
-                throw clnt.getResponse().setAttributes(301, "html");
-            }
-
-            if (srv.getLocations()[j].isAutoIndex()){
-                std::string fileIndexed;
-
-                if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
-                    clnt.setFileToCgi(directory + fileIndexed);
-                    clnt.setIsPost(0);
-                    cgi(clnt);
-                }
-                else if (!srv.getLocations()[j].get_dir_listing())
-                    throw clnt.getResponse().setAttributes(403, "html");
-            }
-
-            if (!srv.getLocations()[j].get_dir_listing())
-                throw clnt.getResponse().setAttributes(403, "html");
-            else
-                listDirectory(directory , directory, fd);
-        }
+    if (!file.empty())
+    {
+        clnt.setFileToCgi(file);
+        clnt.setIsPost(0);
+        cgi(clnt);
+        throw 0;
     }
     else
-        throw clnt.getResponse().setAttributes(403, "html");
-        
+    {
+        if (pathHasSlashAtEnd(clnt.getStartLine().path)){
+            clnt.getResponse().setPath(clnt.getStartLine().path + "/");
+            throw clnt.getResponse().setAttributes(301, "html");
+        }
+
+        if (srv.getLocations()[j].isAutoIndex()){
+            std::string fileIndexed;
+
+            if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
+                clnt.setFileToCgi(directory + fileIndexed);
+                clnt.setIsPost(0);
+                cgi(clnt);
+            }
+            else if (!srv.getLocations()[j].get_dir_listing())
+                throw clnt.getResponse().setAttributes(403, "html");
+        }
+
+        if (!srv.getLocations()[j].get_dir_listing())
+            throw clnt.getResponse().setAttributes(403, "html");
+        else
+            listDirectory(directory , directory, fd);
+    }
 }

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:34 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 22:51:01 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 21:43:11 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int isPathInfos(std::vector<std::string>& v);
 void checkPathInfos(std::string file, client& clnt);
 
     std::map<int, server>& getServerList() ;
+    void checkRealPath(client &clnt, std::string a);
 };
 
 

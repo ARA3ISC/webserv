@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 23:42:32 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 21:45:07 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,37 +114,31 @@ void readBufferChunck(client &clnt, std::string buffer){
         return ;
     }
 }
+void dataCenter::checkRealPath(client &clnt, std::string toCheck){
+
+    server srv = getWebserv().getServers()[clnt.servIndx()];
+    char realPath[PATH_MAX];
+    char currentPath[PATH_MAX];
+    char locationRootPath[PATH_MAX];
+
+    realpath(toCheck.c_str(), realPath);
+    realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
+    realpath(".", currentPath);
+
+    std::string s1 = realPath;
+    std::string s2 = currentPath;
+    std::string s3 = locationRootPath;
+
+    if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+    }
+    else
+        throw clnt.getResponse().setAttributes(403, "html");
+}
 
 void dataCenter::post(client &clnt){
     
     std::string directory, file, res;
-    
-    if (!clnt.getIsUploadfileOpen()){
-        server srv = getWebserv().getServers()[clnt.servIndx()];
 
-        splitPath(clnt, directory, file);
-
-        char realPath[PATH_MAX];
-        char currentPath[PATH_MAX];
-        char locationRootPath[PATH_MAX];
-
-        if (file.empty())
-            realpath(directory.c_str(), realPath);
-        else
-            realpath(file.c_str(), realPath);
-
-        realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
-        realpath(".", currentPath);
-
-        std::string s1 = realPath;
-        std::string s2 = currentPath;
-        std::string s3 = locationRootPath;
-    
-        if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
-        }
-        else
-            throw clnt.getResponse().setAttributes(403, "html");
-    }
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && !clnt.getbufferBody().empty()){
 
         readBufferChunck(clnt, clnt.getbufferBody());
@@ -160,9 +154,15 @@ void dataCenter::post(client &clnt){
 
     if (!clnt.getIsUploadfileOpen()){
 
+        server srv = getWebserv().getServers()[clnt.servIndx()];
+
         splitPath(clnt, directory, file);
 
-        server srv = getWebserv().getServers()[clnt.servIndx()];
+
+        if (file.empty())
+            checkRealPath(clnt, directory);
+        else
+            checkRealPath(clnt, file);
 
         int j = clnt.getLocationIndex();
 
@@ -171,32 +171,15 @@ void dataCenter::post(client &clnt){
 
         std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
         std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
+        
         if (extension == "x-www-form-urlencoded")
             extension = "txt";
+        
         std::string fileName;
+        
         fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
 
-
-        
-
-            char realPath[PATH_MAX];
-            char currentPath[PATH_MAX];
-            char locationRootPath[PATH_MAX];
-
-            realpath(fileName.c_str(), realPath);
-            realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
-            std::string s3 = locationRootPath;
-
-            realpath(".", currentPath);
-            std::string s1 = realPath;
-            std::string s2 = currentPath;
-
-            if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
-                
-            }else
-                throw clnt.getResponse().setAttributes(403, "html");
-
-
+        checkRealPath(clnt, fileName);
 
         clnt.openFileUpload(fileName);
 
@@ -207,11 +190,13 @@ void dataCenter::post(client &clnt){
             throw clnt.getResponse().setAttributes(404, "html");
 
     }
+    
     if (!clnt.getbufferBody().empty()){
         clnt.setFullSize(clnt.getbufferBody().size());
         clnt.getFileUpload().write(clnt.getbufferBody().c_str(), clnt.getbufferBody().size());
 
     }
+    
     std::istringstream iss(clnt.getHeaders()["Content-Length"]);
     size_t nb;
     iss >> nb;
@@ -227,9 +212,11 @@ void dataCenter::post(client &clnt){
         int j = clnt.getLocationIndex();
 
         if (!file.empty()){
+            
             clnt.setFileToCgi(file);
             clnt.setIsPost(1);
             cgi(clnt);
+        
         }else{
             if (srv.getLocations()[j].isAutoIndex()){
                 std::string fileIndexed;
@@ -243,7 +230,6 @@ void dataCenter::post(client &clnt){
                     }
                     else
                         throw clnt.getResponse().setAttributes(201, "html");
-                    //     // cgi(clnt, srv.getLocations()[j], directory + fileIndexed ,1, clnt.getFileUploadName());
                 }
                 else
                     throw clnt.getResponse().setAttributes(201, "html");
