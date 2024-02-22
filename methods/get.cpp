@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/20 10:53:16 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:21:23 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,13 +140,21 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     }
 }
 
-bool dataCenter::getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content){
-
+bool dataCenter::getContentIndexedFiles(client &clnt, std::string path, std::vector<std::string> index, std::string &content)
+{
     std::string nameFile;
+    server srv = getWebserv().getServers()[clnt.servIndx()];
 
     for (size_t i = 0; i < index.size(); i++)
     {
         nameFile = path + index[i];
+        if (isDirectory(nameFile) && index[i] == srv.getLocations()[clnt.getLocationIndex()].getPath())
+            continue;
+        if (isDirectory(nameFile) && clnt.getStartLine().method == "GET")
+        {
+            clnt.getResponse().setPath(index[i]);
+            throw clnt.getResponse().setAttributes(301, "html");
+        }
         std::ifstream input(nameFile.c_str());
         if (input.is_open())
         {
@@ -254,7 +262,7 @@ void dataCenter::get(client &clnt, int fd){
             if (srv.getLocations()[j].isAutoIndex()){
                 std::string fileIndexed;
 
-                if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
+                if (getContentIndexedFiles(clnt, directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
                     clnt.setFileToCgi(directory + fileIndexed);
                     clnt.setIsPost(0);
                     cgi(clnt);

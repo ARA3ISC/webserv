@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:34 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 22:51:01 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:16:56 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ public:
     void deleteDirectory(std::string directory);
     bool pathHasSlashAtEnd(std::string path);
     bool checkCgiPaths(location loc, std::string path);
-    bool getContentIndexedFiles(std::string path, std::vector<std::string> index,std::string &content);
+    bool getContentIndexedFiles(client &clnt, std::string path, std::vector<std::string> index,std::string &content);
 
 int isPathInfos(std::vector<std::string>& v);
 void checkPathInfos(std::string file, client& clnt);

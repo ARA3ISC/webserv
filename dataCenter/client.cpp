@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:00 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/18 23:11:03 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 17:31:15 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ client::client(int serverIndex, int clientFd) {
     this->_serverIndex = serverIndex;
     this->_fd = clientFd;
     this->bufferLen = 0;
+    this->chunkSize = 0;
     this->fullSize = 0;
+    this->isLastChunk = false;
 }
 
 client::client(const client &rhs) {
@@ -54,6 +56,7 @@ client::client(const client &rhs) {
     this->fileNameCgi = rhs.fileNameCgi;
     this->fileToCgi = rhs.fileToCgi;
     this->pathInfo = rhs.pathInfo;
+    this->isLastChunk = rhs.isLastChunk;
     
 
 }
@@ -88,6 +91,7 @@ client& client::operator=(const client &rhs) {
         this->fileNameCgi = rhs.fileNameCgi;
         this->fileToCgi = rhs.fileToCgi;
         this->pathInfo = rhs.pathInfo;
+        this->isLastChunk = rhs.isLastChunk;
     }
     return *this;
 }
@@ -313,4 +317,11 @@ void client::setPathInfo(std::string a){
 }
 std::string client::getPathInfo(){
     return this->pathInfo;
+}
+
+void client::setIsLastChunk(bool a){
+    this->isLastChunk = a;
+}
+bool client::getIsLastChunk(){
+    return this->isLastChunk;
 }

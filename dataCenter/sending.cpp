@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/20 10:43:29 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 15:37:23 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void dataCenter::sending(int fd){
 
     response &res = this->clientList[fd].getResponse();
     std::string content = "";
-    int status;
+    
     if(!res.getIsHeaderSend()){
         if (this->clientList[fd].getIsCgi()){
             res.setIsHeaderSend(true);
@@ -126,8 +126,8 @@ void dataCenter::sending(int fd){
             {
                 std::cout << RED << "Client disconnected " <<  fd << std::endl;
                 close(fd);
-                kill(this->clientList[fd].getPidCgi(), SIGKILL);
-                waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+                res.getFilePath().close();
+                res.getFilePathError().close();
                 return;
             }
 
@@ -141,8 +141,7 @@ void dataCenter::sending(int fd){
             std::cout << GREEN << "Response sent GET [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << RESET << "\n";
             write(fd, header.c_str(), header.length());
             close(fd);
-            kill(this->clientList[fd].getPidCgi(), SIGKILL);
-            waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+            
             return ;
         }
         if (res.getStatusCode() != 200){
@@ -153,8 +152,7 @@ void dataCenter::sending(int fd){
                     res.setIsHeaderSend(true);
                     write(fd, "HTTP/1.1 403 Forbidden\r\nContent-Type: text/html\r\n\r\nERROR PERMISSION", 67);
                     close(fd);
-                    kill(this->clientList[fd].getPidCgi(), SIGKILL);
-                    waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+                    
                     return ;
                 }
             }
@@ -186,10 +184,10 @@ void dataCenter::sending(int fd){
     }
     if (write(fd, content.c_str(), content.length()) < 1)
     {
-        std::cout << RED << "Client disconnected " <<  fd << std::endl;
+        std::cout << RED << "2Client disconnected " <<  fd << std::endl;
         close(fd);
-        kill(this->clientList[fd].getPidCgi(), SIGKILL);
-        waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+        res.getFilePath().close();
+        res.getFilePathError().close();
         return;
     }
     if (res.getIsResponseSent()){
@@ -200,8 +198,7 @@ void dataCenter::sending(int fd){
         std::cout << "Response sent " << this->clientList[fd].getStartLine().method << " [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << "\n";
         std::cout << RESET;
         close(fd);
-        kill(this->clientList[fd].getPidCgi(), SIGKILL);
-        waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+        
         res.getFilePath().close();
         res.getFilePathError().close();
 

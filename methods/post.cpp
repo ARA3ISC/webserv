@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/19 23:42:32 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:30:06 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ bool isValidHexadecimal(const std::string& input) {
     }
 
     return true;
+}
+
+bool checkLastChunk(std::string &hexString){
+
+    if (hexString.find("0\r\n\r\n") != std::string::npos && hexString.find("0\r\n\r\n") == 0)
+        return true;
+    return false;
 }
 
 int hexToDecimal(const std::string& hexString) {
@@ -84,26 +91,29 @@ void readBufferChunck(client &clnt, std::string buffer){
 
     int n = clnt.getbufferLen();
 
-    if ((unsigned long)n < buffer.size()){
+    if ((unsigned long)n <= buffer.size()){
         result = buffer.substr(0, n);
         i = n;
         n = 0;
     }else{
         result = buffer;
-        i += buffer.size();
+        i = buffer.size() - 1;
         n -= buffer.size();
     }
 
     clnt.setbufferLen(n);
 
     if (!n){
-
         if (buffer[i] == '\r' && buffer[i + 1] == '\n'){
             i += 2;
         }
 
         clnt.setTempBuffer(buffer.substr(i));
-
+        std::string tmp = clnt.getTempBuffer();
+        
+        if (checkLastChunk(tmp)){
+            clnt.setIsLastChunk(true);
+        }
         clnt.setChunk(result);
         return ;
     }
@@ -150,6 +160,10 @@ void dataCenter::post(client &clnt){
         readBufferChunck(clnt, clnt.getbufferBody());
 
         if (clnt.getChunk().size() >= clnt.getChunkSize()){
+            if (clnt.getChunk().size() == 0 && clnt.getChunkSize() == 0)
+            {
+                clnt.setIsLastChunk(true);
+            }
             clnt.setbufferBody(clnt.getChunk());
             clnt.setChunk("");
             clnt.setChunkSize(0);
@@ -216,7 +230,7 @@ void dataCenter::post(client &clnt){
     size_t nb;
     iss >> nb;
 
-    if (clnt.getFullSize() >= nb){
+    if ((clnt.getHeaders()["Transfer-Encoding"] != "chunked" && clnt.getFullSize() >= nb) || (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && clnt.getIsLastChunk())){
 
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
@@ -234,7 +248,7 @@ void dataCenter::post(client &clnt){
             if (srv.getLocations()[j].isAutoIndex()){
                 std::string fileIndexed;
 
-                if (getContentIndexedFiles(directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
+                if (getContentIndexedFiles(clnt, directory, srv.getLocations()[j].getIndexes(), fileIndexed)){
                 
                     if (!checkCgiPaths(srv.getLocations()[j], directory + fileIndexed)){
                         clnt.setFileToCgi(directory + fileIndexed);
@@ -243,7 +257,6 @@ void dataCenter::post(client &clnt){
                     }
                     else
                         throw clnt.getResponse().setAttributes(201, "html");
-                    //     // cgi(clnt, srv.getLocations()[j], directory + fileIndexed ,1, clnt.getFileUploadName());
                 }
                 else
                     throw clnt.getResponse().setAttributes(201, "html");

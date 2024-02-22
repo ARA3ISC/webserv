@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/20 10:41:15 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 15:48:12 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void    dataCenter::requestSyntaxError(client& rq)
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
             throw 501;
     }
-    if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0){
-        if (rq.getStartLine().method == "POST")
-            throw 400;
-    }
+    // if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0){
+    //     if (rq.getStartLine().method == "POST")
+    //         throw 400;
+    // }
 
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
@@ -177,6 +177,7 @@ void    dataCenter::reading(int fd)
             throw std::runtime_error("Error epoll ctl");
         }
         close(fd);
+        std::cout << RED << "Client disconnected " <<  fd << std::endl;
     }
 
     if (!this->clientList[fd].isHeadersLoaded()){

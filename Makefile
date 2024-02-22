@@ -1,6 +1,6 @@
 NAME = webserv
 CXX = c++
-CXXFLAGS = -Wextra -Werror -Wall -std=c++98
+CXXFLAGS = -Wextra -Werror -Wall -std=c++98 
 RM = rm -f
 
 SRC = parsingConfigFile/webserv.cpp main.cpp parsingConfigFile/parsingConfigFile.cpp parsingConfigFile/server.cpp \
