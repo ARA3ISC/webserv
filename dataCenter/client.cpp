@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:00 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/22 18:33:33 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:41:45 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,13 +317,6 @@ void client::setPathInfo(std::string a){
 }
 std::string client::getPathInfo(){
     return this->pathInfo;
-}
-
-void client::setIsLastChunk(bool a){
-    this->isLastChunk = a;
-}
-bool client::getIsLastChunk(){
-    return this->isLastChunk;
 }
 
 void client::setIsLastChunk(bool a){
