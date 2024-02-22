@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/20 09:49:38 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/21 21:47:00 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,55 +74,38 @@ void dataCenter::deleteMethod(client &clnt)
 
     splitPath(clnt, directory, file);
 
-    char realPath[PATH_MAX];
-    char currentPath[PATH_MAX];
-    char locationRootPath[PATH_MAX];
-
     if (file.empty())
-        realpath(directory.c_str(), realPath);
+        checkRealPath(clnt, directory);
     else
-        realpath(file.c_str(), realPath);
-
-    realpath(srv.getLocations()[clnt.getLocationIndex()].getRoot().c_str(), locationRootPath);
-    realpath(".", currentPath);
-
-    std::string s1 = realPath;
-    std::string s2 = currentPath;
-    std::string s3 = locationRootPath;
+        checkRealPath(clnt, file);
     
-    if (s1.find(s2) != std::string::npos && s1 != s2 && s1.find(s3) != std::string::npos){
+  
+    if (!file.empty()){
+        
+        if ((fdFile = open(file.c_str(), O_WRONLY)) == -1)
+            throw clnt.getResponse().setAttributes(500, "html");
+        close(fdFile);
+        if (unlink(file.c_str()) == -1)
+            throw clnt.getResponse().setAttributes(500, "html");
 
-        if (!file.empty()){
-            file = s1;
-            
-            if ((fdFile = open(file.c_str(), O_WRONLY)) == -1)
-                throw clnt.getResponse().setAttributes(500, "html");
-            close(fdFile);
-            if (unlink(file.c_str()) == -1)
-                throw clnt.getResponse().setAttributes(500, "html");
-
-        }
-        else{
-            if (pathHasSlashAtEnd(clnt.getStartLine().path))
-                throw clnt.getResponse().setAttributes(409, "html");
-
-            directory = s1;
-            deleteDirectory(directory);
-            if (!isDirectoryEmpty(directory)){
-                throw clnt.getResponse().setAttributes(403, "html");
-            }
-
-            DIR *dir = opendir(directory.c_str());
-            if (dir != NULL){
-                closedir(dir);
-                rmdir(directory.c_str());
-            }
-            else
-                throw clnt.getResponse().setAttributes(403, "html");
-        }
     }
-    else
-        throw clnt.getResponse().setAttributes(403, "html");
+    else{
+        if (pathHasSlashAtEnd(clnt.getStartLine().path))
+            throw clnt.getResponse().setAttributes(409, "html");
+
+        deleteDirectory(directory);
+        if (!isDirectoryEmpty(directory)){
+            throw clnt.getResponse().setAttributes(403, "html");
+        }
+
+        DIR *dir = opendir(directory.c_str());
+        if (dir != NULL){
+            closedir(dir);
+            rmdir(directory.c_str());
+        }
+        else
+            throw clnt.getResponse().setAttributes(403, "html");
+    }
 
     throw clnt.getResponse().setAttributes(204, "html");
 }

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:46 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/22 15:42:43 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:37:41 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ private:
     std::string fileToCgi;
     bool isPost;
     std::string pathInfo;
+    bool isLastChunk;
     bool isLastChunk;
 
 public:
@@ -142,6 +143,9 @@ public:
     bool getIsPost();
     void setPathInfo(std::string a);
     std::string getPathInfo();
+
+    void setIsLastChunk(bool a);
+    bool getIsLastChunk();
 
     void setIsLastChunk(bool a);
     bool getIsLastChunk();

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/22 15:48:12 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:35:14 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void    dataCenter::reading(int fd)
     if (a == 0 || a == -1)
     {
         if (this->clientList[fd].getIsCgiExec()){
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
             int status;
             kill(this->clientList[fd].getPidCgi(), SIGKILL);
             waitpid(this->clientList[fd].getPidCgi(), &status, 0);

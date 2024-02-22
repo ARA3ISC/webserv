@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/22 15:37:23 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/22 18:37:10 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,11 @@ void dataCenter::sending(int fd){
     statusCodeMsgs[504] = "Gateway Timeout";
     statusCodeMsgs[505] = "HTTP Version Not Supported";
 
+        std::cout << "sending \n";
+    if (this->clientList[fd].getIsCgiExec()){
+        std::cout << "child running \n";
+    }
+
     response &res = this->clientList[fd].getResponse();
     std::string content = "";
     
@@ -141,7 +146,11 @@ void dataCenter::sending(int fd){
             std::cout << GREEN << "Response sent GET [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << RESET << "\n";
             write(fd, header.c_str(), header.length());
             close(fd);
-            
+            if (this->clientList[fd].getIsCgiExec()){
+                unlink(this->clientList[fd].getFileNameCgi().c_str());
+                kill(this->clientList[fd].getPidCgi(), SIGKILL);
+                waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+            }
             return ;
         }
         if (res.getStatusCode() != 200){
@@ -152,7 +161,11 @@ void dataCenter::sending(int fd){
                     res.setIsHeaderSend(true);
                     write(fd, "HTTP/1.1 403 Forbidden\r\nContent-Type: text/html\r\n\r\nERROR PERMISSION", 67);
                     close(fd);
-                    
+                    if (this->clientList[fd].getIsCgiExec()){
+                        unlink(this->clientList[fd].getFileNameCgi().c_str());
+                        kill(this->clientList[fd].getPidCgi(), SIGKILL);
+                        waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+                    }
                     return ;
                 }
             }
@@ -188,6 +201,11 @@ void dataCenter::sending(int fd){
         close(fd);
         res.getFilePath().close();
         res.getFilePathError().close();
+        if (this->clientList[fd].getIsCgiExec()){
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
+            kill(this->clientList[fd].getPidCgi(), SIGKILL);
+            waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+        }
         return;
     }
     if (res.getIsResponseSent()){
@@ -198,6 +216,11 @@ void dataCenter::sending(int fd){
         std::cout << "Response sent " << this->clientList[fd].getStartLine().method << " [ " << res.getStatusCode() << " " << statusCodeMsgs[res.getStatusCode()] << " ] " << fd << " " << this->clientList[fd].getStartLine().path << "\n";
         std::cout << RESET;
         close(fd);
+        if (this->clientList[fd].getIsCgiExec()){
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
+            kill(this->clientList[fd].getPidCgi(), SIGKILL);
+            waitpid(this->clientList[fd].getPidCgi(), &status, 0);
+        }
         
         res.getFilePath().close();
         res.getFilePathError().close();
