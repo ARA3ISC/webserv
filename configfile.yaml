@@ -15,6 +15,16 @@
         auto_index: on
         upload: /upload
 
+    - location /pro/:
+        dir_listing: on
+        allow_methods: POST 
+        root: ./myWebsite/products
+        index: index.html
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        auto_index: on
+        upload: /upload
+
 
 - server:
     server_name: serv1

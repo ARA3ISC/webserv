@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:00 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/22 18:41:45 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/23 20:05:23 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ client::client(int serverIndex, int clientFd) {
     this->chunkSize = 0;
     this->fullSize = 0;
     this->isLastChunk = false;
+    this->isUploadfileOpen = false;
 }
 
 client::client(const client &rhs) {
@@ -111,7 +112,7 @@ void client::setStartLine(std::string line) {
     if (values.size() != 3)
         throw 400;
     if (values[0] != "GET" && values[0] != "POST" && values[0] != "DELETE")
-        throw 405;
+        throw 501;
     this->_startLine.method = values[0];
     this->_startLine.path = values[1];
     this->_startLine.http_v = values[2];

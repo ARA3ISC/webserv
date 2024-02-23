@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/23 17:23:28 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/23 20:05:30 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,40 @@ void dataCenter::checkRealPath(client &clnt, std::string toCheck){
 void dataCenter::post(client &clnt){
     
     std::string directory, file, res;
+    if (!clnt.getIsUploadfileOpen()){
 
+        server srv = getWebserv().getServers()[clnt.servIndx()];
+
+        splitPath(clnt, directory, file);
+
+
+        if (file.empty())
+            checkRealPath(clnt, directory);
+        else
+            checkRealPath(clnt, file);
+
+        int j = clnt.getLocationIndex();
+
+        std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
+        std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
+
+        std::string fileName;
+        
+        fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
+
+        checkRealPath(clnt, fileName);
+
+        clnt.openFileUpload(fileName);
+
+        clnt.setIsUploadfileOpen(true);
+
+        if (!clnt.getFileUpload().is_open()){
+            std::cout << "**\n";
+            throw clnt.getResponse().setAttributes(500, "html");
+        }
+
+    }
+    
     if (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && !clnt.getbufferBody().empty()){
 
         readBufferChunck(clnt, clnt.getbufferBody());
@@ -165,40 +198,6 @@ void dataCenter::post(client &clnt){
         }
     }
 
-    if (!clnt.getIsUploadfileOpen()){
-
-        server srv = getWebserv().getServers()[clnt.servIndx()];
-
-        splitPath(clnt, directory, file);
-
-
-        if (file.empty())
-            checkRealPath(clnt, directory);
-        else
-            checkRealPath(clnt, file);
-
-        int j = clnt.getLocationIndex();
-
-        std::size_t lastExtention = clnt.getHeaders()["Content-Type"].find_first_of("/");
-        std::string extension = clnt.getHeaders()["Content-Type"].substr(lastExtention + 1);
-        
-        if (extension == "x-www-form-urlencoded")
-            extension = "txt";
-        
-        std::string fileName;
-        
-        fileName = getFileName(srv.getLocations()[j].getUpload(), srv.getLocations()[j].getRoot(), extension);
-
-        checkRealPath(clnt, fileName);
-
-        clnt.openFileUpload(fileName);
-
-        clnt.setIsUploadfileOpen(true);
-
-        if (!clnt.getFileUpload().is_open())
-            throw clnt.getResponse().setAttributes(500, "html");
-
-    }
     
     if (!clnt.getbufferBody().empty()){
         clnt.setFullSize(clnt.getbufferBody().size());
