@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/22 18:34:14 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/23 17:23:28 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,10 @@ int hexToDecimal(const std::string& hexString) {
     if (hexString == "" || !isValidHexadecimal(hexString)){
         return 0;
     }
-    std::istringstream iss(hexString);
+    
     int decimalValue;
-    iss >> std::hex >> decimalValue;
+    decimalValue = strtoul(hexString.c_str(), NULL, 16);
+    
     return decimalValue;
 }
 
