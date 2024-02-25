@@ -1,14 +1,14 @@
 - server:
     server_name: localhost
     listen: 127.0.0.1:9090
-    root: ./myWebsite
+    root: ./avito
     max_body_size: 1G
     error: 404 ./CustomErrors/404.html
 
     - location:
         dir_listing: on
         allow_methods: POST GET
-        root: ./myWebsite
+        root: ./avito
         index: index.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
@@ -18,12 +18,23 @@
     - location /pro/:
         dir_listing: on
         allow_methods: POST 
-        root: ./myWebsite/products
+        root: ./avito
         index: index.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
         auto_index: on
         upload: /upload
+
+    - location /about/:
+        dir_listing: on
+        allow_methods: POST 
+        root: ./avito/products
+        index: product1.png
+        cgi_path: py /usr/bin/python3
+        cgi_path: php /usr/bin/php-cgi
+        auto_index: on
+        upload: /upload
+    
 
 
 - server:

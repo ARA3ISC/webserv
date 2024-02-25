@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/23 20:05:30 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 16:14:05 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,6 @@ void dataCenter::post(client &clnt){
         clnt.setIsUploadfileOpen(true);
 
         if (!clnt.getFileUpload().is_open()){
-            std::cout << "**\n";
             throw clnt.getResponse().setAttributes(500, "html");
         }
 

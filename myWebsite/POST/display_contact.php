@@ -30,6 +30,6 @@
     }
     ?>
     <a href="contact.html">Contact</a>
-    <a href="uploadFile.html">Upload File Chunekd</a>
+    <a href="uploadFile.html">Upload File Chunked</a>
 </body>
 </html>
