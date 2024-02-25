@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:15 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/25 21:44:22 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 22:58:43 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void fillLocationAttr(std::ifstream &obj, std::string &line, int &nbline, server
 {
     location l;
     l.setPath(line, nbline, s);
-    while (getline(obj, line) && (rtrim(line).find("server") == std::string::npos))
+    while (getline(obj, line) && (rtrim(line).find("- server:") == std::string::npos))
     {
         nbline++;
         if (line.empty() || is_empty(line.c_str()) || trimStr(line).at(0) == '#')
@@ -118,7 +118,7 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
             fillLocationAttr(obj, line, nbline, &s);
         }
 
-        else if (invalid_directive(trimStr(line), 0))
+        else if (invalid_directive(trimStr(line), 0) && rtrim(line).find("- server:") == std::string::npos)
             throwError("Invalid direction error1", nbline);
         if (rtrim(line).find("- server:") != std::string::npos)
         {

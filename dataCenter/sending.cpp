@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 21:16:49 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 22:53:09 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,11 +145,21 @@ void dataCenter::sending(int fd){
         }
         if (res.getStatusCode() != 200){
             res.openfilePathError(this->getWebserv().getServers()[this->clientList[fd].servIndx()].get_error_pages()[res.getStatusCode()]);
+            
             if (!res.getFilePathError().is_open()){
                 res.openfilePathError(getErrorPath(this->getWebserv().getServers()[this->clientList[fd].servIndx()], res.getStatusCode()));
+                
                 if (!res.getFilePathError().is_open()){
+                    
                     res.setIsHeaderSend(true);
-                    write(fd, "HTTP/1.1 403 Forbidden\r\nContent-Type: text/html\r\n\r\nERROR PERMISSION", 67);
+                    std::stringstream responseError;
+                    responseError << "HTTP/1.1 ";
+                    responseError << res.getStatusCode();
+                    responseError << " ";
+                    responseError << statusCodeMsgs[res.getStatusCode()];
+                    responseError << "\r\nContent-Type: text/html\r\n\r\nERROR PERMISSION";
+                    
+                    write(fd, responseError.str().c_str(), responseError.str().size());
                     close(fd);
                     return ;
                 }
