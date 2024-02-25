@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:15 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/25 22:58:43 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 23:53:59 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,10 +236,10 @@ void startParsing(std::string filename)
     {
         countServers(filename);
         checkServerBlock(obj);
+        obj.close();
         printEntryMsg();
         dataCenter ds(webs);
 
-        obj.close();
     }
     else
         throw std::runtime_error("Cannot open file.");
