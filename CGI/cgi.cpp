@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 20:13:24 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 20:19:25 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,18 @@ void dataCenter::cgi(client &clnt){
 
         int id = fork();
         if (id == 0){
-
+            
+            int infileFd;
+            if (clnt.getIsPost()){
+                infileFd = open(clnt.getFileUploadName().c_str(), O_RDWR , 0644);
+                
+                if (infileFd == -1)
+                    exit(12);
+                if (dup2(infileFd, 0) == -1)
+                    exit(12);
+                close(infileFd);
+            }
+            
             int fdFile = open(clnt.getFileNameCgi().c_str(), O_CREAT | O_RDWR , 0644);
             if (fdFile == -1){
                 exit(37);
@@ -111,16 +122,7 @@ void dataCenter::cgi(client &clnt){
                 (char*)pathInfo.c_str(),
                 NULL
             };
-            int infileFd;
-            if (clnt.getIsPost()){
-                infileFd = open(clnt.getFileUploadName().c_str(), O_RDWR , 0644);
-
-                if (infileFd == -1)
-                    exit(12);
-                if (dup2(infileFd, 0) == -1)
-                    exit(12);
-                close(infileFd);
-            }
+            
             dup2(fdFile, 1);
             close(fdFile);
 
