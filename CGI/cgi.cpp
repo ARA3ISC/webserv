@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 19:48:44 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 20:13:24 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,22 @@ void dataCenter::cgi(client &clnt){
             if (fdFile == -1){
                 exit(37);
             }
-            int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
+            int logFd = open("./CGI/logfile.log", O_RDWR, 0644);
 
             std::string pp = clnt.getFileToCgi();
-            // size_t pos = pp.find_last_of("/");
-            // std::string dir;
-            // if (pos != std::string::npos){
-            //     dir = pp.substr(0, pos);
-            //     if (chdir(dir.c_str()) == -1)
-            //         exit(48);
-            //     pp = pp.substr(pos + 1);
-            //     std::cout << "dir " << dir << std::endl;
-            // }
-            // std::cout << "file cgi : " << pp << std::endl;
+            
+            size_t pos = pp.find_last_of("/");
+            std::string dir;
+            
+            if (pos != std::string::npos){
+                dir = pp.substr(0, pos);
+                
+                if (chdir(dir.c_str()) == -1)
+                    exit(48);
+
+                pp = pp.substr(pos + 1);
+                
+            }
             
             
             const char* programPath = pp.c_str();
@@ -90,7 +93,7 @@ void dataCenter::cgi(client &clnt){
             std::string scriptName = "SCRIPT_NAME=" + clnt.getStartLine().path;
             std::string serverProtocol = "SERVER_PROTOCOL=" + clnt.getStartLine().http_v;
             std::string redirectStatus = "REDIRECT_STATUS=CGI";
-            std::string pathTranslated = "PATH_TRANSLATED=" + clnt.getFileToCgi();
+            std::string pathTranslated = "PATH_TRANSLATED=" + pp;
             std::string setCookie = "HTTP_COOKIE=" + clnt.getHeaders()["Cookie"];
             std::string pathInfo = "PATH_INFO=" + clnt.getPathInfo();
 
