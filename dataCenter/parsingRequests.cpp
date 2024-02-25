@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/22 18:35:14 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 19:08:03 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ void    dataCenter::requestSyntaxError(client& rq)
         if (rq.getHeaders().find("Transfer-Encoding")->second != "chunked")
             throw 501;
     }
-    // if (rq.getHeaders().find("Content-Length") == rq.getHeaders().end() || std::atoi(rq.getHeaders()["Content-Length"].c_str()) == 0){
-    //     if (rq.getStartLine().method == "POST")
-    //         throw 400;
-    // }
 
     for (unsigned long i = 0; i < rq.getStartLine().path.size(); ++i) {
         if (uriAllowedCharacters.find(rq.getStartLine().path[i], 0) == std::string::npos)
@@ -69,12 +65,12 @@ void    dataCenter::loadHeaders(int fd)
 
 void dataCenter::getLocationCF(client &clnt,server srv){
 
-    std::string reqUrl = clnt.getStartLine().path;
+    // std::string reqUrl = clnt.getStartLine().path;
     
-    if (reqUrl.find_last_of("?") != std::string::npos)
-        reqUrl = reqUrl.substr(0, reqUrl.find_last_of("?"));
+    // if (reqUrl.find_last_of("?") != std::string::npos)
+    //     reqUrl = reqUrl.substr(0, reqUrl.find_last_of("?"));
         
-    std::vector<std::string> splitURL = splitBy(reqUrl, '/');
+    // std::vector<std::string> splitURL = splitBy(reqUrl, '/');
     
     int tmp = getLocationRequested(srv.getLocations(), clnt);
     if (tmp != -1)

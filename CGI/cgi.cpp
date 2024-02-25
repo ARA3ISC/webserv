@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/23 20:05:46 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 19:48:44 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void dataCenter::cgi(client &clnt){
 
         int id = fork();
         if (id == 0){
-   
+
             int fdFile = open(clnt.getFileNameCgi().c_str(), O_CREAT | O_RDWR , 0644);
             if (fdFile == -1){
                 exit(37);
@@ -68,6 +68,18 @@ void dataCenter::cgi(client &clnt){
             int logFd = open("./CGI/logfile.log", O_RDWR | O_APPEND, 0644);
 
             std::string pp = clnt.getFileToCgi();
+            // size_t pos = pp.find_last_of("/");
+            // std::string dir;
+            // if (pos != std::string::npos){
+            //     dir = pp.substr(0, pos);
+            //     if (chdir(dir.c_str()) == -1)
+            //         exit(48);
+            //     pp = pp.substr(pos + 1);
+            //     std::cout << "dir " << dir << std::endl;
+            // }
+            // std::cout << "file cgi : " << pp << std::endl;
+            
+            
             const char* programPath = pp.c_str();
             char* const argv[] = {(char*)loc.getCgiPath()[getExtention(clnt.getFileToCgi())].c_str(), (char*)programPath, NULL};
 
@@ -138,7 +150,7 @@ void dataCenter::cgi(client &clnt){
     }
     
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
-        
+        std::cout << "exit status : " << WEXITSTATUS(status) << std::endl;
         unlink(clnt.getFileNameCgi().c_str());
         throw clnt.getResponse().setAttributes(500, "html");
     }

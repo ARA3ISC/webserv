@@ -7,7 +7,7 @@
 
     - location:
         dir_listing: on
-        allow_methods: POST GET
+        allow_methods: POST GET DELETE
         root: ./avito
         index: index.html
         cgi_path: py /usr/bin/python3
@@ -17,9 +17,9 @@
 
     - location /pro/:
         dir_listing: on
-        allow_methods: POST 
-        root: ./avito
-        index: index.html
+        allow_methods: POST GET
+        root: ./avito/products
+        index: index.html product1.jpg
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
         auto_index: on
@@ -40,12 +40,13 @@
 - server:
     server_name: serv1
     listen: 127.0.0.1:2222
-    root: ./avito
+    root: ./myWebsite
 
     - location /:
         dir_listing: on
         allow_methods: POST GET
-        root: ./avito
+        root: ./myWebsite
+        cgi_path: php /usr/bin/php-cgi
         index: index.html
         auto_index: on
         upload: /upload

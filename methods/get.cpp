@@ -6,12 +6,20 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 16:17:34 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 19:38:57 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/dataCenter.hpp"
 
+void getQueryStringFromPath(client &clnt, std::string &toOpen){
+
+    size_t pos = toOpen.find_last_of("?");
+    if (pos != std::string::npos){
+        clnt.setQueryString(toOpen.substr(pos + 1));
+        toOpen = toOpen.substr(0, pos);
+    }
+}
 
 std::string dataCenter::cleanPath(std::string path) {
     std::string result;
@@ -63,6 +71,8 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
     server srv = this->wes.getServers()[clnt.servIndx()];
     std::string pathStart = clnt.getStartLine().path;
     
+    getQueryStringFromPath(clnt, pathStart);
+
     int j = -1;
     for (size_t i = 0; i < loc.size(); i++)
     {
@@ -72,7 +82,14 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
 
         size_t pos = pathStart.find(locPath);
         
-        if (pos != std::string::npos){
+        checkPathInfos(replaceFirstOccurrence(pathStart, locPath, loc[i].getRoot()), clnt);
+
+        size_t pos1 = pathStart.rfind(clnt.getPathInfo());
+        
+        if (pos1 != std::string::npos && !clnt.getPathInfo().empty())
+            pathStart = pathStart.substr(0, pos1);
+        
+        if (pos != std::string::npos && pos == 0){
             
             std::string name;
             name = replaceFirstOccurrence(pathStart, locPath, loc[i].getRoot());
@@ -102,14 +119,6 @@ void removeTrailingSlashes(std::string& str) {
     }
 }
 
-void getQueryStringFromPath(client &clnt, std::string &toOpen){
-
-    size_t pos = toOpen.find_last_of("?");
-    if (pos != std::string::npos){
-        clnt.setQueryString(toOpen.substr(pos + 1));
-        toOpen = toOpen.substr(0, pos);
-    }
-}
 
 void dataCenter::splitPath(client &clnt,std::string& directory, std::string& file) {
     int index = clnt.getLocationIndex();
@@ -210,7 +219,7 @@ int dataCenter::isPathInfos(std::vector<std::string>& v)
     return -1;
 }
 
-void dataCenter::checkPathInfos(std::string file, client& clnt)
+std::string dataCenter::checkPathInfos(std::string file, client& clnt)
 {
     std::vector<std::string> v = splitBy(file, '/');
     v.erase(v.begin());
@@ -225,6 +234,7 @@ void dataCenter::checkPathInfos(std::string file, client& clnt)
         }
     }
     clnt.setPathInfo(p);
+    return p;
 }
 
 void dataCenter::get(client &clnt, int fd){
