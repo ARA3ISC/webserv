@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:22 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 16:14:05 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 23:25:41 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,7 @@ void dataCenter::post(client &clnt){
     
     if (!clnt.getbufferBody().empty()){
         clnt.setFullSize(clnt.getbufferBody().size());
+        
         clnt.getFileUpload().write(clnt.getbufferBody().c_str(), clnt.getbufferBody().size());
 
     }
@@ -209,13 +210,20 @@ void dataCenter::post(client &clnt){
     iss >> nb;
 
     if ((clnt.getHeaders()["Transfer-Encoding"] != "chunked" && clnt.getFullSize() >= nb) || (clnt.getHeaders()["Transfer-Encoding"] == "chunked" && clnt.getIsLastChunk())){
+        
+        server srv = getWebserv().getServers()[clnt.servIndx()];
+        if((size_t)srv.getMaxBodySize() < clnt.getFullSize()){
+            clnt.getFileUpload().close();
+            unlink(clnt.getFileUploadName().c_str());
+            throw clnt.getResponse().setAttributes(413, "html");
+        }
 
         clnt.getFileUpload().close();
         clnt.setFullSize(0);
 
         splitPath(clnt, directory, file);
 
-        server srv = getWebserv().getServers()[clnt.servIndx()];
+        // server srv = getWebserv().getServers()[clnt.servIndx()];
         int j = clnt.getLocationIndex();
 
         if (!file.empty()){

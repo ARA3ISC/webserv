@@ -2,7 +2,7 @@
     server_name: localhost
     listen: 127.0.0.1:9090
     root: ./avito
-    max_body_size: 1G
+    max_body_size: 1b
     error: 404 ./CustomErrors/404.html
 
     - location:
