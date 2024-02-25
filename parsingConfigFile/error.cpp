@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maneddam <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:07 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/14 16:05:08 by maneddam         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:45:59 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ bool invalid_directive(std::string line, int c)
     locationAttr.push_back("return:");
     if (!c)
     {
+        std::cout << getFirstWord(line) << "\n";
         if (std::find(serverAttr.begin(), serverAttr.end(), getFirstWord(line)) == serverAttr.end())
             return 1;
     }

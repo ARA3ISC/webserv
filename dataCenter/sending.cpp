@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/22 18:39:53 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 21:16:49 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ void dataCenter::sending(int fd){
     }
     if (write(fd, content.c_str(), content.length()) < 1)
     {
-        std::cout << RED << "2Client disconnected " <<  fd << std::endl;
+        std::cout << RED << "Client disconnected " <<  fd << std::endl;
         close(fd);
         res.getFilePath().close();
         res.getFilePathError().close();

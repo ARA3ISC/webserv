@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:05:15 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/19 23:30:18 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/25 21:44:22 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void fillServerAttr(std::ifstream &obj, int &nbline)
         }
 
         else if (invalid_directive(trimStr(line), 0))
-             throwError("Invalid direction error", nbline);
+            throwError("Invalid direction error1", nbline);
         if (rtrim(line).find("- server:") != std::string::npos)
         {
             checkIndentation(line, 0, nbline);
