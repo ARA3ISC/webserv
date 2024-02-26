@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/25 23:21:56 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/26 14:27:47 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,9 @@ void dataCenter::getLocationCF(client &clnt,server srv){
     // std::vector<std::string> splitURL = splitBy(reqUrl, '/');
     
     int tmp = getLocationRequested(srv.getLocations(), clnt);
-    if (tmp != -1)
+    if (tmp != -1){
         clnt.setLocationIndex(tmp);
+    }
     else{
         throw clnt.getResponse().setAttributes(404, "html");
     }

@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 19:38:57 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/26 14:27:29 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,13 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
             std::string name;
             name = replaceFirstOccurrence(pathStart, locPath, loc[i].getRoot());
             
-            if (fileExists(name))
+            if (fileExists(name)){
                 return i;
+            }
             
         }
     }
+    std::cout << j << std::endl;
     return j;
 }
 
@@ -124,18 +126,25 @@ void dataCenter::splitPath(client &clnt,std::string& directory, std::string& fil
     int index = clnt.getLocationIndex();
     server srv = getWebserv().getServers()[clnt.servIndx()];
 
-    std::string path = srv.getLocations()[index].getPath();
+    std::string locationPath = srv.getLocations()[index].getPath().erase(srv.getLocations()[index].getPath().size() - 1);
+        if (locationPath.empty())
+            locationPath = "/";
+            
     std::string url = clnt.getStartLine().path;
 
-    std::string trimUrl = trimFromBeginning(url, path);
+    std::string trimUrl = trimFromBeginning(url, locationPath);
     if (trimUrl[0] != '/')
         trimUrl.insert(0, "/");
+        
     std::string toOpen = srv.getLocations()[index].getRoot() + trimUrl;
-
+    
+    
     getQueryStringFromPath(clnt, toOpen);
     
     checkPathInfos(toOpen, clnt);
+
     size_t pos = toOpen.rfind(clnt.getPathInfo());
+    
     if (pos != std::string::npos && !clnt.getPathInfo().empty())
         toOpen = toOpen.substr(0, pos);
 
@@ -222,7 +231,7 @@ int dataCenter::isPathInfos(std::vector<std::string>& v)
 std::string dataCenter::checkPathInfos(std::string file, client& clnt)
 {
     std::vector<std::string> v = splitBy(file, '/');
-    v.erase(v.begin());
+    // v.erase(v.begin());
     size_t pos = isPathInfos(v);
     std::string p;
     if ((int)pos != -1)

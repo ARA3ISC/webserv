@@ -7,8 +7,7 @@
 
     - location:
         dir_listing: on
-        allow_methods: POST GET
-        root: ./avito
+        allow_methods: GET
         index: index.html
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
@@ -16,10 +15,10 @@
         upload: /upload
 
     - location /pro/:
-        dir_listing: on
+        dir_listing: off
         allow_methods: POST GET
-        root: ./avito/products
-        index: index.html 
+        root: ./avito
+        index: items.html 
         cgi_path: py /usr/bin/python3
         cgi_path: php /usr/bin/php-cgi
         auto_index: on
