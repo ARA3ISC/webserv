@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:00:17 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/26 14:27:29 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/26 17:48:52 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,12 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
     server srv = this->wes.getServers()[clnt.servIndx()];
     std::string pathStart = clnt.getStartLine().path;
     
+    if (pathStart[pathStart.size() - 1] == '/' && pathStart.size() > 1){
+        pathStart = pathStart.erase(pathStart.size() - 1);
+        if (pathStart.empty())
+            pathStart = "/";
+    }
+    
     getQueryStringFromPath(clnt, pathStart);
 
     int j = -1;
@@ -79,6 +85,7 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
         std::string locPath = loc[i].getPath().erase(loc[i].getPath().size() - 1);
         if (locPath.empty())
             locPath = "/";
+    
 
         size_t pos = pathStart.find(locPath);
         
@@ -100,7 +107,6 @@ int dataCenter::getLocationRequested(std::vector<location> loc, client clnt){
             
         }
     }
-    std::cout << j << std::endl;
     return j;
 }
 
@@ -231,7 +237,7 @@ int dataCenter::isPathInfos(std::vector<std::string>& v)
 std::string dataCenter::checkPathInfos(std::string file, client& clnt)
 {
     std::vector<std::string> v = splitBy(file, '/');
-    // v.erase(v.begin());
+
     size_t pos = isPathInfos(v);
     std::string p;
     if ((int)pos != -1)

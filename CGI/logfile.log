@@ -1,1 +1,5 @@
 --------------------------
+PHP Warning:  Undefined array key "media" in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/session/login.php on line 17
+PHP Warning:  Trying to access array offset on value of type null in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/session/login.php on line 17
+PHP Warning:  foreach() argument must be of type array|object, null given in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/session/login.php on line 17
+PHP Warning:  Undefined variable $uploadFile in /nfs/homes/rlarabi/Desktop/webserv/myWebsite/session/login.php on line 24

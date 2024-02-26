@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:58:14 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/26 14:26:58 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/26 17:48:39 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,9 @@ void dataCenter::sending(int fd){
             res.openFile(res.getPath());
             if (write(fd, "HTTP/1.1 200 OK\r\n", 17) < 1)
             {
-                std::cout << RED << "Client disconnected " <<  fd << std::endl;
+                std::cout << RED << "Client disconnected " <<  fd << RESET << std::endl;
+                if(res.getIsCGIFile())
+                    unlink(this->clientList[fd].getFileNameCgi().c_str());
                 close(fd);
                 res.getFilePath().close();
                 res.getFilePathError().close();
@@ -192,7 +194,10 @@ void dataCenter::sending(int fd){
     }
     if (write(fd, content.c_str(), content.length()) < 1)
     {
-        std::cout << RED << "Client disconnected " <<  fd << std::endl;
+        std::cout << RED << "Client disconnected " <<  fd << RESET << std::endl;
+        if(res.getIsCGIFile())
+            unlink(this->clientList[fd].getFileNameCgi().c_str());
+            
         close(fd);
         res.getFilePath().close();
         res.getFilePathError().close();

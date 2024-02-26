@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 15:57:38 by rlarabi           #+#    #+#             */
-/*   Updated: 2024/02/25 20:19:25 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/26 17:48:24 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,6 @@ void dataCenter::cgi(client &clnt){
     }
     
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0){
-        std::cout << "exit status : " << WEXITSTATUS(status) << std::endl;
         unlink(clnt.getFileNameCgi().c_str());
         throw clnt.getResponse().setAttributes(500, "html");
     }

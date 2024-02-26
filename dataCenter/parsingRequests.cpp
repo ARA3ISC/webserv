@@ -6,7 +6,7 @@
 /*   By: rlarabi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 16:04:13 by maneddam          #+#    #+#             */
-/*   Updated: 2024/02/26 14:27:47 by rlarabi          ###   ########.fr       */
+/*   Updated: 2024/02/26 19:13:11 by rlarabi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,16 @@ void    dataCenter::requestSyntaxError(client& rq)
     if (rq.getStartLine().path.size() > 2048)
         throw 414;
 
-    if (rq.getHeaders().find("Host") == rq.getHeaders().end())
+    if (rq.getHeaders().find("Host") == rq.getHeaders().end() || rq.getStartLine().http_v != "HTTP/1.1")
         throw 400;
 
-    if (std::atoi(rq.getHeaders()["Content-Length"].c_str()) > this->wes.getServers()[rq.servIndx()].getMaxBodySize())
+    char *end = NULL;
+    double contentLength = std::strtol(rq.getHeaders()["Content-Length"].c_str(), &end, 10);
+    std::string s = end;
+    if (!s.empty())
+        throw 400;
+    
+    if (contentLength > this->wes.getServers()[rq.servIndx()].getMaxBodySize() && rq.getStartLine().method == "POST")
         throw 413;
 }
 
@@ -68,13 +74,6 @@ void    dataCenter::loadHeaders(int fd)
 
 void dataCenter::getLocationCF(client &clnt,server srv){
 
-    // std::string reqUrl = clnt.getStartLine().path;
-    
-    // if (reqUrl.find_last_of("?") != std::string::npos)
-    //     reqUrl = reqUrl.substr(0, reqUrl.find_last_of("?"));
-        
-    // std::vector<std::string> splitURL = splitBy(reqUrl, '/');
-    
     int tmp = getLocationRequested(srv.getLocations(), clnt);
     if (tmp != -1){
         clnt.setLocationIndex(tmp);
@@ -200,7 +199,6 @@ void    dataCenter::reading(int fd)
             std::string tmp(buffer, a);
             this->clientList[fd].setbufferBody(tmp);
         }
-
         if (this->clientList[fd].getStartLine().method == "GET")
             get(this->clientList[fd], fd);
 
